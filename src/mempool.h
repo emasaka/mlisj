@@ -16,4 +16,6 @@ extern char *copy_to_string_area(char *);
 extern double *cdouble2float(double);
 extern NArray *new_narray(size_t);
 
+extern void init_mempool(void);
+
 #endif /* _MEMPOOL_H */

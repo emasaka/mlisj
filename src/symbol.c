@@ -48,3 +48,7 @@ char *str2symbol(char *str, bool copy_p) {
         return new_symbol(str, copy_p);
     }
 }
+
+void init_symbol(void) {
+    symbol_table_used = 0;
+}

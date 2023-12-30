@@ -5,6 +5,8 @@
 
 extern char *str2symbol(char *, bool);
 
+extern void init_symbol(void);
+
 /* reserved symbols */
 extern char * Symbol_minus;
 extern char * Symbol_quote;
