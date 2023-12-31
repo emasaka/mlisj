@@ -101,9 +101,11 @@ NArray *new_narray(size_t n) {
     return node;
 }
 
-void init_mempool(void) {
+int init_mempool(void) {
     lispobject_pool_used = 0;
     string_pool_used = 0;
     float_pool_used = 0;
     narray_node_pool_used = 0;
+    // return the value of success, just in case
+    return 0;
 }

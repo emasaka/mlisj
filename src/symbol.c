@@ -49,6 +49,8 @@ char *str2symbol(char *str, bool copy_p) {
     }
 }
 
-void init_symbol(void) {
+int init_symbol(void) {
     symbol_table_used = 0;
+    // return the value of success, just in case
+    return 0;
 }
