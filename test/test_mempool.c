@@ -108,6 +108,34 @@ void testsuite_float_pool(void) {
 }
 
 /*
+  Array Node Pool
+ */
+
+void test_narray_node_pool_normail(void) {
+    NArray *n1 = new_narray(1);
+    CU_ASSERT_PTR_NOT_NULL(n1);
+    CU_ASSERT(n1->size == 1);
+    CU_ASSERT_PTR_NOT_NULL(n1->data);
+    NArray *n2 = new_narray(1);
+    CU_ASSERT_PTR_NOT_NULL(n2);
+    CU_ASSERT(n1 != n2);
+}
+
+void test_narray_node_pool_edge(void) {
+    narray_node_pool_used = NARRAY_NODE_POOL_SIZE - 1;
+    NArray *n1 = new_narray(1);
+    CU_ASSERT_PTR_NOT_NULL(n1);
+    NArray *n2 = new_narray(1);
+    CU_ASSERT_PTR_NULL(n2);
+}
+
+void testsuite_narray_node_pool(void) {
+    CU_pSuite suite = CU_add_suite("narray_node_pool_test", init_mempool, NULL);
+    CU_add_test(suite, "narray_node_pool_normal", test_narray_node_pool_normail);
+    CU_add_test(suite, "narray_node_pool_edge", test_narray_node_pool_edge);
+}
+
+/*
   Main
  */
 
@@ -118,6 +146,7 @@ int main(void) {
     testsuite_string_area();
     testsuite_string_copy();
     testsuite_float_pool();
+    testsuite_narray_node_pool();
 
     CU_basic_run_tests();
     CU_cleanup_registry();
