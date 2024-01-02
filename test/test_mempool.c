@@ -83,6 +83,31 @@ void testsuite_string_copy(void) {
 }
 
 /*
+  Float Pool
+ */
+
+void test_float_pool_normal(void) {
+    double *f1 = cdouble2float(1.0);
+    CU_ASSERT_PTR_NOT_NULL(f1);
+    double *f2 = cdouble2float(1.0);
+    CU_ASSERT(f1 != f2);
+}
+
+void test_float_pool_edge(void) {
+    float_pool_used = FLOAT_POOL_SIZE - 1;
+    double *f1 = cdouble2float(1.0);
+    CU_ASSERT_PTR_NOT_NULL(f1);
+    double *f2 = cdouble2float(1.0);
+    CU_ASSERT_PTR_NULL(f2);
+}
+
+void testsuite_float_pool(void) {
+    CU_pSuite suite = CU_add_suite("float_pool_test", init_mempool, NULL);
+    CU_add_test(suite, "float_allocate_normal", test_float_pool_normal);
+    CU_add_test(suite, "float_allocate_edge", test_float_pool_edge);
+}
+
+/*
   Main
  */
 
@@ -92,6 +117,7 @@ int main(void) {
     testsuite_lispobject_pool();
     testsuite_string_area();
     testsuite_string_copy();
+    testsuite_float_pool();
 
     CU_basic_run_tests();
     CU_cleanup_registry();
