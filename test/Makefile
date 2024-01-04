@@ -3,7 +3,7 @@ CFLAGS := -W -Wall
 
 .DEFAULT_GOAL := test
 
-.PHONY: test
+.PHONY: test clean
 
 test: test_mempool test_symbol
 	./test_mempool
