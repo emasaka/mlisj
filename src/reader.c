@@ -148,11 +148,14 @@ Lisp_Object reader_list(reader_context *c) {
     for (int i = 0; i < READER_BUFSIZE; i++) {
         while (isspace(c->ptr[0])) { c->ptr++; }
         if (c->ptr[0] == ')') {
+            c->ptr++;
             NArray *ary = new_narray(buffer_used);
             if (ary == NULL ) { return MEMORY_ERROR_VAL; }
             for (int j = 0; j < buffer_used; j++) {
                 ary->data[j] = buffer[j];
             }
+            ary->size = buffer_used;
+            return (Lisp_Object){ .type = Lisp_CList, .val.aval = ary};
         }
 
         Lisp_Object v = reader_sexp(c);
