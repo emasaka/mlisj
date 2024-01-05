@@ -112,7 +112,7 @@ Lisp_Object reader_string(reader_context *c) {
                 /* "\<octet>" */
                 c->ptr++;
                 int n = 0;
-                while ((c->ptr[0] >= '0') || (c->ptr[0] <= '7')) {
+                while ((c->ptr[0] >= '0') && (c->ptr[0] <= '7')) {
                     n = (n << 3) + (c->ptr[0] - '0');
                     c->ptr++;
                 }
