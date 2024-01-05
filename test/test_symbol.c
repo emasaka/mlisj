@@ -13,9 +13,9 @@ int init_for_symboltest(void) {
  */
 
 void test_symbol_quote(void) {
-    char *q = symbol_table_lookup("'");
+    char *q = symbol_table_lookup("quote");
     CU_ASSERT_PTR_NOT_NULL(q);
-    CU_ASSERT(strcmp(q, "'") == 0);
+    CU_ASSERT(strcmp(q, "quote") == 0);
 }
 
 void test_symbol_minus(void) {

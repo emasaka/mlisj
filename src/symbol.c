@@ -52,7 +52,7 @@ char *str2symbol(char *str, bool copy_p) {
 int init_symbol(void) {
     symbol_table_used = 0;
     Symbol_minus = str2symbol("-", true);
-    Symbol_quote = str2symbol("'", true);
+    Symbol_quote = str2symbol("quote", true);
     // return the value of success, just in case
     return 0;
 }
