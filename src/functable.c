@@ -1,5 +1,6 @@
 #include <string.h>
 #include "lispobject.h"
+#include "symbol.h"
 #include "functable.h"
 
 typedef int (*cfunc_t)();
@@ -24,6 +25,12 @@ int add_func(char *sym, cfunc_t func) {
     } else {
         return -1;
     }
+}
+
+int add_func_from_cstr(char *str, cfunc_t func) {
+    char *sym = str2symbol(str, true);
+    if (sym == NULL) { return -1; }
+    return add_func(sym, func);
 }
 
 cfunc_t get_func(char *sym) {
