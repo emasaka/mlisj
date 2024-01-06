@@ -20,25 +20,25 @@ int init_for_readertest(void) {
 void test_reader_positive_int(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("31");
-    CU_ASSERT(obj.type == Lisp_Int);
+    CU_ASSERT_EQUAL(obj.type, Lisp_Int);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "31") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "31");
 }
 
 void test_reader_negative_int(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("-31");
-    CU_ASSERT(obj.type == Lisp_Int);
+    CU_ASSERT_EQUAL(obj.type, Lisp_Int);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "-31") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "-31");
 }
 
 void test_reader_char(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("?a");
-    CU_ASSERT(obj.type == Lisp_Int);
+    CU_ASSERT_EQUAL(obj.type, Lisp_Int);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "97") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "97");
 }
 
 void testsuite_reader_number(void) {
@@ -55,9 +55,9 @@ void testsuite_reader_number(void) {
 void test_reader_symbol(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("foo");
-    CU_ASSERT(obj.type == Lisp_Symbol);
+    CU_ASSERT_EQUAL(obj.type, Lisp_Symbol);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "foo") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "foo");
 }
 
 void testsuite_reader_symbol(void) {
@@ -72,9 +72,9 @@ void testsuite_reader_symbol(void) {
 void test_reader_nil(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("nil");
-    CU_ASSERT(obj.type == Lisp_Nil);
+    CU_ASSERT_EQUAL(obj.type, Lisp_Nil);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "nil") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "nil");
 }
 
 void testsuite_reader_nil(void) {
@@ -89,33 +89,33 @@ void testsuite_reader_nil(void) {
 void test_reader_string_visible(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("\"Hello, World!\"");
-    CU_ASSERT(obj.type == Lisp_String);
+    CU_ASSERT_EQUAL(obj.type, Lisp_String);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "\"Hello, World!\"") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "\"Hello, World!\"");
 }
 
 void test_reader_string_escaped_octet1(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("\"I\\057O\"");
-    CU_ASSERT(obj.type == Lisp_String);
+    CU_ASSERT_EQUAL(obj.type, Lisp_String);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "\"I/O\"") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "\"I/O\"");
 }
 
 void test_reader_string_escaped_octet2(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("\"\\033\"");
-    CU_ASSERT(obj.type == Lisp_String);
+    CU_ASSERT_EQUAL(obj.type, Lisp_String);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "\"\\033\"") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "\"\\033\"");
 }
 
 void test_reader_string_escaped_visible(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("\"\\W\"");
-    CU_ASSERT(obj.type == Lisp_String);
+    CU_ASSERT_EQUAL(obj.type, Lisp_String);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "\"W\"") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "\"W\"");
 }
 
 void testsuite_reader_string(void) {
@@ -133,49 +133,49 @@ void testsuite_reader_string(void) {
 void test_reader_list_empty(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("()");
-    CU_ASSERT(obj.type == Lisp_CList);
+    CU_ASSERT_EQUAL(obj.type, Lisp_CList);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "()") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "()");
 }
 
 void test_reader_list_one(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("(foo)");
-    CU_ASSERT(obj.type == Lisp_CList);
+    CU_ASSERT_EQUAL(obj.type, Lisp_CList);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "(foo)") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(foo)");
 }
 
 void test_reader_list_two(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("(foo bar)");
-    CU_ASSERT(obj.type == Lisp_CList);
+    CU_ASSERT_EQUAL(obj.type, Lisp_CList);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "(foo bar)") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(foo bar)");
 }
 
 void test_reader_list_quoted(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("'foo");
-    CU_ASSERT(obj.type == Lisp_CList);
+    CU_ASSERT_EQUAL(obj.type, Lisp_CList);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "(quote foo)") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(quote foo)");
 }
 
 void test_reader_list_nested1(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("((foo))");
-    CU_ASSERT(obj.type == Lisp_CList);
+    CU_ASSERT_EQUAL(obj.type, Lisp_CList);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "((foo))") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "((foo))");
 }
 
 void test_reader_list_nested2(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("(lambda (a b) (concat a b))");
-    CU_ASSERT(obj.type == Lisp_CList);
+    CU_ASSERT_EQUAL(obj.type, Lisp_CList);
     CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT(strcmp(tmp_buf, "(lambda (a b) (concat a b))") == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(lambda (a b) (concat a b))");
 }
 
 void testsuite_reader_list(void) {

@@ -21,18 +21,18 @@ void test_variable_found(void) {
     CU_ASSERT(set_variable(sym2, (Lisp_Object){ .type = Lisp_Nil, .val.ival = 0 }) == 0);
 
     Lisp_Object val1 = get_variable(sym1);
-    CU_ASSERT(val1.type == Lisp_Int);
-    CU_ASSERT(val1.val.ival == 31);
+    CU_ASSERT_EQUAL(val1.type, Lisp_Int);
+    CU_ASSERT_EQUAL(val1.val.ival, 31);
     Lisp_Object val2 = get_variable(sym2);
-    CU_ASSERT(val2.type == Lisp_Nil);
+    CU_ASSERT_EQUAL(val2.type, Lisp_Nil);
 }
 
 void test_variable_notfound(void) {
     char *sym = str2symbol("baz", true);
     CU_ASSERT_PTR_NOT_NULL(sym);
     Lisp_Object val = get_variable(sym);
-    CU_ASSERT(val.type == Internal_Error);
-    CU_ASSERT(val.val.err == Variable_Error);
+    CU_ASSERT_EQUAL(val.type, Internal_Error);
+    CU_ASSERT_EQUAL(val.val.err, Variable_Error);
 }
 
 void testsuite_variable_set_get(void) {
@@ -50,12 +50,12 @@ void test_variable_stack_frame(void) {
     CU_ASSERT(set_variable(sym, (Lisp_Object){ .type = Lisp_Nil, .val.ival = 0 }) == 0);
 
     Lisp_Object val1 = get_variable(sym);
-    CU_ASSERT(val1.type == Lisp_Nil);
+    CU_ASSERT_EQUAL(val1.type, Lisp_Nil);
 
     restore_variable_status(st);
     Lisp_Object val2 = get_variable(sym);
-    CU_ASSERT(val2.type == Lisp_Int);
-    CU_ASSERT(val2.val.ival == 31);
+    CU_ASSERT_EQUAL(val2.type, Lisp_Int);
+    CU_ASSERT_EQUAL(val2.val.ival, 31);
 }
 
 void testsuite_variable_stack_frame(void) {
