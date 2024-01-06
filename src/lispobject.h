@@ -18,7 +18,8 @@ enum Lisp_Type {
 
 enum Internal_Error_Type {
     Memory_Error,
-    Reader_Error
+    Reader_Error,
+    Variable_Error
 };
 
 struct _Narray;                 /* prototype declaration */
