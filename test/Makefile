@@ -5,10 +5,11 @@ CFLAGS := -W -Wall
 
 .PHONY: test clean
 
-test: test_mempool test_symbol test_reader
+test: test_mempool test_symbol test_reader test_variable
 	./test_mempool
 	./test_symbol
 	./test_reader
+	./test_variable
 
 test_mempool: test_mempool.c ../src/mempool.c
 	$(CC) test_mempool.c $(CFLAGS) -lcunit -o test_mempool
@@ -18,6 +19,9 @@ test_symbol: test_symbol.c ../src/mempool.c mempool.o
 
 test_reader: test_reader.c ../src/reader.c mempool.o symbol.o writer.o
 	$(CC) test_reader.c mempool.o symbol.o writer.o $(CFLAGS) -lcunit -o test_reader
+
+test_variable: test_variable.c ../src/variable.c mempool.o symbol.o
+	$(CC) test_variable.c mempool.o symbol.o $(CFLAGS) -lcunit -o test_variable
 
 mempool.o: ../src/mempool.c ../src/mempool.h
 	$(CC) -c ../src/mempool.c $(CFLAGS) -o mempool.o
@@ -29,4 +33,4 @@ writer.o: writer.c ../src/lispobject.h
 	$(CC) -c writer.c $(CFLAGS) -o writer.o
 
 clean:
-	rm -f test_mempool test_symbol test_reader mempool.o symbol.o writer.o
+	rm -f test_mempool test_symbol test_reader test_variable mempool.o symbol.o writer.o
