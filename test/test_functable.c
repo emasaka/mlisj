@@ -20,13 +20,15 @@ int dummy_func2(int n) {
 }
 
 void test_functable_found(void) {
-    char *sym1 = str2symbol("foo", true);
-    char *sym2 = str2symbol("bar", true);
+    char *str1 = "foo";
+    char *str2 = "bar";
+    CU_ASSERT(add_func_from_cstr(str1, dummy_func1) == 0);
+    CU_ASSERT(add_func_from_cstr(str2, dummy_func2) == 0);
+
+    char *sym1 = str2symbol(str1, true);
+    char *sym2 = str2symbol(str2, true);
     CU_ASSERT_PTR_NOT_NULL(sym1);
     CU_ASSERT_PTR_NOT_NULL(sym2);
-
-    CU_ASSERT(add_func(sym1, dummy_func1) == 0);
-    CU_ASSERT(add_func(sym2, dummy_func2) == 0);
 
     cfunc_t func1 = get_func(sym1);
     CU_ASSERT_PTR_NOT_NULL(func1);
