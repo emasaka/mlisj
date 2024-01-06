@@ -9,8 +9,6 @@ enum Lisp_Type {
    Lisp_CList,                  /* cdr-coded list */
    Lisp_Nil,
 
-   /* TODO: C functions */
-
    Internal_Error               /* error code as Lisp_Object */
 
    /* not implemented: cons-list, vector */
