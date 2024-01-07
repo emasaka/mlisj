@@ -1,40 +1,41 @@
 TESTDIR := test
 CFLAGS := -W -Wall
+TEST_CFLAGS := $(CFLAGS) -lcunit
+
+TEST_EXECS := test_mempool test_symbol test_reader test_variable test_functable
+OBJS := mempool.o symbol.o writer.o
 
 .DEFAULT_GOAL := test
 
 .PHONY: test clean
 
-test: test_mempool test_symbol test_reader test_variable test_functable
-	./test_mempool
-	./test_symbol
-	./test_reader
-	./test_variable
-	./test_functable
+test: $(TEST_EXECS)
+	$(shell echo $(TEST_EXECS) | sed -e 's| | \&\& ./|g;s|^|./|')
+# foo bar baz -> ./foo && ./bar && ./baz
 
 test_mempool: test_mempool.c ../src/mempool.c
-	$(CC) test_mempool.c $(CFLAGS) -lcunit -o test_mempool
+	$(CC) $< $(TEST_CFLAGS) -o $@
 
 test_symbol: test_symbol.c ../src/mempool.c mempool.o
-	$(CC) test_symbol.c mempool.o $(CFLAGS) -lcunit -o test_symbol
+	$(CC) $< mempool.o $(TEST_CFLAGS) -o $@
 
 test_reader: test_reader.c ../src/reader.c mempool.o symbol.o writer.o
-	$(CC) test_reader.c mempool.o symbol.o writer.o $(CFLAGS) -lcunit -o test_reader
+	$(CC) $< mempool.o symbol.o writer.o $(TEST_CFLAGS) -o $@
 
 test_variable: test_variable.c ../src/variable.c mempool.o symbol.o
-	$(CC) test_variable.c mempool.o symbol.o $(CFLAGS) -lcunit -o test_variable
+	$(CC) $< mempool.o symbol.o $(TEST_CFLAGS) -o $@
 
 test_functable: test_functable.c ../src/functable.c mempool.o symbol.o
-	$(CC) test_functable.c mempool.o symbol.o $(CFLAGS) -lcunit -o test_functable
+	$(CC) $< mempool.o symbol.o $(TEST_CFLAGS) -o $@
 
 mempool.o: ../src/mempool.c ../src/mempool.h
-	$(CC) -c ../src/mempool.c $(CFLAGS) -o mempool.o
+	$(CC) -c $(CFLAGS) $< -o $@
 
 symbol.o: ../src/symbol.c ../src/symbol.h
-	$(CC) -c ../src/symbol.c $(CFLAGS) -o symbol.o
+	$(CC) -c $(CFLAGS) $< -o $@
 
 writer.o: writer.c ../src/lispobject.h
-	$(CC) -c writer.c $(CFLAGS) -o writer.o
+	$(CC) -c $(CFLAGS) $< -o $@
 
 clean:
-	rm -f test_mempool test_symbol test_reader test_variable test_functable mempool.o symbol.o writer.o
+	rm -f $(TEST_EXECS) $(OBJS)
