@@ -1,2 +1,7 @@
-*~
-*.o
+*
+!*.c
+!*.h
+!*.md
+!Makefile
+!.gitignore
+!.editorconfig
