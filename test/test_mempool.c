@@ -149,7 +149,8 @@ int main(void) {
     testsuite_narray_node_pool();
 
     CU_basic_run_tests();
+    int ret = CU_get_number_of_failures();
     CU_cleanup_registry();
 
-    return 0;
+    return ret;
 }
