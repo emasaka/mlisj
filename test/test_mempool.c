@@ -10,7 +10,7 @@ void test_lispobject_pool_normal(void) {
     Lisp_Object *obj1 = new_lispobject_array(1);
     CU_ASSERT_PTR_NOT_NULL(obj1);
     Lisp_Object *obj2 = new_lispobject_array(1);
-    CU_ASSERT_NOT_EQUAL(obj1, obj2);
+    CU_ASSERT_PTR_NOT_EQUAL(obj1, obj2);
 }
 
 void test_lispobject_pool_edge(void) {
@@ -35,7 +35,7 @@ void test_string_area_normal(void) {
     char *str1 = new_string_area(16);
     CU_ASSERT_PTR_NOT_NULL(str1);
     char *str2 = new_string_area(16);
-    CU_ASSERT_NOT_EQUAL(str1, str2);
+    CU_ASSERT_PTR_NOT_EQUAL(str1, str2);
 }
 
 void test_string_area_edge(void) {
@@ -57,10 +57,10 @@ void test_string_copy_normal(void) {
     char *str_src2 = "def";
     char *str_dst1 = copy_to_string_area(str_src1);
     CU_ASSERT_PTR_NOT_NULL(str_dst1);
-    CU_ASSERT_NOT_EQUAL(str_src1, str_dst1);
+    CU_ASSERT_PTR_NOT_EQUAL(str_src1, str_dst1);
     CU_ASSERT_STRING_EQUAL(str_src1, str_dst1);
     char *str_dst2 = copy_to_string_area(str_src2);
-    CU_ASSERT_NOT_EQUAL(str_dst1, str_dst2);
+    CU_ASSERT_PTR_NOT_EQUAL(str_dst1, str_dst2);
 }
 
 void test_string_copy_edge(void) {
@@ -90,7 +90,7 @@ void test_float_pool_normal(void) {
     double *f1 = cdouble2float(1.0);
     CU_ASSERT_PTR_NOT_NULL(f1);
     double *f2 = cdouble2float(1.0);
-    CU_ASSERT_NOT_EQUAL(f1, f2);
+    CU_ASSERT_PTR_NOT_EQUAL(f1, f2);
 }
 
 void test_float_pool_edge(void) {

@@ -38,19 +38,19 @@ void test_add_symbol_copy(void) {
     char *str1 = "abc";
     char *sym1 = str2symbol(str1, true);
     CU_ASSERT_PTR_NOT_NULL(sym1);
-    CU_ASSERT_NOT_EQUAL(str1, sym1);
+    CU_ASSERT_PTR_NOT_EQUAL(str1, sym1);
     CU_ASSERT_STRING_EQUAL(str1, sym1);
 
     char *str2 = "abc";
     char *sym2 = str2symbol(str2, true);
-    CU_ASSERT_EQUAL(sym1, sym2);
+    CU_ASSERT_PTR_EQUAL(sym1, sym2);
 }
 
 void test_add_symbol_nocopy(void) {
     char *str1 = "def";
     char *sym1 = str2symbol(str1, false);
     CU_ASSERT_PTR_NOT_NULL(sym1);
-    CU_ASSERT_EQUAL(str1, sym1);
+    CU_ASSERT_PTR_EQUAL(str1, sym1);
 }
 
 void testsuite_adding_symbols(void) {
