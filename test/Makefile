@@ -13,29 +13,33 @@ test: $(TEST_EXECS)
 	$(shell echo $(TEST_EXECS) | sed -e 's| | \&\& ./|g;s|^|./|')
 # foo bar baz -> ./foo && ./bar && ./baz
 
+# Test executables
+
+%: %.c
+	$(CC) $< $(filter %.o,$^) $(TEST_CFLAGS) -o $@
+
 test_mempool: test_mempool.c ../src/mempool.c
-	$(CC) $< $(TEST_CFLAGS) -o $@
 
 test_symbol: test_symbol.c ../src/mempool.c mempool.o
-	$(CC) $< mempool.o $(TEST_CFLAGS) -o $@
 
 test_reader: test_reader.c ../src/reader.c mempool.o symbol.o writer.o
-	$(CC) $< mempool.o symbol.o writer.o $(TEST_CFLAGS) -o $@
 
 test_variable: test_variable.c ../src/variable.c mempool.o symbol.o
-	$(CC) $< mempool.o symbol.o $(TEST_CFLAGS) -o $@
 
 test_functable: test_functable.c ../src/functable.c mempool.o symbol.o
-	$(CC) $< mempool.o symbol.o $(TEST_CFLAGS) -o $@
+
+# Object modules
+
+%.o: ../src/%.c
+	$(CC) -c $(CFLAGS) $< -o $@
 
 mempool.o: ../src/mempool.c ../src/mempool.h
-	$(CC) -c $(CFLAGS) $< -o $@
 
 symbol.o: ../src/symbol.c ../src/symbol.h
-	$(CC) -c $(CFLAGS) $< -o $@
 
 writer.o: writer.c ../src/lispobject.h
-	$(CC) -c $(CFLAGS) $< -o $@
+
+# other
 
 clean:
 	rm -f $(TEST_EXECS) $(OBJS)
