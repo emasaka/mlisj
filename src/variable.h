@@ -2,11 +2,26 @@
 #define _VARIABLE_H
 
 #include "lispobject.h"
+#include "symbol.h"
 
-extern int set_variable(char *, Lisp_Object;
-extern Lisp_Object get_variable(char *);
-extern int save_variable_status(void);
-extern void restore_variable_status(int);
-extern int init_variables(void);
+typedef struct {
+    char *symbol;
+    Lisp_Object value;
+} variable_binding;
+
+typedef struct {
+    variable_binding *variable_stack;
+    int variable_stack_used;
+
+    symbol_pool_t *symbol_pool;
+} variable_pool_t;
+
+extern int set_variable(variable_pool_t *, char *, Lisp_Object);
+extern Lisp_Object get_variable(variable_pool_t *, char *);
+extern int save_variable_status(variable_pool_t *);
+extern void restore_variable_status(variable_pool_t *, int);
+
+extern variable_pool_t *init_variables(symbol_pool_t *);
+extern void end_variables(variable_pool_t *);
 
 #endif /* _VARIABLE_H */
