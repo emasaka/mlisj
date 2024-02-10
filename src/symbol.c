@@ -1,58 +1,77 @@
 #include <string.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include "lispobject.h"
 #include "mempool.h"
+#include "symbol.h"
 
 #define SYMBOL_TABLE_SIZE 256
-
-static char *symbol_table[SYMBOL_TABLE_SIZE];
-
-static int symbol_table_used = 0;
 
 /* reserved symbols */
 char * Symbol_minus = NULL;
 char * Symbol_quote = NULL;
 
 /* linear search, for simplicity */
-char *symbol_table_lookup(char *str) {
-    for (int i = 0; i < symbol_table_used; i++) {
-        if (strcmp(str, symbol_table[i]) == 0) {
-            return symbol_table[i];
+char *symbol_table_lookup(symbol_pool_t *sp, char *str) {
+    for (int i = 0; i < sp->symbol_table_used; i++) {
+        if (strcmp(str, sp->symbol_table[i]) == 0) {
+            return sp->symbol_table[i];
         }
     }
     /* not found */
     return NULL;
 }
 
-char *new_symbol(char*str, bool copy_p) {
-    if (symbol_table_used == SYMBOL_TABLE_SIZE) {
+char *new_symbol(symbol_pool_t *sp, char*str, bool copy_p) {
+    if (sp->symbol_table_used == SYMBOL_TABLE_SIZE) {
         return NULL;
     }
     char *newstr;
     if (copy_p) {
-        newstr =  copy_to_string_area(str);
+        newstr =  copy_to_string_area(sp->mempool, str);
         if (newstr == NULL) { return NULL; }
     } else {
         newstr = str;
     }
-    symbol_table[symbol_table_used++] = newstr;
+    sp->symbol_table[sp->symbol_table_used++] = newstr;
     return newstr;
 }
 
-char *str2symbol(char *str, bool copy_p) {
-    char *p = symbol_table_lookup(str);
+char *str2symbol(symbol_pool_t *sp, char *str, bool copy_p) {
+    char *p = symbol_table_lookup(sp, str);
     if (p) {
         /* already existed */
         return p;
     } else {
-        return new_symbol(str, copy_p);
+        return new_symbol(sp, str, copy_p);
     }
 }
 
-int init_symbol(void) {
-    symbol_table_used = 0;
-    Symbol_minus = str2symbol("-", true);
-    Symbol_quote = str2symbol("quote", true);
-    // return the value of success, just in case
-    return 0;
+void end_symbol(symbol_pool_t *symbol_pool) {
+    if (symbol_pool->symbol_table != NULL) {
+        free(symbol_pool->symbol_table);
+    }
+    free(symbol_pool);
+}
+
+symbol_pool_t *init_symbol(mempool_t *mempool) {
+    symbol_pool_t *symbol_pool = malloc(sizeof(symbol_pool_t));
+    if (symbol_pool == NULL) {
+        return NULL;
+    }
+
+    char **symbol_table = malloc(sizeof(char *) * SYMBOL_TABLE_SIZE);
+    if (symbol_table == NULL) {
+        free(symbol_pool);
+        return NULL;
+    }
+    symbol_pool->symbol_table = symbol_table;
+    symbol_pool->symbol_table_used = 0;
+
+    symbol_pool->mempool = mempool;
+
+    Symbol_minus = str2symbol(symbol_pool, "-", true);
+    Symbol_quote = str2symbol(symbol_pool, "quote", true);
+
+    return symbol_pool;
 }
