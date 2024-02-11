@@ -4,10 +4,34 @@
 #include "../src/symbol.h"
 #include "../src/functable.c"
 
+static func_pool_t *func_pool;
+static symbol_pool_t *symbol_pool;
+static mempool_t *mempool;
+
 int init_for_functabletest(void) {
-    init_mempool();
-    init_symbol();
-    init_func_table();
+    mempool = init_mempool();
+    if (mempool == NULL) {
+        return -1;
+    }
+    symbol_pool = init_symbol(mempool);
+    if (symbol_pool == NULL) {
+        end_mempool(mempool);
+        return -1;
+    }
+    func_pool = init_func_table(symbol_pool);
+    if (func_pool == NULL) {
+        end_symbol(symbol_pool);
+        end_mempool(mempool);
+        return -1;
+    } else {
+        return 0;
+    }
+}
+
+int end_for_functabletest(void) {
+    end_func_table(func_pool);
+    end_symbol(symbol_pool);
+    end_mempool(mempool);
     return 0;
 }
 
@@ -22,31 +46,31 @@ int dummy_func2(int n) {
 void test_functable_found(void) {
     char *str1 = "foo";
     char *str2 = "bar";
-    CU_ASSERT(add_func_from_cstr(str1, dummy_func1) == 0);
-    CU_ASSERT(add_func_from_cstr(str2, dummy_func2) == 0);
+    CU_ASSERT(add_func_from_cstr(func_pool, str1, dummy_func1) == 0);
+    CU_ASSERT(add_func_from_cstr(func_pool, str2, dummy_func2) == 0);
 
-    char *sym1 = str2symbol(str1, true);
-    char *sym2 = str2symbol(str2, true);
+    char *sym1 = str2symbol(func_pool->symbol_pool, str1, true);
+    char *sym2 = str2symbol(func_pool->symbol_pool, str2, true);
     CU_ASSERT_PTR_NOT_NULL(sym1);
     CU_ASSERT_PTR_NOT_NULL(sym2);
 
-    cfunc_t func1 = get_func(sym1);
+    cfunc_t func1 = get_func(func_pool, sym1);
     CU_ASSERT_PTR_NOT_NULL(func1);
     CU_ASSERT_EQUAL((*func1)(3), 4);
 
-    cfunc_t func2 = get_func(sym2);
+    cfunc_t func2 = get_func(func_pool, sym2);
     CU_ASSERT_PTR_NOT_NULL(func2);
     CU_ASSERT_EQUAL((*func2)(3), 5);
 }
 
 void test_functable_notfound(void) {
-    char *sym = str2symbol("baz", true);
+    char *sym = str2symbol(func_pool->symbol_pool, "baz", true);
     CU_ASSERT_PTR_NOT_NULL(sym);
-    CU_ASSERT_PTR_NULL(get_func(sym));
+    CU_ASSERT_PTR_NULL(get_func(func_pool, sym));
 }
 
 void testsuite_functable_set_get(void) {
-    CU_pSuite suite = CU_add_suite("functable_set_get", init_for_functabletest, NULL);
+    CU_pSuite suite = CU_add_suite("functable_set_get", init_for_functabletest, end_for_functabletest);
     CU_add_test(suite, "functable_found", test_functable_found);
     CU_add_test(suite, "functable_notfound", test_functable_notfound);
 }
