@@ -2,7 +2,8 @@
 #define _READER_H
 
 #include "lispobject.h"
+#include "lispenv.h"
 
-extern Lisp_Object reader(char *);
+extern Lisp_Object reader(char *, lispenv_t *);
 
 #endif /* _READER_H */
