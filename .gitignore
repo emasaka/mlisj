@@ -1,7 +1,6 @@
-*
-!*.c
-!*.h
-!*.md
+*~
+*.swp
+/src/*
+/test/*
+!*.[ch]
 !Makefile
-!.gitignore
-!.editorconfig
