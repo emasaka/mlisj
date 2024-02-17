@@ -34,8 +34,8 @@ lispenv_t *init_lispenv(void) {
     }
     env->symbol_pool = symbol_pool;
 
-    env->Symbol_minus = str2symbol(symbol_pool, "-", true);
-    env->Symbol_quote = str2symbol(symbol_pool, "quote", true);
+    env->Symbol_minus = str2symbol(symbol_pool, "-", false);
+    env->Symbol_quote = str2symbol(symbol_pool, "quote", false);
 
     variable_pool_t *variable_pool = init_variables(symbol_pool);
     if (variable_pool == NULL) {
