@@ -1,6 +1,6 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
-#include "../src/reader.c"
+#include "../src/reader.h"
 
 /* from writer.c */
 extern int writer(Lisp_Object, char *);
