@@ -26,28 +26,6 @@ int end_for_symboltest(void) {
 }
 
 /*
-  reserved symbols
- */
-
-void test_symbol_quote(void) {
-    char *q = symbol_table_lookup(symbol_pool, "quote");
-    CU_ASSERT_PTR_NOT_NULL(q);
-    CU_ASSERT_STRING_EQUAL(q, "quote");
-}
-
-void test_symbol_minus(void) {
-    char *m = symbol_table_lookup(symbol_pool, "-");
-    CU_ASSERT_PTR_NOT_NULL(m);
-    CU_ASSERT_STRING_EQUAL(m, "-");
-}
-
-void testsuite_reserved_symbols(void) {
-    CU_pSuite suite = CU_add_suite("reserved_symbols_test", init_for_symboltest, end_for_symboltest);
-    CU_add_test(suite, "symbol_quote", test_symbol_quote);
-    CU_add_test(suite, "symbol_minus", test_symbol_minus);
-}
-
-/*
   adding symbols
  */
 
@@ -100,7 +78,6 @@ void testsuite_symbols_edge(void) {
 int main(void) {
     CU_initialize_registry();
 
-    testsuite_reserved_symbols();
     testsuite_adding_symbols();
     testsuite_symbols_edge();
 

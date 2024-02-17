@@ -7,10 +7,6 @@
 
 #define SYMBOL_TABLE_SIZE 256
 
-/* reserved symbols */
-char * Symbol_minus = NULL;
-char * Symbol_quote = NULL;
-
 /* linear search, for simplicity */
 char *symbol_table_lookup(symbol_pool_t *sp, char *str) {
     for (int i = 0; i < sp->symbol_table_used; i++) {
@@ -69,9 +65,6 @@ symbol_pool_t *init_symbol(mempool_t *mempool) {
     symbol_pool->symbol_table_used = 0;
 
     symbol_pool->mempool = mempool;
-
-    Symbol_minus = str2symbol(symbol_pool, "-", true);
-    Symbol_quote = str2symbol(symbol_pool, "quote", true);
 
     return symbol_pool;
 }

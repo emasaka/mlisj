@@ -3,7 +3,7 @@ CC := gcc
 CFLAGS := -W -Wall -fsanitize=address -static-libasan
 TEST_CFLAGS := $(CFLAGS) -lcunit
 
-TEST_EXECS := test_mempool test_symbol test_variable test_functable test_reader
+TEST_EXECS := test_mempool test_symbol test_variable test_functable test_lispenv test_reader
 OBJS := mempool.o symbol.o variable.o functable.o lispenv.o writer.o
 
 .DEFAULT_GOAL := test
@@ -26,6 +26,8 @@ test_symbol: test_symbol.c ../src/symbol.c mempool.o ../src/lispobject.h ../src/
 test_variable: test_variable.c ../src/variable.c mempool.o symbol.o ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h
 
 test_functable: test_functable.c ../src/functable.c mempool.o symbol.o ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/functable.h
+
+test_lispenv: ../src/lispenv.c mempool.o symbol.o variable.o functable.o ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h ../src/lispenv.h
 
 test_reader: test_reader.c ../src/reader.c mempool.o symbol.o variable.o functable.o lispenv.o writer.o ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h ../src/lispenv.h
 

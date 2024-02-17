@@ -12,6 +12,10 @@ typedef struct {
     symbol_pool_t *symbol_pool;
     variable_pool_t *variable_pool;
     func_pool_t *func_pool;
+
+    /* reserved symbols */
+    char * Symbol_minus;
+    char * Symbol_quote;
 } lispenv_t;
 
 extern lispenv_t *init_lispenv(void);

@@ -22,7 +22,7 @@ Lisp_Object reader_minus_hash(reader_context *c, char *str) {
     if (sym == NULL ) { return MEMORY_ERROR_VAL; }
     NArray *ary = new_narray(c->env->mempool, 2);
     if (ary == NULL ) { return MEMORY_ERROR_VAL; }
-    ary->data[0] = (Lisp_Object){ .type = Lisp_Symbol, .val.sval = Symbol_minus };
+    ary->data[0] = (Lisp_Object){ .type = Lisp_Symbol, .val.sval = c->env->Symbol_minus };
     ary->data[1] = (Lisp_Object){ .type = Lisp_Symbol, .val.sval = sym };
     return (Lisp_Object){ .type = Lisp_CList, .val.aval = ary };
 }
@@ -174,7 +174,7 @@ Lisp_Object reader_quoted(reader_context *c) {
     if (v.type == Internal_Error ) { return v; }
     NArray *ary = new_narray(c->env->mempool, 2);
     if (ary == NULL ) { return MEMORY_ERROR_VAL; }
-    ary->data[0] = (Lisp_Object){ .type = Lisp_Symbol, .val.sval = Symbol_quote};
+    ary->data[0] = (Lisp_Object){ .type = Lisp_Symbol, .val.sval = c->env->Symbol_quote};
     ary->data[1] = v;
     return (Lisp_Object){ .type = Lisp_CList, .val.aval = ary };
 }
