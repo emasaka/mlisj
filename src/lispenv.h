@@ -16,6 +16,7 @@ typedef struct {
     /* reserved symbols */
     char * Symbol_minus;
     char * Symbol_quote;
+    char * Symbol_lambda;
 } lispenv_t;
 
 extern lispenv_t *init_lispenv(void);

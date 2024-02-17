@@ -17,7 +17,8 @@ enum Lisp_Type {
 enum Internal_Error_Type {
     Memory_Error,
     Reader_Error,
-    Variable_Error
+    Variable_Error,
+    Evaluation_Error
 };
 
 struct _Narray;                 /* prototype declaration */
@@ -31,9 +32,6 @@ typedef struct _Lisp_Object {
         char *sval;             /* Lisp_String, Lisp_Symbol */
         struct _NArray *aval;   /* Lisp_CList */
         enum Internal_Error_Type err; /* Internal_Error */
-
-        /* TODO: C functions */
-
     } val;
     enum Lisp_Type type;
 } Lisp_Object;

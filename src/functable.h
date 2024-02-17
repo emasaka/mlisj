@@ -1,7 +1,7 @@
 #ifndef _FUNCTABLE_H
 #define _FUNCTABLE_H
 
-typedef int (*cfunc_t)();
+typedef Lisp_Object (*cfunc_t)();
 
 typedef struct {
     char *symbol;

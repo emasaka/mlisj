@@ -35,12 +35,12 @@ int end_for_functabletest(void) {
     return 0;
 }
 
-int dummy_func1(int n) {
-    return n + 1;
+Lisp_Object dummy_func1(int n) {
+    return (Lisp_Object){ .type = Lisp_Int, .val.ival = n + 1 };
 }
 
-int dummy_func2(int n) {
-    return n + 2;
+Lisp_Object dummy_func2(int n) {
+    return (Lisp_Object){ .type = Lisp_Int, .val.ival = n + 2 };
 }
 
 void test_functable_found(void) {
@@ -56,11 +56,11 @@ void test_functable_found(void) {
 
     cfunc_t func1 = get_func(func_pool, sym1);
     CU_ASSERT_PTR_NOT_NULL(func1);
-    CU_ASSERT_EQUAL((*func1)(3), 4);
+    CU_ASSERT_EQUAL(func1(3).val.ival, 4);
 
     cfunc_t func2 = get_func(func_pool, sym2);
     CU_ASSERT_PTR_NOT_NULL(func2);
-    CU_ASSERT_EQUAL((*func2)(3), 5);
+    CU_ASSERT_EQUAL(func2(3).val.ival, 5);
 }
 
 void test_functable_notfound(void) {
