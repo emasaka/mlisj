@@ -10,14 +10,14 @@ typedef struct {
     lispenv_t *env;
 } reader_context;
 
-Lisp_Object reader_sexp(reader_context *); /* prototype declaration */
+static Lisp_Object reader_sexp(reader_context *); /* prototype declaration */
 
 #define READER_ERROR_VAL ((Lisp_Object){ .type = Internal_Error, .val.err = Reader_Error })
 #define MEMORY_ERROR_VAL ((Lisp_Object){ .type = Internal_Error, .val.err = Memory_Error })
 #define NIL_VAL ((Lisp_Object) { .type = Lisp_Nil, .val.ival = 0 })
 
 /* workaround: "-#0" -> (- #0) */
-Lisp_Object reader_minus_hash(reader_context *c, char *str) {
+static Lisp_Object reader_minus_hash(reader_context *c, char *str) {
     char *sym = str2symbol(c->env->symbol_pool, str + 1, true);
     if (sym == NULL ) { return MEMORY_ERROR_VAL; }
     NArray *ary = new_narray(c->env->mempool, 2);
@@ -28,7 +28,7 @@ Lisp_Object reader_minus_hash(reader_context *c, char *str) {
 }
 
 /* parse number, or return nil */
-Lisp_Object reader_check_number(reader_context *c, char *str) {
+static Lisp_Object reader_check_number(reader_context *c, char *str) {
     /* XXX: only dicimal integer (and num-list) is supported */
     int minus = 1;
     char *p = str;
@@ -54,7 +54,7 @@ Lisp_Object reader_check_number(reader_context *c, char *str) {
     return (Lisp_Object){ .type = Lisp_Int, .val.ival = n * minus };
 }
 
-Lisp_Object reader_maybe_symbol(reader_context *c) {
+static Lisp_Object reader_maybe_symbol(reader_context *c) {
     char buffer[READER_BUFSIZE];
     char *p = buffer;
     for (int i = 0; i < READER_BUFSIZE; i++) {
@@ -90,7 +90,7 @@ Lisp_Object reader_maybe_symbol(reader_context *c) {
     return READER_ERROR_VAL;
 }
 
-Lisp_Object reader_char(reader_context *c) {
+static Lisp_Object reader_char(reader_context *c) {
     /* XXX: escapes in character is not supported */
     /* XXX: multibyte character is not supported */
     c->ptr++;
@@ -98,7 +98,7 @@ Lisp_Object reader_char(reader_context *c) {
     return (Lisp_Object){ .type = Lisp_Int, .val.ival = *(c->ptr++) };
 }
 
-Lisp_Object reader_string(reader_context *c) {
+static Lisp_Object reader_string(reader_context *c) {
     /* XXX: "\x<hex>" and "\u<code>" are not supported */
     /* XXX: escaping multibyte character is not supported (maybe no problem) */
     c->ptr++;
@@ -142,7 +142,7 @@ Lisp_Object reader_string(reader_context *c) {
     return READER_ERROR_VAL;
 }
 
-Lisp_Object reader_list(reader_context *c) {
+static Lisp_Object reader_list(reader_context *c) {
     Lisp_Object buffer[READER_ARRAY_BUFSIZE];
     int buffer_used = 0;
     c->ptr++;
@@ -168,7 +168,7 @@ Lisp_Object reader_list(reader_context *c) {
     return READER_ERROR_VAL;
 }
 
-Lisp_Object reader_quoted(reader_context *c) {
+static Lisp_Object reader_quoted(reader_context *c) {
     c->ptr++;
     Lisp_Object v = reader_sexp(c);
     if (v.type == Internal_Error ) { return v; }
@@ -179,7 +179,7 @@ Lisp_Object reader_quoted(reader_context *c) {
     return (Lisp_Object){ .type = Lisp_CList, .val.aval = ary };
 }
 
-Lisp_Object reader_sexp(reader_context *c) {
+static Lisp_Object reader_sexp(reader_context *c) {
     while (isspace(c->ptr[0])) { c->ptr++; }
     if (c->ptr[0] == '\0') {
         return READER_ERROR_VAL;

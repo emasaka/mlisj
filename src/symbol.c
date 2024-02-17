@@ -18,7 +18,7 @@ char *symbol_table_lookup(symbol_pool_t *sp, char *str) {
     return NULL;
 }
 
-char *new_symbol(symbol_pool_t *sp, char*str, bool copy_p) {
+static char *new_symbol(symbol_pool_t *sp, char*str, bool copy_p) {
     if (sp->symbol_table_used == SYMBOL_TABLE_SIZE) {
         return NULL;
     }
