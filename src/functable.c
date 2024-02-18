@@ -16,8 +16,8 @@ int add_func(func_pool_t *fp, char *sym, cfunc_t func) {
     }
 }
 
-int add_func_from_cstr(func_pool_t *fp, char *str, cfunc_t func) {
-    char *sym = str2symbol(fp->symbol_pool, str, true);
+int add_func_from_cstr(func_pool_t *fp, char *str, cfunc_t func, bool copy_p) {
+    char *sym = str2symbol(fp->symbol_pool, str, copy_p);
     if (sym == NULL) { return -1; }
     return add_func(fp, sym, func);
 }

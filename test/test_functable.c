@@ -46,8 +46,8 @@ Lisp_Object dummy_func2(int n) {
 void test_functable_found(void) {
     char *str1 = "foo";
     char *str2 = "bar";
-    CU_ASSERT(add_func_from_cstr(func_pool, str1, dummy_func1) == 0);
-    CU_ASSERT(add_func_from_cstr(func_pool, str2, dummy_func2) == 0);
+    CU_ASSERT(add_func_from_cstr(func_pool, str1, dummy_func1, true) == 0);
+    CU_ASSERT(add_func_from_cstr(func_pool, str2, dummy_func2, true) == 0);
 
     char *sym1 = str2symbol(func_pool->symbol_pool, str1, true);
     char *sym2 = str2symbol(func_pool->symbol_pool, str2, true);

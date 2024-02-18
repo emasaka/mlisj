@@ -1,6 +1,8 @@
 #ifndef _FUNCTABLE_H
 #define _FUNCTABLE_H
 
+#include <stdbool.h>
+
 typedef Lisp_Object (*cfunc_t)();
 
 typedef struct {
@@ -16,7 +18,7 @@ typedef struct {
 } func_pool_t;
 
 extern int add_func(func_pool_t *, char *, cfunc_t);
-extern int add_func_from_cstr(func_pool_t *, char *, cfunc_t);
+extern int add_func_from_cstr(func_pool_t *, char *, cfunc_t, bool);
 extern cfunc_t get_func(func_pool_t *, char *);
 
 extern func_pool_t *init_func_table(symbol_pool_t *);
