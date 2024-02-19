@@ -15,7 +15,6 @@ static Lisp_Object reader_sexp(reader_context *); /* prototype declaration */
 
 #define READER_ERROR_VAL ((Lisp_Object){ .type = Internal_Error, .val.err = Reader_Error })
 #define MEMORY_ERROR_VAL ((Lisp_Object){ .type = Internal_Error, .val.err = Memory_Error })
-#define NIL_VAL ((Lisp_Object) { .type = Lisp_Nil, .val.ival = 0 })
 
 /* workaround: "-#0" -> (- #0) */
 static Lisp_Object reader_minus_hash(reader_context *c, char *str) {
@@ -38,7 +37,7 @@ static Lisp_Object reader_check_intnum(reader_context *c, char *str) {
             /* example: "-#0" */
             return reader_minus_hash(c, str);
         } else if (str[1] == '\0') {
-            return NIL_VAL;
+            return LISP_NIL;
         } else {
             minus = -1;
             p++;
@@ -51,10 +50,10 @@ static Lisp_Object reader_check_intnum(reader_context *c, char *str) {
             p++;
         } else {
             /* not a number */
-            return NIL_VAL;
+            return LISP_NIL;
         }
     }
-    return (Lisp_Object){ .type = Lisp_Int, .val.ival = n * minus };
+    return LISP_INT(n * minus);
 }
 
 /* parse float number, or return nil */
@@ -62,7 +61,7 @@ static Lisp_Object reader_check_floatnum(reader_context *c, char *str) {
     char *endptr;
     double fnum = strtod(str, &endptr);
     if (*endptr != '\0') {
-        return NIL_VAL;
+        return LISP_NIL;
     }
     double *flt = cdouble2float(c->env->mempool, fnum);
     if (flt == NULL) {
@@ -94,7 +93,7 @@ static Lisp_Object reader_maybe_symbol(reader_context *c) {
 
             /* nil? */
             if (strcmp(buffer, "nil") == 0) {
-                return NIL_VAL;
+                return LISP_NIL;
             }
 
             /* returns a symbol */
@@ -118,7 +117,7 @@ static Lisp_Object reader_char(reader_context *c) {
     /* XXX: multibyte character is not supported */
     c->ptr++;
     if (*(c->ptr) == '\0') { return READER_ERROR_VAL; }
-    return (Lisp_Object){ .type = Lisp_Int, .val.ival = *(c->ptr++) };
+    return LISP_INT(*(c->ptr++));
 }
 
 static Lisp_Object reader_string(reader_context *c) {

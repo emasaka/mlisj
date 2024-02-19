@@ -36,4 +36,8 @@ typedef struct _Lisp_Object {
     enum Lisp_Type type;
 } Lisp_Object;
 
+
+#define LISP_INT(n) ((Lisp_Object){ .type = Lisp_Int, .val.ival = (n) })
+#define LISP_NIL ((Lisp_Object) { .type = Lisp_Nil, .val.ival = 0 })
+
 #endif /* _LISPOBJECT_H */

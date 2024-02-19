@@ -12,7 +12,7 @@
 static Lisp_Object minus_onearg(NArray *args, lispenv_t *env) {
     /* (- x) -> -x */
     if (args->data[0].type == Lisp_Int) {
-        return (Lisp_Object){ .type = Lisp_Int, .val.ival = -(args->data[0].val.ival) };
+        return LISP_INT(-(args->data[0].val.ival));
     } else if (args->data[0].type == Lisp_Float) {
         double *flt = cdouble2float(env->mempool, -(*(args->data[0].val.fval)));
         if (flt == NULL) {
@@ -67,7 +67,7 @@ static Lisp_Object minus_multiarg(NArray *args, lispenv_t *env) {
             return (Lisp_Object){ .type = Lisp_Float, .val.fval = flt };
         }
     } else {
-        return (Lisp_Object){ .type = Lisp_Int, .val.ival = r_int };
+        return LISP_INT(r_int);
     }
 
 }
@@ -75,7 +75,7 @@ static Lisp_Object minus_multiarg(NArray *args, lispenv_t *env) {
 Lisp_Object f_minus(NArray *args, lispenv_t *env) {
     if (args->size == 0) {
         /* (-) -> 0 */
-        return (Lisp_Object){ .type = Lisp_Int, .val.ival = 0 };
+        return LISP_INT(0);
     } else if (args->size == 1) {
         return minus_onearg(args, env);
     } else {

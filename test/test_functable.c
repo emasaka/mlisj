@@ -36,11 +36,11 @@ int end_for_functabletest(void) {
 }
 
 Lisp_Object dummy_func1(int n) {
-    return (Lisp_Object){ .type = Lisp_Int, .val.ival = n + 1 };
+    return LISP_INT(n + 1);
 }
 
 Lisp_Object dummy_func2(int n) {
-    return (Lisp_Object){ .type = Lisp_Int, .val.ival = n + 2 };
+    return LISP_INT(n + 2);
 }
 
 void test_functable_found(void) {

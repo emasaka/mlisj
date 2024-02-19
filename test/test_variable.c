@@ -41,8 +41,8 @@ void test_variable_found(void) {
     CU_ASSERT_PTR_NOT_NULL(sym1);
     CU_ASSERT_PTR_NOT_NULL(sym2);
 
-    CU_ASSERT(set_variable(variable_pool, sym1, (Lisp_Object){ .type = Lisp_Int, .val.ival = 31 }) == 0);
-    CU_ASSERT(set_variable(variable_pool, sym2, (Lisp_Object){ .type = Lisp_Nil, .val.ival = 0 }) == 0);
+    CU_ASSERT(set_variable(variable_pool, sym1, LISP_INT(31)) == 0);
+    CU_ASSERT(set_variable(variable_pool, sym2, LISP_NIL) == 0);
 
     Lisp_Object val1 = get_variable(variable_pool, sym1);
     CU_ASSERT_EQUAL(val1.type, Lisp_Int);
@@ -69,9 +69,9 @@ void test_variable_stack_frame(void) {
     char *sym = str2symbol(symbol_pool, "hoge", true);
     CU_ASSERT_PTR_NOT_NULL(sym);
 
-    CU_ASSERT(set_variable(variable_pool, sym, (Lisp_Object){ .type = Lisp_Int, .val.ival = 31 }) == 0);
+    CU_ASSERT(set_variable(variable_pool, sym, LISP_INT(31)) == 0);
     int st = save_variable_status(variable_pool);
-    CU_ASSERT(set_variable(variable_pool, sym, (Lisp_Object){ .type = Lisp_Nil, .val.ival = 0 }) == 0);
+    CU_ASSERT(set_variable(variable_pool, sym, LISP_NIL) == 0);
 
     Lisp_Object val1 = get_variable(variable_pool, sym);
     CU_ASSERT_EQUAL(val1.type, Lisp_Nil);
