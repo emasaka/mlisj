@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h>
 # include "lispenv.h"
 
 #define READER_BUFSIZE 512
@@ -27,8 +28,8 @@ static Lisp_Object reader_minus_hash(reader_context *c, char *str) {
     return (Lisp_Object){ .type = Lisp_CList, .val.aval = ary };
 }
 
-/* parse number, or return nil */
-static Lisp_Object reader_check_number(reader_context *c, char *str) {
+/* parse integer number, or return nil */
+static Lisp_Object reader_check_intnum(reader_context *c, char *str) {
     /* XXX: only dicimal integer (and num-list) is supported */
     int minus = 1;
     char *p = str;
@@ -56,6 +57,20 @@ static Lisp_Object reader_check_number(reader_context *c, char *str) {
     return (Lisp_Object){ .type = Lisp_Int, .val.ival = n * minus };
 }
 
+/* parse float number, or return nil */
+static Lisp_Object reader_check_floatnum(reader_context *c, char *str) {
+    char *endptr;
+    double fnum = strtod(str, &endptr);
+    if (*endptr != '\0') {
+        return NIL_VAL;
+    }
+    double *flt = cdouble2float(c->env->mempool, fnum);
+    if (flt == NULL) {
+        return MEMORY_ERROR_VAL;
+    }
+    return (Lisp_Object){ .type = Lisp_Float, .val.fval = flt };
+}
+
 static Lisp_Object reader_maybe_symbol(reader_context *c) {
     char buffer[READER_BUFSIZE];
     char *p = buffer;
@@ -65,10 +80,16 @@ static Lisp_Object reader_maybe_symbol(reader_context *c) {
         if (isspace(ch) || (ch == '(') || (ch == ')') || (ch == '\"') || (ch == '\'') || (ch == '\0')) {
             *p = '\0';
 
-            /* number? */
-            Lisp_Object n = reader_check_number(c, buffer);
+            /* integer number? */
+            Lisp_Object n = reader_check_intnum(c, buffer);
             if (n.type != Lisp_Nil) {
                 return n;
+            }
+
+            /* float number? */
+            Lisp_Object fnum = reader_check_floatnum(c, buffer);
+            if (fnum.type == Lisp_Float) {
+                return fnum;
             }
 
             /* nil? */

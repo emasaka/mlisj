@@ -52,11 +52,18 @@ void test_reader_char(void) {
     CU_ASSERT_STRING_EQUAL(tmp_buf, "97");
 }
 
+void test_reader_floatnum(void) {
+    Lisp_Object obj = reader("3.0", lisp_env);
+    CU_ASSERT_EQUAL(obj.type, Lisp_Float);
+    CU_ASSERT_DOUBLE_EQUAL(*(obj.val.fval), 3.0, 1e-10);
+}
+
 void testsuite_reader_number(void) {
     CU_pSuite suite = CU_add_suite("reader_number", init_for_readertest, end_for_readertest);
     CU_add_test(suite, "reader_positive_int", test_reader_positive_int);
     CU_add_test(suite, "reader_negative_int", test_reader_negative_int);
     CU_add_test(suite, "reader_char", test_reader_char);
+    CU_add_test(suite, "reader_floatnum", test_reader_floatnum);
 }
 
 /*
