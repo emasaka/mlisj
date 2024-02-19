@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "lispenv.h"
+#include "func-simple.h"
 
 void end_lispenv(lispenv_t *env) {
     if (env->func_pool != NULL) { end_func_table(env->func_pool); }
@@ -10,10 +11,10 @@ void end_lispenv(lispenv_t *env) {
 }
 
 lispenv_t *init_lispenv(void) {
+#define END_AND_RETURN_NULL(e) { end_lispenv(e); return NULL; }
+
     lispenv_t *env = malloc(sizeof(lispenv_t));
-    if (env == NULL) {
-        return NULL;
-    }
+    if (env == NULL) { return NULL; }
 
     env->mempool = NULL;
     env->symbol_pool = NULL;
@@ -21,17 +22,12 @@ lispenv_t *init_lispenv(void) {
     env->func_pool = NULL;
 
     mempool_t *mempool = init_mempool();
-    if (mempool == NULL) {
-        end_lispenv(env);
-        return NULL;
-    }
+    if (mempool == NULL) { END_AND_RETURN_NULL(env); }
     env->mempool = mempool;
 
     symbol_pool_t *symbol_pool = init_symbol(mempool);
-    if (symbol_pool == NULL) {
-        end_lispenv(env);
-        return NULL;
-    }
+    if (symbol_pool == NULL) { END_AND_RETURN_NULL(env); }
+
     env->symbol_pool = symbol_pool;
 
     env->Symbol_minus = str2symbol(symbol_pool, "-", false);
@@ -39,18 +35,16 @@ lispenv_t *init_lispenv(void) {
     env->Symbol_lambda = str2symbol(symbol_pool, "lambda", false);
 
     variable_pool_t *variable_pool = init_variables(symbol_pool);
-    if (variable_pool == NULL) {
-        end_lispenv(env);
-        return NULL;
-    }
+    if (variable_pool == NULL) { END_AND_RETURN_NULL(env); }
     env->variable_pool = variable_pool;
 
     func_pool_t *func_pool = init_func_table(symbol_pool);
-    if (func_pool == NULL) {
-        end_lispenv(env);
-        return NULL;
-    }
+    if (func_pool == NULL) { END_AND_RETURN_NULL(env); }
     env->func_pool = func_pool;
 
+    int r = register_func_simple(func_pool);
+    if (r != 0) { END_AND_RETURN_NULL(env); }
+
     return env;
+#undef END_AND_RETURN_NULL
 }
