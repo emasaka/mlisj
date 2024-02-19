@@ -36,6 +36,8 @@ static Lisp_Object reader_check_number(reader_context *c, char *str) {
         if (str[1] == '#') {
             /* example: "-#0" */
             return reader_minus_hash(c, str);
+        } else if (str[1] == '\0') {
+            return NIL_VAL;
         } else {
             minus = -1;
             p++;

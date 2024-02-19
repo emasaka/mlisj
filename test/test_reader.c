@@ -65,10 +65,16 @@ void testsuite_reader_number(void) {
 
 void test_reader_symbol(void) {
     char tmp_buf[TMP_BUFFSIZE];
-    Lisp_Object obj = reader("foo", lisp_env);
-    CU_ASSERT_EQUAL(obj.type, Lisp_Symbol);
-    CU_ASSERT(writer(obj, tmp_buf) == 0);
+
+    Lisp_Object obj1 = reader("foo", lisp_env);
+    CU_ASSERT_EQUAL(obj1.type, Lisp_Symbol);
+    CU_ASSERT(writer(obj1, tmp_buf) == 0);
     CU_ASSERT_STRING_EQUAL(tmp_buf, "foo");
+
+    Lisp_Object obj2 = reader("-", lisp_env);
+    CU_ASSERT_EQUAL(obj2.type, Lisp_Symbol);
+    CU_ASSERT(writer(obj2, tmp_buf) == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "-");
 }
 
 void testsuite_reader_symbol(void) {
