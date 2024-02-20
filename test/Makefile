@@ -56,7 +56,7 @@ eval.o: ../src/eval.c  ../src/eval.h ../src/lispobject.h ../src/mempool.h ../src
 
 func-simple.o: ../src/func-simple.c ../src/eval.h ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h ../src/lispenv.h ../src/reader.h
 
-writer.o: writer.c ../src/lispobject.h ../src/mempool.h
+writer.o: helper/writer.c ../src/lispobject.h ../src/mempool.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 # other
