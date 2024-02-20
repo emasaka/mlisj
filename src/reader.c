@@ -17,25 +17,25 @@ static Lisp_Object reader_sexp(reader_context *); /* prototype declaration */
 #define MEMORY_ERROR_VAL ((Lisp_Object){ .type = Internal_Error, .val.err = Memory_Error })
 
 /* workaround: "-#0" -> (- #0) */
-static Lisp_Object reader_minus_hash(reader_context *c, char *str) {
-    char *sym = str2symbol(c->env->symbol_pool, str + 1, true);
+static Lisp_Object reader_minus_hash(char *str, lispenv_t *env) {
+    char *sym = str2symbol(env->symbol_pool, str + 1, true);
     if (sym == NULL ) { return MEMORY_ERROR_VAL; }
-    NArray *ary = new_narray(c->env->mempool, 2);
+    NArray *ary = new_narray(env->mempool, 2);
     if (ary == NULL ) { return MEMORY_ERROR_VAL; }
-    ary->data[0] = (Lisp_Object){ .type = Lisp_Symbol, .val.sval = c->env->Symbol_minus };
+    ary->data[0] = (Lisp_Object){ .type = Lisp_Symbol, .val.sval = env->Symbol_minus };
     ary->data[1] = (Lisp_Object){ .type = Lisp_Symbol, .val.sval = sym };
     return (Lisp_Object){ .type = Lisp_CList, .val.aval = ary };
 }
 
 /* parse integer number, or return nil */
-static Lisp_Object reader_check_intnum(reader_context *c, char *str) {
+static Lisp_Object reader_check_intnum(char *str, lispenv_t *env) {
     /* XXX: only dicimal integer (and num-list) is supported */
     int minus = 1;
     char *p = str;
     if (str[0] == '-') {
         if (str[1] == '#') {
             /* example: "-#0" */
-            return reader_minus_hash(c, str);
+            return reader_minus_hash(str, env);
         } else if (str[1] == '\0') {
             return LISP_NIL;
         } else {
@@ -57,13 +57,13 @@ static Lisp_Object reader_check_intnum(reader_context *c, char *str) {
 }
 
 /* parse float number, or return nil */
-static Lisp_Object reader_check_floatnum(reader_context *c, char *str) {
+static Lisp_Object reader_check_floatnum(char *str, lispenv_t *env) {
     char *endptr;
     double fnum = strtod(str, &endptr);
     if (*endptr != '\0') {
         return LISP_NIL;
     }
-    double *flt = cdouble2float(c->env->mempool, fnum);
+    double *flt = cdouble2float(env->mempool, fnum);
     if (flt == NULL) {
         return MEMORY_ERROR_VAL;
     }
@@ -80,13 +80,13 @@ static Lisp_Object reader_maybe_symbol(reader_context *c) {
             *p = '\0';
 
             /* integer number? */
-            Lisp_Object n = reader_check_intnum(c, buffer);
+            Lisp_Object n = reader_check_intnum(buffer, c->env);
             if (n.type != Lisp_Nil) {
                 return n;
             }
 
             /* float number? */
-            Lisp_Object fnum = reader_check_floatnum(c, buffer);
+            Lisp_Object fnum = reader_check_floatnum(buffer, c->env);
             if (fnum.type == Lisp_Float) {
                 return fnum;
             }
