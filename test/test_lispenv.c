@@ -1,6 +1,6 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
-#include "../src/lispenv.c"
+#include "../src/lispenv.h"
 
 static lispenv_t *lisp_env;
 

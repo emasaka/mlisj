@@ -11,13 +11,16 @@ OBJS := mempool.o symbol.o variable.o functable.o lispenv.o reader.o eval.o func
 .PHONY: test clean
 
 test: $(TEST_EXECS)
-	$(shell echo $(TEST_EXECS) | sed -e 's| | \&\& ./|g;s|^|./|')
+		$(shell echo $(TEST_EXECS) | sed -e 's| | \&\& ./|g;s|^|./|')
 # foo bar baz -> ./foo && ./bar && ./baz
 
 # Test executables
 
 %: %.c
 	$(CC) $< $(filter %.o,$^) $(TEST_CFLAGS) -o $@
+
+LISPENV_H_AND_DEPS := ../src/lispenv.h ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h
+LISPENV_O_AND_DEPS :=  lispenv.o mempool.o symbol.o variable.o functable.o func-simple.o
 
 test_mempool: test_mempool.c ../src/mempool.c ../src/lispobject.h ../src/mempool.h
 
@@ -27,13 +30,13 @@ test_variable: test_variable.c ../src/variable.c mempool.o symbol.o ../src/lispo
 
 test_functable: test_functable.c ../src/functable.c mempool.o symbol.o ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/functable.h
 
-test_lispenv: ../src/lispenv.c mempool.o symbol.o variable.o functable.o func-simple.o ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h ../src/lispenv.h
+test_lispenv: test_lispenv.c $(LISPENV_O_AND_DEPS) $(LISPENV_H_AND_DEPS) ../src/func-simple.h
 
-test_reader: test_reader.c reader.o mempool.o symbol.o variable.o functable.o lispenv.o func-simple.o writer.o ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h ../src/lispenv.h
+test_reader: test_reader.c reader.o writer.o $(LISPENV_O_AND_DEPS) $(LISPENV_H_AND_DEPS)
 
-test_eval: test_eval.c eval.o reader.o mempool.o symbol.o variable.o functable.o lispenv.o func-simple.o writer.o ../src/eval.h ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h ../src/lispenv.h ../src/reader.h ../src/eval.h
+test_eval: test_eval.c eval.o reader.o writer.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
 
-test_func-simple: test_func-simple.c func-simple.o eval.o reader.o mempool.o symbol.o variable.o functable.o lispenv.o eval.o writer.o ../src/eval.h ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h ../src/lispenv.h ../src/reader.h ../src/eval.h
+test_func-simple: test_func-simple.c func-simple.o eval.o reader.o writer.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h  $(LISPENV_H_AND_DEPS)
 
 # Object modules
 
@@ -48,13 +51,13 @@ variable.o: ../src/variable.c ../src/lispobject.h ../src/mempool.h ../src/symbol
 
 functable.o: ../src/variable.c ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/functable.h
 
-lispenv.o: ../src/lispenv.c ../src/lispenv.h ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h
+lispenv.o: ../src/lispenv.c $(LISPENV_H_AND_DEPS) ../src/func-simple.h
 
-reader.o: ../src/reader.c ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h ../src/lispenv.h
+reader.o: ../src/reader.c $(LISPENV_H_AND_DEPS)
 
-eval.o: ../src/eval.c  ../src/eval.h ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h ../src/lispenv.h ../src/reader.h
+eval.o: ../src/eval.c  ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
 
-func-simple.o: ../src/func-simple.c ../src/eval.h ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h ../src/lispenv.h ../src/reader.h
+func-simple.o: ../src/func-simple.c ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
 
 writer.o: helper/writer.c ../src/lispobject.h ../src/mempool.h
 	$(CC) -c $(CFLAGS) $< -o $@
