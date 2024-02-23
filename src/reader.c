@@ -13,15 +13,12 @@ typedef struct {
 
 static Lisp_Object reader_sexp(reader_context *); /* prototype declaration */
 
-#define READER_ERROR_VAL ((Lisp_Object){ .type = Internal_Error, .val.err = Reader_Error })
-#define MEMORY_ERROR_VAL ((Lisp_Object){ .type = Internal_Error, .val.err = Memory_Error })
-
 /* workaround: "-#0" -> (- #0) */
 static Lisp_Object reader_minus_hash(char *str, lispenv_t *env) {
     char *sym = str2symbol(env->symbol_pool, str + 1, true);
-    if (sym == NULL ) { return MEMORY_ERROR_VAL; }
+    if (sym == NULL ) { return LISP_ERROR(Memory_Error); }
     NArray *ary = new_narray(env->mempool, 2);
-    if (ary == NULL ) { return MEMORY_ERROR_VAL; }
+    if (ary == NULL ) { return LISP_ERROR(Memory_Error); }
     ary->data[0] = (Lisp_Object){ .type = Lisp_Symbol, .val.sval = env->Symbol_minus };
     ary->data[1] = (Lisp_Object){ .type = Lisp_Symbol, .val.sval = sym };
     return (Lisp_Object){ .type = Lisp_CList, .val.aval = ary };
@@ -65,7 +62,7 @@ static Lisp_Object reader_check_floatnum(char *str, lispenv_t *env) {
     }
     double *flt = cdouble2float(env->mempool, fnum);
     if (flt == NULL) {
-        return MEMORY_ERROR_VAL;
+        return LISP_ERROR(Memory_Error);
     }
     return (Lisp_Object){ .type = Lisp_Float, .val.fval = flt };
 }
@@ -99,7 +96,7 @@ static Lisp_Object reader_maybe_symbol(reader_context *c) {
             /* returns a symbol */
             char *sym = str2symbol(c->env->symbol_pool, buffer, true);
             if (sym == NULL) {
-                return MEMORY_ERROR_VAL;
+                return LISP_ERROR(Memory_Error);
             } else {
                 return (Lisp_Object){ .type = Lisp_Symbol, .val.sval = sym };
             }
@@ -109,14 +106,14 @@ static Lisp_Object reader_maybe_symbol(reader_context *c) {
         }
     }
     /* too long */
-    return READER_ERROR_VAL;
+    return LISP_ERROR(Reader_Error);
 }
 
 static Lisp_Object reader_char(reader_context *c) {
     /* XXX: escapes in character is not supported */
     /* XXX: multibyte character is not supported */
     c->ptr++;
-    if (*(c->ptr) == '\0') { return READER_ERROR_VAL; }
+    if (*(c->ptr) == '\0') { return LISP_ERROR(Reader_Error); }
     return LISP_INT(*(c->ptr++));
 }
 
@@ -139,29 +136,29 @@ static Lisp_Object reader_string(reader_context *c) {
                     n = (n << 3) + (c->ptr[0] - '0');
                     c->ptr++;
                 }
-                if (buffer_used++ == READER_BUFSIZE) { return MEMORY_ERROR_VAL; }
+                if (buffer_used++ == READER_BUFSIZE) { return LISP_ERROR(Memory_Error); }
                 *p++ = (char)n;
             } else {
-                if (buffer_used++ == READER_BUFSIZE) { return MEMORY_ERROR_VAL; }
+                if (buffer_used++ == READER_BUFSIZE) { return LISP_ERROR(Memory_Error); }
                 *p++ = *(c->ptr++);
             }
             break;
         case '\"':
-            if (buffer_used == READER_BUFSIZE) { return MEMORY_ERROR_VAL; }
+            if (buffer_used == READER_BUFSIZE) { return LISP_ERROR(Memory_Error); }
             *p = '\0';
             c->ptr++;
             char *newstr = copy_to_string_area(c->env->mempool, buffer);
-            if (newstr == NULL ) { return MEMORY_ERROR_VAL; }
+            if (newstr == NULL ) { return LISP_ERROR(Memory_Error); }
             return (Lisp_Object){ .type = Lisp_String, .val.sval = newstr };
             break;
         default:
-            if (buffer_used++ == READER_BUFSIZE) { return MEMORY_ERROR_VAL; }
+            if (buffer_used++ == READER_BUFSIZE) { return LISP_ERROR(Memory_Error); }
             *p++ = *(c->ptr++);
             break;
         }
     }
     /* double-quote is not closed */
-    return READER_ERROR_VAL;
+    return LISP_ERROR(Reader_Error);
 }
 
 static Lisp_Object reader_list(reader_context *c) {
@@ -173,7 +170,7 @@ static Lisp_Object reader_list(reader_context *c) {
         if (c->ptr[0] == ')') {
             c->ptr++;
             NArray *ary = new_narray(c->env->mempool, buffer_used);
-            if (ary == NULL ) { return MEMORY_ERROR_VAL; }
+            if (ary == NULL ) { return LISP_ERROR(Memory_Error); }
             for (int j = 0; j < buffer_used; j++) {
                 ary->data[j] = buffer[j];
             }
@@ -183,11 +180,11 @@ static Lisp_Object reader_list(reader_context *c) {
 
         Lisp_Object v = reader_sexp(c);
         if (v.type == Internal_Error ) { return v; }
-        if (buffer_used == READER_ARRAY_BUFSIZE)  { return MEMORY_ERROR_VAL; }
+        if (buffer_used == READER_ARRAY_BUFSIZE)  { return LISP_ERROR(Memory_Error); }
         buffer[buffer_used++] = v;
     }
     /* too long */
-    return READER_ERROR_VAL;
+    return LISP_ERROR(Reader_Error);
 }
 
 static Lisp_Object reader_quoted(reader_context *c) {
@@ -195,7 +192,7 @@ static Lisp_Object reader_quoted(reader_context *c) {
     Lisp_Object v = reader_sexp(c);
     if (v.type == Internal_Error ) { return v; }
     NArray *ary = new_narray(c->env->mempool, 2);
-    if (ary == NULL ) { return MEMORY_ERROR_VAL; }
+    if (ary == NULL ) { return LISP_ERROR(Memory_Error); }
     ary->data[0] = (Lisp_Object){ .type = Lisp_Symbol, .val.sval = c->env->Symbol_quote};
     ary->data[1] = v;
     return (Lisp_Object){ .type = Lisp_CList, .val.aval = ary };
@@ -204,7 +201,7 @@ static Lisp_Object reader_quoted(reader_context *c) {
 static Lisp_Object reader_sexp(reader_context *c) {
     while (isspace(c->ptr[0])) { c->ptr++; }
     if (c->ptr[0] == '\0') {
-        return READER_ERROR_VAL;
+        return LISP_ERROR(Reader_Error);
     } else if (c->ptr[0] == '\'') {
         return reader_quoted(c);
     } else if (c->ptr[0] == '(') {

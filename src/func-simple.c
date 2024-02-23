@@ -2,9 +2,6 @@
 #include "lispobject.h"
 #include "lispenv.h"
 
-#define EVAL_ERROR_VAL ((Lisp_Object){ .type = Internal_Error, .val.err = Evaluation_Error })
-#define MEMORY_ERROR_VAL ((Lisp_Object){ .type = Internal_Error, .val.err = Memory_Error })
-
 /*
     Function: -
 */
@@ -16,12 +13,12 @@ static Lisp_Object minus_onearg(NArray *args, lispenv_t *env) {
     } else if (args->data[0].type == Lisp_Float) {
         double *flt = cdouble2float(env->mempool, -(*(args->data[0].val.fval)));
         if (flt == NULL) {
-            return MEMORY_ERROR_VAL;
+            return LISP_ERROR(Memory_Error);
         } else {
             return (Lisp_Object){ .type = Lisp_Float, .val.fval = flt };
         }
     } else {
-        return EVAL_ERROR_VAL;
+        return LISP_ERROR(Evaluation_Error);
     }
 }
 
@@ -36,7 +33,7 @@ static Lisp_Object minus_multiarg(NArray *args, lispenv_t *env) {
         r_double = *(args->data[0].val.fval);
         float_p = true;
     } else {
-        return EVAL_ERROR_VAL;
+        return LISP_ERROR(Evaluation_Error);
     }
 
     for (size_t i = 1; i < args->size; i++) {
@@ -55,14 +52,14 @@ static Lisp_Object minus_multiarg(NArray *args, lispenv_t *env) {
                 float_p = true;
             }
         } else {
-            return EVAL_ERROR_VAL;
+            return LISP_ERROR(Evaluation_Error);
         }
     }
 
     if (float_p == true) {
         double *flt = cdouble2float(env->mempool, r_double);
         if (flt == NULL) {
-            return MEMORY_ERROR_VAL;
+            return LISP_ERROR(Memory_Error);
         } else {
             return (Lisp_Object){ .type = Lisp_Float, .val.fval = flt };
         }

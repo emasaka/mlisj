@@ -38,6 +38,8 @@ typedef struct _Lisp_Object {
 
 
 #define LISP_INT(n) ((Lisp_Object){ .type = Lisp_Int, .val.ival = (n) })
-#define LISP_NIL ((Lisp_Object) { .type = Lisp_Nil, .val.ival = 0 })
+#define LISP_NIL ((Lisp_Object){ .type = Lisp_Nil, .val.ival = 0 })
+#define LISP_ERROR(x) ((Lisp_Object){ .type = Internal_Error, .val.err = x })
+
 
 #endif /* _LISPOBJECT_H */

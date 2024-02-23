@@ -3,17 +3,15 @@
 
 Lisp_Object eval_expr(Lisp_Object, lispenv_t *); /* prototype declaration */
 
-#define EVAL_ERROR_VAL ((Lisp_Object){ .type = Internal_Error, .val.err = Evaluation_Error })
-
 static Lisp_Object eval_func_call(Lisp_Object lst, lispenv_t *env) {
         cfunc_t func = get_func(env->func_pool, lst.val.aval->data[0].val.sval);
         if (func == NULL) {
-            return EVAL_ERROR_VAL;
+            return LISP_ERROR(Evaluation_Error);
         }
         /* eval arguments*/
         NArray *args = new_narray(env->mempool, lst.val.aval->size - 1);
         if (args == NULL) {
-            return EVAL_ERROR_VAL;
+            return LISP_ERROR(Evaluation_Error);
         }
         for (size_t i = 1; i < lst.val.aval->size; i++) {
             Lisp_Object ret = eval_expr(lst.val.aval->data[i], env);
@@ -36,7 +34,7 @@ static Lisp_Object eval_list(Lisp_Object lst, lispenv_t *env) {
             if (lst.val.aval->size == 2 ) {
                 return lst.val.aval->data[1];
             } else {
-                return EVAL_ERROR_VAL;
+                return LISP_ERROR(Evaluation_Error);
             }
         } else if (item_first.val.sval == env->Symbol_lambda) {
             /* return (lambda ...) itself*/
@@ -44,7 +42,7 @@ static Lisp_Object eval_list(Lisp_Object lst, lispenv_t *env) {
         }
         return eval_func_call(lst, env);
     }
-    return EVAL_ERROR_VAL;
+    return LISP_ERROR(Evaluation_Error);
 }
 
 Lisp_Object eval_expr(Lisp_Object expr, lispenv_t *env) {
@@ -67,6 +65,6 @@ Lisp_Object eval_expr(Lisp_Object expr, lispenv_t *env) {
         break;
     default:
         /* unkknown case */
-        return EVAL_ERROR_VAL;
+        return LISP_ERROR(Evaluation_Error);
     }
 }

@@ -22,7 +22,7 @@ Lisp_Object get_variable(variable_pool_t *vp, char *sym) {
         }
     }
     // not found
-    return (Lisp_Object){ .type = Internal_Error, .val.err = Variable_Error };
+    return LISP_ERROR(Variable_Error);
 }
 
 int save_variable_status(variable_pool_t *vp) {
