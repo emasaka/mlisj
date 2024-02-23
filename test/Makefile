@@ -20,7 +20,7 @@ test: $(TEST_EXECS)
 	$(CC) $< $(filter %.o,$^) $(TEST_CFLAGS) -o $@
 
 LISPENV_H_AND_DEPS := ../src/lispenv.h ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h
-LISPENV_O_AND_DEPS :=  lispenv.o mempool.o symbol.o variable.o functable.o func-simple.o
+LISPENV_O_AND_DEPS :=  lispenv.o mempool.o symbol.o variable.o functable.o
 
 test_mempool: test_mempool.c ../src/mempool.c ../src/lispobject.h ../src/mempool.h
 
@@ -30,7 +30,7 @@ test_variable: test_variable.c ../src/variable.c mempool.o symbol.o ../src/lispo
 
 test_functable: test_functable.c ../src/functable.c mempool.o symbol.o ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/functable.h
 
-test_lispenv: test_lispenv.c $(LISPENV_O_AND_DEPS) $(LISPENV_H_AND_DEPS) ../src/func-simple.h
+test_lispenv: test_lispenv.c $(LISPENV_O_AND_DEPS) $(LISPENV_H_AND_DEPS)
 
 test_reader: test_reader.c reader.o writer.o $(LISPENV_O_AND_DEPS) $(LISPENV_H_AND_DEPS)
 
@@ -51,7 +51,7 @@ variable.o: ../src/variable.c ../src/lispobject.h ../src/mempool.h ../src/symbol
 
 functable.o: ../src/variable.c ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/functable.h
 
-lispenv.o: ../src/lispenv.c $(LISPENV_H_AND_DEPS) ../src/func-simple.h
+lispenv.o: ../src/lispenv.c $(LISPENV_H_AND_DEPS)
 
 reader.o: ../src/reader.c $(LISPENV_H_AND_DEPS)
 

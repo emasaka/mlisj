@@ -2,6 +2,7 @@
 #include <CUnit/Basic.h>
 #include "../src/reader.h"
 #include "../src/eval.h"
+#include "../src/func-simple.h"
 
 static lispenv_t *lisp_env;
 
@@ -9,9 +10,13 @@ int init_for_func_simple_test(void) {
     lisp_env =init_lispenv();
     if (lisp_env == NULL) {
         return -1;
-    } else {
-        return 0;
     }
+
+    if (register_func_simple(lisp_env->func_pool) != 0) {
+        end_lispenv(lisp_env);
+        return -1;
+    }
+    return 0;
 }
 
 int end_for_func_simple_test(void) {

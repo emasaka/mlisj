@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include "lispenv.h"
-#include "func-simple.h"
 
 void end_lispenv(lispenv_t *env) {
     if (env->func_pool != NULL) { end_func_table(env->func_pool); }
@@ -41,9 +40,6 @@ lispenv_t *init_lispenv(void) {
     func_pool_t *func_pool = init_func_table(symbol_pool);
     if (func_pool == NULL) { END_AND_RETURN_NULL(env); }
     env->func_pool = func_pool;
-
-    int r = register_func_simple(func_pool);
-    if (r != 0) { END_AND_RETURN_NULL(env); }
 
     return env;
 #undef END_AND_RETURN_NULL
