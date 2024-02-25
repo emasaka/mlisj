@@ -25,7 +25,7 @@ int end_for_func_simple_test(void) {
 }
 
 /*
-  special form
+    Function: -
  */
 
 void test_simple_func_minus_int(void) {
