@@ -110,9 +110,9 @@ int register_func_simple(func_pool_t *func_pool) {
     int r;
 
     r = add_func_from_cstr(func_pool, "-", f_minus, false);
-    if (r != 0) { return -1; };
+    if (r != 0) { return -1; }
     r = add_func_from_cstr(func_pool, "car", f_car, false);
-    if (r != 0) { return -1; };
+    if (r != 0) { return -1; }
 
     return 0;
 }
