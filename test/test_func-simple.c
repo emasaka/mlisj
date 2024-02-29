@@ -44,6 +44,10 @@ void test_simple_func_minus_int(void) {
     Lisp_Object result4 = eval_expr(reader("(- 10 3 2)", lisp_env), lisp_env);
     CU_ASSERT_EQUAL(result4.type, Lisp_Int);
     CU_ASSERT_EQUAL(result4.val.ival, 5);
+
+    Lisp_Object result5 = eval_expr(reader("(- 3 5)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(result5.type, Lisp_Int);
+    CU_ASSERT_EQUAL(result5.val.ival, -2);
 }
 
 void test_simple_func_minus_float(void) {
@@ -54,6 +58,10 @@ void test_simple_func_minus_float(void) {
     Lisp_Object result2 = eval_expr(reader("(- 5 3.0)", lisp_env), lisp_env);
     CU_ASSERT_EQUAL(result2.type, Lisp_Float);
     CU_ASSERT_DOUBLE_EQUAL(*(result2.val.fval), 2.0, 1e-10);
+
+    Lisp_Object result3 = eval_expr(reader("(- 3.0 5)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(result3.type, Lisp_Float);
+    CU_ASSERT_DOUBLE_EQUAL(*(result3.val.fval), -2.0, 1e-10);
 }
 
 void testsuite_simple_func_minus(void) {
