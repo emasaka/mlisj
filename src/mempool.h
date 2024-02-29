@@ -12,16 +12,16 @@ typedef struct _NArray {
 
 typedef struct {
     Lisp_Object *lispobject_pool;
-    int lispobject_pool_used;
+    size_t lispobject_pool_used;
 
     char *string_pool;
-    int string_pool_used;
+    size_t string_pool_used;
 
     double *float_pool;
-    int float_pool_used;
+    size_t float_pool_used;
 
     NArray *narray_node_pool;
-    int narray_node_pool_used;
+    size_t narray_node_pool_used;
 } mempool_t;
 
 extern Lisp_Object *new_lispobject_array(mempool_t *, size_t);

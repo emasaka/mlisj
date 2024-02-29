@@ -6,7 +6,7 @@
 
 typedef struct {
     char **symbol_table;
-    int symbol_table_used;
+    size_t symbol_table_used;
 
     mempool_t *mempool;
 } symbol_pool_t;

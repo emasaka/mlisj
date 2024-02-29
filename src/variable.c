@@ -16,7 +16,9 @@ int set_variable(variable_pool_t *vp, char *sym, Lisp_Object val) {
 /* changing value of variable is not implemented */
 
 Lisp_Object get_variable(variable_pool_t *vp, char *sym) {
-    for (int i = vp->variable_stack_used - 1; i >= 0; i--) {
+    size_t i = vp->variable_stack_used;
+    while (i > 0) {
+        i--;
         if (vp->variable_stack[i] .symbol == sym) {
             return vp->variable_stack[i].value;
         }

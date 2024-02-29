@@ -70,7 +70,7 @@ static Lisp_Object reader_check_floatnum(char *str, lispenv_t *env) {
 static Lisp_Object reader_maybe_symbol(reader_context *c) {
     char buffer[READER_BUFSIZE];
     char *p = buffer;
-    for (int i = 0; i < READER_BUFSIZE; i++) {
+    for (size_t i = 0; i < READER_BUFSIZE; i++) {
         char ch = c->ptr[0];
         /* XXX: escapes in symbol is not supported */
         if (isspace(ch) || (ch == '(') || (ch == ')') || (ch == '\"') || (ch == '\'') || (ch == '\0')) {
@@ -122,7 +122,7 @@ static Lisp_Object reader_string(reader_context *c) {
     /* XXX: escaping multibyte character is not supported (maybe no problem) */
     c->ptr++;
     char buffer[READER_BUFSIZE];
-    int buffer_used = 0;
+    size_t buffer_used = 0;
     char *p = buffer;
     while (c->ptr[0] != '\0') {
         switch (c->ptr[0]) {
@@ -163,15 +163,15 @@ static Lisp_Object reader_string(reader_context *c) {
 
 static Lisp_Object reader_list(reader_context *c) {
     Lisp_Object buffer[READER_ARRAY_BUFSIZE];
-    int buffer_used = 0;
+    size_t buffer_used = 0;
     c->ptr++;
-    for (int i = 0; i < READER_ARRAY_BUFSIZE; i++) {
+    for (size_t i = 0; i < READER_ARRAY_BUFSIZE; i++) {
         while (isspace(c->ptr[0])) { c->ptr++; }
         if (c->ptr[0] == ')') {
             c->ptr++;
             NArray *ary = new_narray(c->env->mempool, buffer_used);
             if (ary == NULL ) { return LISP_ERROR(Memory_Error); }
-            for (int j = 0; j < buffer_used; j++) {
+            for (size_t j = 0; j < buffer_used; j++) {
                 ary->data[j] = buffer[j];
             }
             ary->size = buffer_used;

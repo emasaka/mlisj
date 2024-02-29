@@ -11,7 +11,7 @@ typedef struct {
 
 typedef struct {
     variable_binding *variable_stack;
-    int variable_stack_used;
+    size_t variable_stack_used;
 
     symbol_pool_t *symbol_pool;
 } variable_pool_t;

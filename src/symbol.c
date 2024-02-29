@@ -9,7 +9,7 @@
 
 /* linear search, for simplicity */
 char *symbol_table_lookup(symbol_pool_t *sp, char *str) {
-    for (int i = 0; i < sp->symbol_table_used; i++) {
+    for (size_t i = 0; i < sp->symbol_table_used; i++) {
         if (strcmp(str, sp->symbol_table[i]) == 0) {
             return sp->symbol_table[i];
         }

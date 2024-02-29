@@ -12,7 +12,7 @@ typedef struct {
 
 typedef struct {
     cfunc_entry *func_table;
-    int func_table_used;
+    size_t func_table_used;
 
     symbol_pool_t *symbol_pool;
 } func_pool_t;
