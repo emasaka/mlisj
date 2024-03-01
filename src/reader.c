@@ -13,27 +13,13 @@ typedef struct {
 
 static Lisp_Object reader_sexp(reader_context *); /* prototype declaration */
 
-/* workaround: "-#0" -> (- #0) */
-static Lisp_Object reader_minus_hash(char *str, lispenv_t *env) {
-    char *sym = str2symbol(env->symbol_pool, str + 1, true);
-    if (sym == NULL ) { return LISP_ERROR(Memory_Error); }
-    NArray *ary = new_narray(env->mempool, 2);
-    if (ary == NULL ) { return LISP_ERROR(Memory_Error); }
-    ary->data[0] = (Lisp_Object){ .type = Lisp_Symbol, .val.sval = env->Symbol_minus };
-    ary->data[1] = (Lisp_Object){ .type = Lisp_Symbol, .val.sval = sym };
-    return (Lisp_Object){ .type = Lisp_CList, .val.aval = ary };
-}
-
 /* parse integer number, or return nil */
-static Lisp_Object reader_check_intnum(char *str, lispenv_t *env) {
-    /* XXX: only dicimal integer (and num-list) is supported */
+static Lisp_Object reader_check_intnum(char *str) {
+    /* XXX: only dicimal integer is supported */
     int minus = 1;
     char *p = str;
     if (str[0] == '-') {
-        if (str[1] == '#') {
-            /* example: "-#0" */
-            return reader_minus_hash(str, env);
-        } else if (str[1] == '\0') {
+        if (str[1] == '\0') {
             return LISP_NIL;
         } else {
             minus = -1;
@@ -77,7 +63,7 @@ static Lisp_Object reader_maybe_symbol(reader_context *c) {
             *p = '\0';
 
             /* integer number? */
-            Lisp_Object n = reader_check_intnum(buffer, c->env);
+            Lisp_Object n = reader_check_intnum(buffer);
             if (n.type != Lisp_Nil) {
                 return n;
             }

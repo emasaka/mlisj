@@ -14,7 +14,6 @@ typedef struct {
     func_pool_t *func_pool;
 
     /* reserved symbols */
-    char * Symbol_minus;
     char * Symbol_quote;
     char * Symbol_lambda;
 } lispenv_t;

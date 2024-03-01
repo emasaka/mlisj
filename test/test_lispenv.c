@@ -29,12 +29,6 @@ void test_symbol_quote(void) {
     CU_ASSERT_STRING_EQUAL(q, "quote");
 }
 
-void test_symbol_minus(void) {
-    char *m = symbol_table_lookup(lisp_env->symbol_pool, "-");
-    CU_ASSERT_PTR_NOT_NULL(m);
-    CU_ASSERT_STRING_EQUAL(m, "-");
-}
-
 void test_symbol_lambda(void) {
     char *m = symbol_table_lookup(lisp_env->symbol_pool, "lambda");
     CU_ASSERT_PTR_NOT_NULL(m);
@@ -44,7 +38,6 @@ void test_symbol_lambda(void) {
 void testsuite_reserved_symbols(void) {
     CU_pSuite suite = CU_add_suite("reserved_symbols_test", init_for_lispenvtest, end_for_lispenvtest);
     CU_add_test(suite, "symbol_quote", test_symbol_quote);
-    CU_add_test(suite, "symbol_minus", test_symbol_minus);
     CU_add_test(suite, "symbol_lambda", test_symbol_lambda);
 }
 
