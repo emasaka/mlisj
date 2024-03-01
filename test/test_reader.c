@@ -78,6 +78,7 @@ void test_reader_symbol(void) {
     CU_ASSERT(writer(obj1, tmp_buf) == 0);
     CU_ASSERT_STRING_EQUAL(tmp_buf, "foo");
 
+    /* '-' is a symbol, and '-1' is a number */
     Lisp_Object obj2 = reader("-", lisp_env);
     CU_ASSERT_EQUAL(obj2.type, Lisp_Symbol);
     CU_ASSERT(writer(obj2, tmp_buf) == 0);
