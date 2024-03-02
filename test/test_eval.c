@@ -99,6 +99,21 @@ void testsuite_eval_specialform(void) {
 }
 
 /*
+  function call
+ */
+
+void test_eval_func_call_notexist(void) {
+    Lisp_Object result = eval_expr(reader("(xxx-non-existent-function)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Internal_Error);
+    CU_ASSERT_EQUAL(GET_ERROR_TYPE(result), Evaluation_Error);
+}
+
+void testsuite_eval_func_call(void) {
+    CU_pSuite suite = CU_add_suite("eval function call", init_for_evaltest, end_for_evaltest);
+    CU_add_test(suite, "eval non-existent function call", test_eval_func_call_notexist);
+}
+
+/*
   Main
  */
 
@@ -108,6 +123,7 @@ int main(void) {
     testsuite_eval_atom();
     testsuite_eval_symbol();
     testsuite_eval_specialform();
+    testsuite_eval_func_call();
 
     CU_basic_run_tests();
     int ret = CU_get_number_of_failures();
