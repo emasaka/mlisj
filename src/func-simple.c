@@ -4,6 +4,7 @@
 #include "lispenv.h"
 
 #define CHECK_TYPE(x, tp) if (GET_TYPE(x) != tp) { return LISP_ERROR(Evaluation_Error); }
+#define CHECK_ALLOC(p) if ((p) == NULL) { return LISP_ERROR(Memory_Error); }
 
 /*
     Function: -
@@ -15,11 +16,8 @@ static Lisp_Object minus_onearg(NArray *args, lispenv_t *env) {
         return LISP_INT(-GET_IVAL(args->data[0]));
     } else if (GET_TYPE(args->data[0]) == Lisp_Float) {
         double *flt = cdouble2float(env->mempool, -(*GET_FVAL(args->data[0])));
-        if (flt == NULL) {
-            return LISP_ERROR(Memory_Error);
-        } else {
-            return LISP_FLOAT(flt);
-        }
+        CHECK_ALLOC(flt);
+        return LISP_FLOAT(flt);
     } else {
         return LISP_ERROR(Evaluation_Error);
     }
@@ -61,11 +59,8 @@ static Lisp_Object minus_multiarg(NArray *args, lispenv_t *env) {
 
     if (float_p == true) {
         double *flt = cdouble2float(env->mempool, r_double);
-        if (flt == NULL) {
-            return LISP_ERROR(Memory_Error);
-        } else {
-            return LISP_FLOAT(flt);
-        }
+        CHECK_ALLOC(flt);
+        return LISP_FLOAT(flt);
     } else {
         return LISP_INT(r_int);
     }
@@ -113,9 +108,7 @@ Lisp_Object f_concat(NArray *args, lispenv_t *env) {
     if (args->size == 0) {
         /* returns empty string */
         char *str = copy_to_string_area(env->mempool, "");
-        if (str == NULL) {
-            return LISP_ERROR(Memory_Error);
-        }
+        CHECK_ALLOC(str);
         return LISP_STRING(str);
     } else if (args->size == 1) {
         /* returns first argument itself */
@@ -129,9 +122,7 @@ Lisp_Object f_concat(NArray *args, lispenv_t *env) {
             len += strlen(GET_SVAL(args->data[i]));
         }
         char *newstr = new_string_area(env->mempool, len + 1);
-        if (newstr == NULL) {
-            return LISP_ERROR(Memory_Error);
-        }
+        CHECK_ALLOC(newstr);
         char *p = newstr;
         for (size_t i = 0; i < args->size; i++) {
             char *src = GET_SVAL(args->data[i]);
