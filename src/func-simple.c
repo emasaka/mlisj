@@ -1,6 +1,9 @@
 #include <stdbool.h>
+#include <string.h>
 #include "lispobject.h"
 #include "lispenv.h"
+
+#define CHECK_TYPE(x, tp) if (GET_TYPE(x) != tp) { return LISP_ERROR(Evaluation_Error); }
 
 /*
     Function: -
@@ -103,6 +106,45 @@ Lisp_Object f_car(NArray *args, __attribute__((unused)) lispenv_t *env) {
 }
 
 /*
+    Function: concat
+*/
+
+Lisp_Object f_concat(NArray *args, lispenv_t *env) {
+    if (args->size == 0) {
+        /* returns empty string */
+        char *str = copy_to_string_area(env->mempool, "");
+        if (str == NULL) {
+            return LISP_ERROR(Memory_Error);
+        }
+        return LISP_STRING(str);
+    } else if (args->size == 1) {
+        /* returns first argument itself */
+        CHECK_TYPE(args->data[0], Lisp_String);
+        return args->data[0];
+    } else {
+        /* concatenate strings */
+        size_t len = 0;
+        for (size_t i = 0; i < args->size; i++) {
+            CHECK_TYPE(args->data[i], Lisp_String);
+            len += strlen(GET_SVAL(args->data[i]));
+        }
+        char *newstr = new_string_area(env->mempool, len + 1);
+        if (newstr == NULL) {
+            return LISP_ERROR(Memory_Error);
+        }
+        char *p = newstr;
+        for (size_t i = 0; i < args->size; i++) {
+            char *src = GET_SVAL(args->data[i]);
+            while (*src != '\0') {
+                *p++ = *src++;
+            }
+        }
+        *p = '\0';
+        return LISP_STRING(newstr);
+    }
+}
+
+/*
     register functions
 */
 
@@ -112,6 +154,8 @@ int register_func_simple(func_pool_t *func_pool) {
     r = add_func_from_cstr(func_pool, "-", f_minus, false);
     if (r != 0) { return -1; }
     r = add_func_from_cstr(func_pool, "car", f_car, false);
+    if (r != 0) { return -1; }
+    r = add_func_from_cstr(func_pool, "concat", f_concat, false);
     if (r != 0) { return -1; }
 
     return 0;

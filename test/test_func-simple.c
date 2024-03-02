@@ -102,6 +102,35 @@ void testsuite_simple_func_car(void) {
 }
 
 /*
+    Function: concat
+*/
+
+void test_simple_func_concat_noarg(void) {
+    Lisp_Object result = eval_expr(reader("(concat)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "");
+}
+
+void test_simple_func_concat_onearg(void) {
+    Lisp_Object result = eval_expr(reader("(concat \"foo\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "foo");
+}
+
+void test_simple_func_concat_multiarg(void) {
+    Lisp_Object result = eval_expr(reader("(concat \"foo\" \"bar\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "foobar");
+}
+
+void testsuite_simple_func_concat(void) {
+    CU_pSuite suite = CU_add_suite("simplt-func concat", init_for_func_simple_test, end_for_func_simple_test);
+    CU_add_test(suite, "simple-func concat noarg", test_simple_func_concat_noarg);
+    CU_add_test(suite, "simple-func concat onearg", test_simple_func_concat_onearg);
+    CU_add_test(suite, "simple-func concat multiarg", test_simple_func_concat_multiarg);
+}
+
+/*
   Main
  */
 
@@ -110,6 +139,7 @@ int main(void) {
 
     testsuite_simple_func_minus();
     testsuite_simple_func_car();
+    testsuite_simple_func_concat();
 
     CU_basic_run_tests();
     int ret = CU_get_number_of_failures();
