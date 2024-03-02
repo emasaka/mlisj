@@ -8,14 +8,14 @@
 
 static Lisp_Object minus_onearg(NArray *args, lispenv_t *env) {
     /* (- x) -> -x */
-    if (args->data[0].type == Lisp_Int) {
-        return LISP_INT(-(args->data[0].val.ival));
-    } else if (args->data[0].type == Lisp_Float) {
-        double *flt = cdouble2float(env->mempool, -(*(args->data[0].val.fval)));
+    if (GET_TYPE(args->data[0]) == Lisp_Int) {
+        return LISP_INT(-GET_IVAL(args->data[0]));
+    } else if (GET_TYPE(args->data[0]) == Lisp_Float) {
+        double *flt = cdouble2float(env->mempool, -(*GET_FVAL(args->data[0])));
         if (flt == NULL) {
             return LISP_ERROR(Memory_Error);
         } else {
-            return (Lisp_Object){ .type = Lisp_Float, .val.fval = flt };
+            return LISP_FLOAT(flt);
         }
     } else {
         return LISP_ERROR(Evaluation_Error);
@@ -27,28 +27,28 @@ static Lisp_Object minus_multiarg(NArray *args, lispenv_t *env) {
     double r_double = 0.0;
     bool float_p = false;
 
-    if (args->data[0].type == Lisp_Int) {
-        r_int = args->data[0].val.ival;
-    } else if (args->data[0].type == Lisp_Float) {
-        r_double = *(args->data[0].val.fval);
+    if (GET_TYPE(args->data[0]) == Lisp_Int) {
+        r_int = GET_IVAL(args->data[0]);
+    } else if (GET_TYPE(args->data[0]) == Lisp_Float) {
+        r_double = *GET_FVAL(args->data[0]);
         float_p = true;
     } else {
         return LISP_ERROR(Evaluation_Error);
     }
 
     for (size_t i = 1; i < args->size; i++) {
-        if (args->data[i].type == Lisp_Int) {
+        if (GET_TYPE(args->data[i]) == Lisp_Int) {
             if (float_p == true) {
-                r_double -= (double)(args->data[i].val.ival);
+                r_double -= (double)GET_IVAL(args->data[i]);
             } else {
-                r_int -= args->data[i].val.ival;
+                r_int -= GET_IVAL(args->data[i]);
             }
-        } else if (args->data[i].type == Lisp_Float) {
+        } else if (GET_TYPE(args->data[i]) == Lisp_Float) {
             if (float_p == true) {
-                r_double -= *(args->data[i].val.fval);
+                r_double -= *GET_FVAL(args->data[i]);
             } else {
                 r_double = (double)r_int;
-                r_double -= *(args->data[i].val.fval);
+                r_double -= *GET_FVAL(args->data[i]);
                 float_p = true;
             }
         } else {
@@ -61,7 +61,7 @@ static Lisp_Object minus_multiarg(NArray *args, lispenv_t *env) {
         if (flt == NULL) {
             return LISP_ERROR(Memory_Error);
         } else {
-            return (Lisp_Object){ .type = Lisp_Float, .val.fval = flt };
+            return LISP_FLOAT(flt);
         }
     } else {
         return LISP_INT(r_int);
@@ -86,13 +86,13 @@ Lisp_Object f_minus(NArray *args, lispenv_t *env) {
 
 Lisp_Object f_car(NArray *args, __attribute__((unused)) lispenv_t *env) {
     if (args->size == 1) {
-        if (args->data[0].type == Lisp_CList) {
-            if (args->data[0].val.aval->size == 0) {
+        if (GET_TYPE(args->data[0]) == Lisp_CList) {
+            if (GET_AVAL(args->data[0])->size == 0) {
                 return LISP_NIL;
             } else {
-                return args->data[0].val.aval->data[0];
+                return GET_AVAL(args->data[0])->data[0];
             }
-        } else if (args->data[0].type == Lisp_Nil) {
+        } else if (GET_TYPE(args->data[0]) == Lisp_Nil) {
             return LISP_NIL;
         } else {
             return LISP_ERROR(Evaluation_Error);

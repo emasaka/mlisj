@@ -56,11 +56,11 @@ void test_functable_found(void) {
 
     cfunc_t func1 = get_func(func_pool, sym1);
     CU_ASSERT_PTR_NOT_NULL(func1);
-    CU_ASSERT_EQUAL(func1(3).val.ival, 4);
+    CU_ASSERT_EQUAL(GET_IVAL(func1(3)), 4);
 
     cfunc_t func2 = get_func(func_pool, sym2);
     CU_ASSERT_PTR_NOT_NULL(func2);
-    CU_ASSERT_EQUAL(func2(3).val.ival, 5);
+    CU_ASSERT_EQUAL(GET_IVAL(func2(3)), 5);
 }
 
 void test_functable_notfound(void) {

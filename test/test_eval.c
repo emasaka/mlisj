@@ -30,19 +30,19 @@ int end_for_evaltest(void) {
 
 void test_eval_number(void) {
     Lisp_Object result1 = eval_expr(reader("32", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result1.type, Lisp_Int);
-    CU_ASSERT_EQUAL(result1.val.ival, 32);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result1), 32);
 }
 
 void test_eval_string(void) {
     Lisp_Object result1 = eval_expr(reader("\"foo\"", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result1.type, Lisp_String);
-    CU_ASSERT_STRING_EQUAL(result1.val.sval, "\"foo\"");
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "\"foo\"");
 }
 
 void test_eval_nil(void) {
     Lisp_Object result1 = eval_expr(reader("nil", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result1.type, Lisp_Nil);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Nil);
 }
 
 void testsuite_eval_atom(void) {
@@ -60,8 +60,8 @@ void test_eval_symbol(void) {
     char *sym1 = str2symbol(lisp_env->symbol_pool, "foo", true);
     set_variable(lisp_env->variable_pool, sym1, LISP_INT(32));
     Lisp_Object result1 = eval_expr(reader("foo", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result1.type, Lisp_Int);
-    CU_ASSERT_EQUAL(result1.val.ival, 32);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result1), 32);
 }
 
 void testsuite_eval_symbol(void) {

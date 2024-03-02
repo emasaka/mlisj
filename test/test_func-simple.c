@@ -30,38 +30,38 @@ int end_for_func_simple_test(void) {
 
 void test_simple_func_minus_int(void) {
     Lisp_Object result1 = eval_expr(reader("(- 5 3)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result1.type, Lisp_Int);
-    CU_ASSERT_EQUAL(result1.val.ival, 2);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result1), 2);
 
     Lisp_Object result2 = eval_expr(reader("(- 5)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result2.type, Lisp_Int);
-    CU_ASSERT_EQUAL(result2.val.ival, -5);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result2), -5);
 
     Lisp_Object result3 = eval_expr(reader("(-)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result3.type, Lisp_Int);
-    CU_ASSERT_EQUAL(result3.val.ival, 0);
+    CU_ASSERT_EQUAL(GET_TYPE(result3), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result3), 0);
 
     Lisp_Object result4 = eval_expr(reader("(- 10 3 2)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result4.type, Lisp_Int);
-    CU_ASSERT_EQUAL(result4.val.ival, 5);
+    CU_ASSERT_EQUAL(GET_TYPE(result4), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result4), 5);
 
     Lisp_Object result5 = eval_expr(reader("(- 3 5)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result5.type, Lisp_Int);
-    CU_ASSERT_EQUAL(result5.val.ival, -2);
+    CU_ASSERT_EQUAL(GET_TYPE(result5), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result5), -2);
 }
 
 void test_simple_func_minus_float(void) {
     Lisp_Object result1 = eval_expr(reader("(- 5.0 3)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result1.type, Lisp_Float);
-    CU_ASSERT_DOUBLE_EQUAL(*(result1.val.fval), 2.0, 1e-10);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Float);
+    CU_ASSERT_DOUBLE_EQUAL(*(GET_FVAL(result1)), 2.0, 1e-10);
 
     Lisp_Object result2 = eval_expr(reader("(- 5 3.0)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result2.type, Lisp_Float);
-    CU_ASSERT_DOUBLE_EQUAL(*(result2.val.fval), 2.0, 1e-10);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_Float);
+    CU_ASSERT_DOUBLE_EQUAL(*(GET_FVAL(result2)), 2.0, 1e-10);
 
     Lisp_Object result3 = eval_expr(reader("(- 3.0 5)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result3.type, Lisp_Float);
-    CU_ASSERT_DOUBLE_EQUAL(*(result3.val.fval), -2.0, 1e-10);
+    CU_ASSERT_EQUAL(GET_TYPE(result3), Lisp_Float);
+    CU_ASSERT_DOUBLE_EQUAL(*(GET_FVAL(result3)), -2.0, 1e-10);
 }
 
 void testsuite_simple_func_minus(void) {
@@ -76,22 +76,22 @@ void testsuite_simple_func_minus(void) {
 
 void test_simple_func_car_list(void) {
     Lisp_Object result = eval_expr(reader("(car '(a b c))", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result.type, Lisp_Symbol);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_Symbol);
     char *sym = str2symbol(lisp_env->symbol_pool, "a", true);
-    CU_ASSERT_PTR_EQUAL(result.val.sval, sym);
+    CU_ASSERT_PTR_EQUAL(GET_SVAL(result), sym);
 }
 
 void test_simple_func_car_nil(void) {
     Lisp_Object result1 = eval_expr(reader("(car nil)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result1.type, Lisp_Nil);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Nil);
 
     Lisp_Object result2 = eval_expr(reader("(car '())", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result2.type, Lisp_Nil);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_Nil);
 }
 
 void test_simple_func_car_nonlist(void) {
     Lisp_Object result = eval_expr(reader("(car 'a)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(result.type, Internal_Error);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Internal_Error);
 }
 
 void testsuite_simple_func_car(void) {
