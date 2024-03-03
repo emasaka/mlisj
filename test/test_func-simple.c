@@ -168,6 +168,25 @@ void testsuite_simple_func_make_string(void) {
 }
 
 /*
+    Function: string-to-char
+*/
+
+void test_simple_func_string_to_char(void) {
+    Lisp_Object result1 = eval_expr(reader("(string-to-char \"abc\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result1), 'a');
+
+    Lisp_Object result2 = eval_expr(reader("(string-to-char \"\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result2), 0);
+}
+
+void testsuite_simple_func_string_to_char(void) {
+    CU_pSuite suite = CU_add_suite("simplt-func string-to-char", init_for_func_simple_test, end_for_func_simple_test);
+    CU_add_test(suite, "simple-func string-to-char normal", test_simple_func_string_to_char);
+}
+
+/*
   Main
  */
 
@@ -178,6 +197,7 @@ int main(void) {
     testsuite_simple_func_car();
     testsuite_simple_func_concat();
     testsuite_simple_func_make_string();
+    testsuite_simple_func_string_to_char();
 
     CU_basic_run_tests();
     int ret = CU_get_number_of_failures();

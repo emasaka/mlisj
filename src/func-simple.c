@@ -154,6 +154,17 @@ Lisp_Object f_make_string(NArray *args, lispenv_t *env) {
 }
 
 /*
+    Function: string-to-char
+*/
+
+Lisp_Object f_string_to_char(NArray *args, __attribute__((unused)) lispenv_t *env) {
+    CHECK_CONDITION(args->size == 1);
+    CHECK_TYPE(args->data[0], Lisp_String);
+    char *str = GET_SVAL(args->data[0]);
+    return LISP_INT(str[0]);
+}
+
+/*
     register functions
 */
 
@@ -167,6 +178,8 @@ int register_func_simple(func_pool_t *func_pool) {
     r = add_func_from_cstr(func_pool, "concat", f_concat, false);
     if (r != 0) { return -1; }
     r = add_func_from_cstr(func_pool, "make-string", f_make_string, false);
+    if (r != 0) { return -1; }
+    r = add_func_from_cstr(func_pool, "string-to-char", f_string_to_char, false);
     if (r != 0) { return -1; }
 
     return 0;
