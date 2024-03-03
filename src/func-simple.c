@@ -84,18 +84,15 @@ Lisp_Object f_minus(NArray *args, lispenv_t *env) {
 */
 
 Lisp_Object f_car(NArray *args, __attribute__((unused)) lispenv_t *env) {
-    if (args->size == 1) {
-        if (GET_TYPE(args->data[0]) == Lisp_CList) {
-            if (GET_AVAL(args->data[0])->size == 0) {
-                return LISP_NIL;
-            } else {
-                return GET_AVAL(args->data[0])->data[0];
-            }
-        } else if (GET_TYPE(args->data[0]) == Lisp_Nil) {
+    CHECK_CONDITION(args->size == 1);
+    if (GET_TYPE(args->data[0]) == Lisp_CList) {
+        if (GET_AVAL(args->data[0])->size == 0) {
             return LISP_NIL;
         } else {
-            return LISP_ERROR(Evaluation_Error);
+            return GET_AVAL(args->data[0])->data[0];
         }
+    } else if (GET_TYPE(args->data[0]) == Lisp_Nil) {
+        return LISP_NIL;
     } else {
         return LISP_ERROR(Evaluation_Error);
     }
