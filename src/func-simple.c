@@ -3,6 +3,7 @@
 #include "lispobject.h"
 #include "lispenv.h"
 
+#define CHECK_CONDITION(c) if (!(c)) { return LISP_ERROR(Evaluation_Error); }
 #define CHECK_TYPE(x, tp) if (GET_TYPE(x) != tp) { return LISP_ERROR(Evaluation_Error); }
 #define CHECK_ALLOC(p) if ((p) == NULL) { return LISP_ERROR(Memory_Error); }
 
@@ -136,6 +137,26 @@ Lisp_Object f_concat(NArray *args, lispenv_t *env) {
 }
 
 /*
+    Function: make-string
+*/
+
+Lisp_Object f_make_string(NArray *args, lispenv_t *env) {
+    CHECK_CONDITION(args->size == 2);
+    CHECK_TYPE(args->data[0], Lisp_Int);
+    CHECK_TYPE(args->data[1], Lisp_Int);
+    int n = GET_IVAL(args->data[0]);
+    CHECK_CONDITION(n >= 0);
+    char c = GET_IVAL(args->data[1]);
+    char *str = new_string_area(env->mempool, n + 1);
+    CHECK_ALLOC(str);
+    for (size_t i = 0; i < (size_t)n; i++) {
+        str[i] = c;
+    }
+    str[n] = '\0';
+    return LISP_STRING(str);
+}
+
+/*
     register functions
 */
 
@@ -147,6 +168,8 @@ int register_func_simple(func_pool_t *func_pool) {
     r = add_func_from_cstr(func_pool, "car", f_car, false);
     if (r != 0) { return -1; }
     r = add_func_from_cstr(func_pool, "concat", f_concat, false);
+    if (r != 0) { return -1; }
+    r = add_func_from_cstr(func_pool, "make-string", f_make_string, false);
     if (r != 0) { return -1; }
 
     return 0;

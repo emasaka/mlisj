@@ -131,6 +131,43 @@ void testsuite_simple_func_concat(void) {
 }
 
 /*
+    Function: make-string
+*/
+
+void test_simple_func_make_string_normal(void) {
+    Lisp_Object result1 = eval_expr(reader("(make-string 3 ?x)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "xxx");
+
+    Lisp_Object result2 = eval_expr(reader("(make-string 0 ?x)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result2), "");
+}
+
+void test_simple_func_make_string_error(void) {
+    Lisp_Object result1 = eval_expr(reader("(make-string)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Internal_Error);
+
+    Lisp_Object result2 = eval_expr(reader("(make-string 3)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Internal_Error);
+
+    Lisp_Object result3 = eval_expr(reader("(make-string 3 3 3)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result3), Internal_Error);
+
+    Lisp_Object result4 = eval_expr(reader("(make-string nil ?x)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result4), Internal_Error);
+
+    Lisp_Object result5 = eval_expr(reader("(make-string 3 nil)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result5), Internal_Error);
+}
+
+void testsuite_simple_func_make_string(void) {
+    CU_pSuite suite = CU_add_suite("simplt-func make-string", init_for_func_simple_test, end_for_func_simple_test);
+    CU_add_test(suite, "simple-func make-string normal", test_simple_func_make_string_normal);
+    CU_add_test(suite, "simple-func make-string error", test_simple_func_make_string_error);
+}
+
+/*
   Main
  */
 
@@ -140,6 +177,7 @@ int main(void) {
     testsuite_simple_func_minus();
     testsuite_simple_func_car();
     testsuite_simple_func_concat();
+    testsuite_simple_func_make_string();
 
     CU_basic_run_tests();
     int ret = CU_get_number_of_failures();
