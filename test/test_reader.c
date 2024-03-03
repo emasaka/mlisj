@@ -1,9 +1,7 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
 #include "../src/reader.h"
-
-/* from writer.c */
-extern int writer(Lisp_Object, char *);
+#include "helper/writer.h"
 
 #define TMP_BUFFSIZE 128
 

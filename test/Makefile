@@ -32,11 +32,11 @@ test_functable: test_functable.c ../src/functable.c mempool.o symbol.o ../src/li
 
 test_lispenv: test_lispenv.c $(LISPENV_O_AND_DEPS) $(LISPENV_H_AND_DEPS)
 
-test_reader: test_reader.c reader.o writer.o $(LISPENV_O_AND_DEPS) $(LISPENV_H_AND_DEPS)
+test_reader: test_reader.c reader.o writer.o $(LISPENV_O_AND_DEPS) helper/writer.h $(LISPENV_H_AND_DEPS)
 
-test_eval: test_eval.c eval.o reader.o writer.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
+test_eval: test_eval.c eval.o reader.o writer.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h helper/writer.h $(LISPENV_H_AND_DEPS)
 
-test_func-simple: test_func-simple.c func-simple.o eval.o reader.o writer.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h  $(LISPENV_H_AND_DEPS)
+test_func-simple: test_func-simple.c func-simple.o eval.o reader.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h  $(LISPENV_H_AND_DEPS)
 
 # Object modules
 
