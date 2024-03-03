@@ -4,3 +4,4 @@
 /test/*
 !*.[ch]
 !Makefile
+!/test/helper
