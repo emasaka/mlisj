@@ -62,9 +62,18 @@ void test_eval_symbol(void) {
     CU_ASSERT_EQUAL(GET_IVAL(result1), 32);
 }
 
+void test_eval_keyword_symbol(void) {
+    Lisp_Object sym = reader(":foo", lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(sym), Lisp_Symbol);
+    Lisp_Object result = eval_expr(sym, lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_Symbol);
+    CU_ASSERT_PTR_EQUAL(GET_SVAL(result), GET_SVAL(sym));
+}
+
 void testsuite_eval_symbol(void) {
     CU_pSuite suite = CU_add_suite("eval symbol", init_for_evaltest, end_for_evaltest);
     CU_add_test(suite, "eval symbol", test_eval_symbol);
+    CU_add_test(suite, "eval keyword symbol", test_eval_keyword_symbol);
 }
 
 /*

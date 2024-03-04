@@ -3,6 +3,17 @@
 
 Lisp_Object eval_expr(Lisp_Object, lispenv_t *); /* prototype declaration */
 
+static Lisp_Object eval_symbol(Lisp_Object sym, lispenv_t *env) {
+    char *s = GET_SVAL(sym);
+    if (s[0] == ':') {
+        /* keyword symbol*/
+        return sym;
+    } else {
+        /* symbol as variable */
+        return get_variable(env->variable_pool, s);
+    }
+}
+
 static Lisp_Object eval_func_call(Lisp_Object lst, lispenv_t *env) {
     cfunc_t func = get_func(env->func_pool, GET_SVAL(GET_AVAL(lst)->data[0]));
     if (func == NULL) {
@@ -58,8 +69,7 @@ Lisp_Object eval_expr(Lisp_Object expr, lispenv_t *env) {
         return expr;
         break;
     case Lisp_Symbol:
-        /* symbol as variable */
-        return get_variable(env->variable_pool, GET_SVAL(expr));
+        return eval_symbol(expr, env);
         break;
     case Lisp_CList:
         return eval_list(expr, env);
