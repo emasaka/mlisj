@@ -2,7 +2,7 @@
 #include <CUnit/Basic.h>
 #include "../src/mempool.h"
 #include "../src/symbol.h"
-#include "../src/functable.c"
+#include "../src/functable.h"
 
 static func_pool_t *func_pool;
 static symbol_pool_t *symbol_pool;

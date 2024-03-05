@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#define FUNC_TABLE_SIZE 256
+
 typedef Lisp_Object (*cfunc_t)();
 
 typedef struct {

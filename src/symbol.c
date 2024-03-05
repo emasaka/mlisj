@@ -5,8 +5,6 @@
 #include "mempool.h"
 #include "symbol.h"
 
-#define SYMBOL_TABLE_SIZE 256
-
 /* linear search, for simplicity */
 char *symbol_table_lookup(symbol_pool_t *sp, char *str) {
     for (size_t i = 0; i < sp->symbol_table_used; i++) {
@@ -18,7 +16,7 @@ char *symbol_table_lookup(symbol_pool_t *sp, char *str) {
     return NULL;
 }
 
-static char *new_symbol(symbol_pool_t *sp, char*str, bool copy_p) {
+char *new_symbol(symbol_pool_t *sp, char *str, bool copy_p) {
     if (sp->symbol_table_used == SYMBOL_TABLE_SIZE) {
         return NULL;
     }

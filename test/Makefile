@@ -22,13 +22,13 @@ test: $(TEST_EXECS)
 LISPENV_H_AND_DEPS := ../src/lispenv.h ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h
 LISPENV_O_AND_DEPS :=  lispenv.o mempool.o symbol.o variable.o functable.o
 
-test_mempool: test_mempool.c ../src/mempool.c ../src/lispobject.h ../src/mempool.h
+test_mempool: test_mempool.c ../src/mempool.h mempool.o ../src/lispobject.h ../src/mempool.h
 
-test_symbol: test_symbol.c ../src/symbol.c mempool.o ../src/lispobject.h ../src/mempool.h ../src/symbol.h
+test_symbol: test_symbol.c ../src/symbol.h symbol.o mempool.o ../src/lispobject.h ../src/mempool.h ../src/symbol.h
 
-test_variable: test_variable.c ../src/variable.c mempool.o symbol.o ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h
+test_variable: test_variable.c ../src/variable.h variable.o mempool.o symbol.o ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h
 
-test_functable: test_functable.c ../src/functable.c mempool.o symbol.o ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/functable.h
+test_functable: test_functable.c ../src/functable.h functable.o mempool.o symbol.o ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/functable.h
 
 test_lispenv: test_lispenv.c $(LISPENV_O_AND_DEPS) $(LISPENV_H_AND_DEPS)
 

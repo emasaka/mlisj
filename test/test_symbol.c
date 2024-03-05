@@ -1,6 +1,6 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
-#include "../src/symbol.c"
+#include "../src/symbol.h"
 
 static symbol_pool_t *symbol_pool;
 static mempool_t *mempool;

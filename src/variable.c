@@ -2,8 +2,6 @@
 #include "lispobject.h"
 #include "variable.h"
 
-#define VARIABLE_STACK_SIZE 256
-
 int set_variable(variable_pool_t *vp, char *sym, Lisp_Object val) {
     if (vp->variable_stack_used < VARIABLE_STACK_SIZE) {
         vp->variable_stack[vp->variable_stack_used++] = (variable_binding){ .symbol = sym, .value = val };

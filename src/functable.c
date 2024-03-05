@@ -4,8 +4,6 @@
 #include "symbol.h"
 #include "functable.h"
 
-#define FUNC_TABLE_SIZE 256
-
 int add_func(func_pool_t *fp, char *sym, cfunc_t func) {
     /* duplicate check omitted*/
     if (fp->func_table_used < FUNC_TABLE_SIZE) {

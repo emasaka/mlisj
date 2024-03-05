@@ -4,6 +4,8 @@
 #include "lispobject.h"
 #include "symbol.h"
 
+#define VARIABLE_STACK_SIZE 256
+
 typedef struct {
     char *symbol;
     Lisp_Object value;

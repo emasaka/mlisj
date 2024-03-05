@@ -1,6 +1,6 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
-#include "../src/mempool.c"
+#include "../src/mempool.h"
 
 static mempool_t *mempool;
 
