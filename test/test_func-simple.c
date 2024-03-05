@@ -187,6 +187,31 @@ void testsuite_simple_func_string_to_char(void) {
 }
 
 /*
+    Function: symbol-value
+*/
+
+void test_simple_func_symbol_value_found(void) {
+    char *sym = str2symbol(lisp_env->symbol_pool, "foo", true);
+    CU_ASSERT_PTR_NOT_NULL(sym);
+    CU_ASSERT(set_variable(lisp_env->variable_pool, sym, LISP_INT(33)) == 0);
+
+    Lisp_Object result = eval_expr(reader("(symbol-value 'foo)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result), 33);
+}
+
+void test_simple_func_symbol_value_notfound(void) {
+    Lisp_Object result = eval_expr(reader("(symbol-value 'xxx-non-existent-variable)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Internal_Error);
+}
+
+void testsuite_simple_func_symbol_value(void) {
+    CU_pSuite suite = CU_add_suite("simplt-func symbol-value", init_for_func_simple_test, end_for_func_simple_test);
+    CU_add_test(suite, "simple-func symbol-value found", test_simple_func_symbol_value_found);
+    CU_add_test(suite, "simple-func symbol-value fnotound", test_simple_func_symbol_value_notfound);
+}
+
+/*
   Main
  */
 
@@ -198,6 +223,7 @@ int main(void) {
     testsuite_simple_func_concat();
     testsuite_simple_func_make_string();
     testsuite_simple_func_string_to_char();
+    testsuite_simple_func_symbol_value();
 
     CU_basic_run_tests();
     int ret = CU_get_number_of_failures();

@@ -165,6 +165,16 @@ Lisp_Object f_string_to_char(NArray *args, __attribute__((unused)) lispenv_t *en
 }
 
 /*
+    Function: symbol-value
+*/
+
+Lisp_Object f_symbol_value(NArray *args, lispenv_t *env) {
+    CHECK_CONDITION(args->size == 1);
+    CHECK_TYPE(args->data[0], Lisp_Symbol);
+    return get_variable(env->variable_pool, GET_SVAL(args->data[0]));
+}
+
+/*
     register functions
 */
 
@@ -180,6 +190,8 @@ int register_func_simple(func_pool_t *func_pool) {
     r = add_func_from_cstr(func_pool, "make-string", f_make_string, false);
     if (r != 0) { return -1; }
     r = add_func_from_cstr(func_pool, "string-to-char", f_string_to_char, false);
+    if (r != 0) { return -1; }
+    r = add_func_from_cstr(func_pool, "symbol-value", f_symbol_value, false);
     if (r != 0) { return -1; }
 
     return 0;
