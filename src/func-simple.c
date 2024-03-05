@@ -7,6 +7,8 @@
 #define CHECK_TYPE(x, tp) if (GET_TYPE(x) != tp) { return LISP_ERROR(Evaluation_Error); }
 #define CHECK_ALLOC(p) if ((p) == NULL) { return LISP_ERROR(Memory_Error); }
 
+#define ADD_FUNC_OR_RETURN(fp, s, f) if(add_func_from_cstr(fp, s, f, false) != 0) { return -1; }
+
 /*
     Function: -
 */
@@ -179,20 +181,12 @@ Lisp_Object f_symbol_value(NArray *args, lispenv_t *env) {
 */
 
 int register_func_simple(func_pool_t *func_pool) {
-    int r;
-
-    r = add_func_from_cstr(func_pool, "-", f_minus, false);
-    if (r != 0) { return -1; }
-    r = add_func_from_cstr(func_pool, "car", f_car, false);
-    if (r != 0) { return -1; }
-    r = add_func_from_cstr(func_pool, "concat", f_concat, false);
-    if (r != 0) { return -1; }
-    r = add_func_from_cstr(func_pool, "make-string", f_make_string, false);
-    if (r != 0) { return -1; }
-    r = add_func_from_cstr(func_pool, "string-to-char", f_string_to_char, false);
-    if (r != 0) { return -1; }
-    r = add_func_from_cstr(func_pool, "symbol-value", f_symbol_value, false);
-    if (r != 0) { return -1; }
+    ADD_FUNC_OR_RETURN(func_pool, "-", f_minus);
+    ADD_FUNC_OR_RETURN(func_pool, "car", f_car);
+    ADD_FUNC_OR_RETURN(func_pool, "concat", f_concat);
+    ADD_FUNC_OR_RETURN(func_pool, "make-string", f_make_string);
+    ADD_FUNC_OR_RETURN(func_pool, "string-to-char", f_string_to_char);
+    ADD_FUNC_OR_RETURN(func_pool, "symbol-value", f_symbol_value);
 
     return 0;
 }
