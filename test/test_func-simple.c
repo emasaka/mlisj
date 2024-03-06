@@ -212,6 +212,55 @@ void testsuite_simple_func_symbol_value(void) {
 }
 
 /*
+    Function: substring
+*/
+
+void test_simple_func_substring_head(void) {
+    Lisp_Object result1 = eval_expr(reader("(substring \"abcdef\" 0 2)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "ab");
+
+    Lisp_Object result2 = eval_expr(reader("(substring \"abcdef\" 0 0)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result2), "");
+}
+
+void test_simple_func_substring_middle(void) {
+    Lisp_Object result = eval_expr(reader("(substring \"abcdef\" 1 3)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "bc");
+}
+
+void test_simple_func_substring_tail(void) {
+    Lisp_Object result1 = eval_expr(reader("(substring \"abcdef\" 4 6)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "ef");
+
+    Lisp_Object result2 = eval_expr(reader("(substring \"abcdef\" 6 6)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result2), "");
+}
+
+void test_simple_func_substring_error(void) {
+    Lisp_Object result1 = eval_expr(reader("(substring \"abc\" 2 1)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Internal_Error);
+
+    Lisp_Object result2 = eval_expr(reader("(substring \"abc\" 2 5)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Internal_Error);
+
+    Lisp_Object result3 = eval_expr(reader("(substring \"abc\" 5 6)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result3), Internal_Error);
+}
+
+void testsuite_simple_func_substring(void) {
+    CU_pSuite suite = CU_add_suite("simplt-func substring", init_for_func_simple_test, end_for_func_simple_test);
+    CU_add_test(suite, "simple-func substring head", test_simple_func_substring_head);
+    CU_add_test(suite, "simple-func substring middle", test_simple_func_substring_middle);
+    CU_add_test(suite, "simple-func substring tail", test_simple_func_substring_tail);
+    CU_add_test(suite, "simple-func substring error", test_simple_func_substring_error);
+}
+
+/*
   Main
  */
 
@@ -224,6 +273,7 @@ int main(void) {
     testsuite_simple_func_make_string();
     testsuite_simple_func_string_to_char();
     testsuite_simple_func_symbol_value();
+    testsuite_simple_func_substring();
 
     CU_basic_run_tests();
     int ret = CU_get_number_of_failures();

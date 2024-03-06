@@ -177,6 +177,33 @@ Lisp_Object f_symbol_value(NArray *args, lispenv_t *env) {
 }
 
 /*
+    Function: substring
+*/
+
+Lisp_Object f_substring(NArray *args, lispenv_t *env) {
+    CHECK_CONDITION(args->size == 3);
+    CHECK_TYPE(args->data[0], Lisp_String);
+    CHECK_TYPE(args->data[1], Lisp_Int);
+    CHECK_TYPE(args->data[2], Lisp_Int);
+
+    char *str = GET_SVAL(args->data[0]);
+    size_t slen = strlen(str);
+    int from = GET_IVAL(args->data[1]);
+    int to = GET_IVAL(args->data[2]);
+    CHECK_CONDITION(0 <= from && from <= (int)slen);
+    CHECK_CONDITION(from <= to && to <= (int)slen);
+
+    size_t newlen = to - from;
+    char *newstr = new_string_area(env->mempool, newlen + 1);
+    CHECK_ALLOC(newstr);
+    for (size_t i = 0; i < newlen; i++) {
+        newstr[i] = str[from + i];
+    }
+    newstr[newlen] = '\0';
+    return LISP_STRING(newstr);
+}
+
+/*
     register functions
 */
 
@@ -187,6 +214,7 @@ int register_func_simple(func_pool_t *func_pool) {
     ADD_FUNC_OR_RETURN(func_pool, "make-string", f_make_string);
     ADD_FUNC_OR_RETURN(func_pool, "string-to-char", f_string_to_char);
     ADD_FUNC_OR_RETURN(func_pool, "symbol-value", f_symbol_value);
+    ADD_FUNC_OR_RETURN(func_pool, "substring", f_substring);
 
     return 0;
 }
