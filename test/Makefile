@@ -3,15 +3,15 @@ CC := gcc
 CFLAGS := -W -Wall -fsanitize=address -static-libasan
 TEST_CFLAGS := $(CFLAGS) -lcunit
 
-TEST_EXECS := test_mempool test_symbol test_variable test_functable test_lispenv test_reader test_eval test_func-simple
-OBJS := mempool.o symbol.o variable.o functable.o lispenv.o reader.o eval.o func-simple.o writer.o
+TEST_EXECS := test_mempool test_symbol test_variable test_functable test_lispenv test_reader test_eval test_func-simple test_util
+OBJS := mempool.o symbol.o variable.o functable.o lispenv.o reader.o eval.o func-simple.o util.o writer.o
 
 .DEFAULT_GOAL := test
 
 .PHONY: test clean
 
 test: $(TEST_EXECS)
-		$(shell echo $(TEST_EXECS) | sed -e 's| | \&\& ./|g;s|^|./|')
+	$(shell echo $(TEST_EXECS) | sed -e 's| | \&\& ./|g;s|^|./|')
 # foo bar baz -> ./foo && ./bar && ./baz
 
 # Test executables
@@ -38,6 +38,8 @@ test_eval: test_eval.c eval.o reader.o writer.o $(LISPENV_O_AND_DEPS) ../src/eva
 
 test_func-simple: test_func-simple.c func-simple.o eval.o reader.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h  $(LISPENV_H_AND_DEPS)
 
+test_util: test_util.c util.o ../src/util.h
+
 # Object modules
 
 %.o: ../src/%.c
@@ -58,6 +60,8 @@ reader.o: ../src/reader.c $(LISPENV_H_AND_DEPS)
 eval.o: ../src/eval.c  ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
 
 func-simple.o: ../src/func-simple.c ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
+
+util.o: ../src/util.c ../src/util.h
 
 writer.o: helper/writer.c ../src/lispobject.h ../src/mempool.h
 	$(CC) -c $(CFLAGS) $< -o $@
