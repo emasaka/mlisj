@@ -261,6 +261,39 @@ void testsuite_simple_func_substring(void) {
 }
 
 /*
+    Function: string-to-number
+*/
+
+void test_simple_func_string_to_number_int(void) {
+    Lisp_Object result1 = eval_expr(reader("(string-to-number \"32\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result1), 32);
+
+    Lisp_Object result2 = eval_expr(reader("(string-to-number \"-32\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result2), -32);
+}
+
+void test_simple_func_string_to_number_float(void) {
+    Lisp_Object result1 = eval_expr(reader("(string-to-number \"3.2\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Float);
+    CU_ASSERT_DOUBLE_EQUAL(*(GET_FVAL(result1)), 3.2, 1e-10);
+}
+
+void test_simple_func_string_to_number_notnumber(void) {
+    Lisp_Object result1 = eval_expr(reader("(string-to-number \"xyz\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result1), 0);
+}
+
+void testsuite_simple_func_string_to_number(void) {
+    CU_pSuite suite = CU_add_suite("simplt-func string-to-number", init_for_func_simple_test, end_for_func_simple_test);
+    CU_add_test(suite, "simple-func string-to-number int", test_simple_func_string_to_number_int);
+    CU_add_test(suite, "simple-func string-to-number float", test_simple_func_string_to_number_float);
+    CU_add_test(suite, "simple-func string-to-number notnumber", test_simple_func_string_to_number_notnumber);
+}
+
+/*
   Main
  */
 
@@ -274,6 +307,7 @@ int main(void) {
     testsuite_simple_func_string_to_char();
     testsuite_simple_func_symbol_value();
     testsuite_simple_func_substring();
+    testsuite_simple_func_string_to_number();
 
     CU_basic_run_tests();
     int ret = CU_get_number_of_failures();

@@ -1,7 +1,9 @@
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 #include "lispobject.h"
 #include "lispenv.h"
+#include "util.h"
 
 #define CHECK_CONDITION(c) if (!(c)) { return LISP_ERROR(Evaluation_Error); }
 #define CHECK_TYPE(x, tp) if (GET_TYPE(x) != tp) { return LISP_ERROR(Evaluation_Error); }
@@ -204,6 +206,33 @@ Lisp_Object f_substring(NArray *args, lispenv_t *env) {
 }
 
 /*
+    Function: string-to-number
+*/
+
+Lisp_Object f_string_to_number(NArray *args, lispenv_t *env) {
+    CHECK_CONDITION(args->size == 1);
+    CHECK_TYPE(args->data[0], Lisp_String);
+    char *str = GET_SVAL(args->data[0]);
+    check_num_t result = check_num_str(str, false);
+    if (result == R_INT) {
+        /* integer*/
+        char *endptr;
+        int n = (int)strtol(str, &endptr, 10);
+        return LISP_INT(n);
+    } else if (result == R_FLOAT) {
+        /* float */
+        char *endptr;
+        double fnum = strtod(str, &endptr);
+        double *flt = cdouble2float(env->mempool, fnum);
+        CHECK_ALLOC(flt);
+        return LISP_FLOAT(flt);
+    } else {
+        /* not number*/
+        return LISP_INT(0);
+    }
+}
+
+/*
     register functions
 */
 
@@ -215,6 +244,7 @@ int register_func_simple(func_pool_t *func_pool) {
     ADD_FUNC_OR_RETURN(func_pool, "string-to-char", f_string_to_char);
     ADD_FUNC_OR_RETURN(func_pool, "symbol-value", f_symbol_value);
     ADD_FUNC_OR_RETURN(func_pool, "substring", f_substring);
+    ADD_FUNC_OR_RETURN(func_pool, "string-to-number", f_string_to_number);
 
     return 0;
 }
