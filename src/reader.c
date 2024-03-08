@@ -1,7 +1,8 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
-# include "lispenv.h"
+#include "lispenv.h"
+#include "util.h"
 
 #define READER_BUFSIZE 512
 #define READER_ARRAY_BUFSIZE 128
@@ -13,39 +14,17 @@ typedef struct {
 
 static Lisp_Object reader_sexp(reader_context *); /* prototype declaration */
 
-/* parse integer number, or return nil */
-static Lisp_Object reader_check_intnum(char *str) {
-    /* XXX: only dicimal integer is supported */
-    int minus = 1;
-    char *p = str;
-    if (str[0] == '-') {
-        if (str[1] == '\0') {
-            return LISP_NIL;
-        } else {
-            minus = -1;
-            p++;
-        }
-    }
-    int n = 0;
-    while (*p != '\0') {
-        if (isdigit(*p) ) {
-            n = n * 10 + (*p - '0');
-            p++;
-        } else {
-            /* not a number */
-            return LISP_NIL;
-        }
-    }
-    return LISP_INT(n * minus);
+/* parse integer number */
+static Lisp_Object reader_get_intnum(char *str) {
+    char *endptr;
+    int n = (int)strtol(str, &endptr, 10);
+    return LISP_INT(n);
 }
 
-/* parse float number, or return nil */
-static Lisp_Object reader_check_floatnum(char *str, lispenv_t *env) {
+/* parse float number */
+static Lisp_Object reader_get_floatnum(char *str, lispenv_t *env) {
     char *endptr;
     double fnum = strtod(str, &endptr);
-    if (*endptr != '\0') {
-        return LISP_NIL;
-    }
     double *flt = cdouble2float(env->mempool, fnum);
     if (flt == NULL) {
         return LISP_ERROR(Memory_Error);
@@ -62,16 +41,12 @@ static Lisp_Object reader_maybe_symbol(reader_context *c) {
         if (isspace(ch) || (ch == '(') || (ch == ')') || (ch == '\"') || (ch == '\'') || (ch == '\0')) {
             *p = '\0';
 
-            /* integer number? */
-            Lisp_Object n = reader_check_intnum(buffer);
-            if (GET_TYPE(n) != Lisp_Nil) {
-                return n;
-            }
-
-            /* float number? */
-            Lisp_Object fnum = reader_check_floatnum(buffer, c->env);
-            if (GET_TYPE(fnum) == Lisp_Float) {
-                return fnum;
+            /* integer? float? other?*/
+            check_num_t result = check_num_str(buffer, true);
+            if (result == R_INT) {
+                return reader_get_intnum(buffer);
+            } else if (result == R_FLOAT) {
+                return reader_get_floatnum(buffer, c->env);
             }
 
             /* nil? */

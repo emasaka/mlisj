@@ -32,11 +32,11 @@ test_functable: test_functable.c ../src/functable.h functable.o mempool.o symbol
 
 test_lispenv: test_lispenv.c $(LISPENV_O_AND_DEPS) $(LISPENV_H_AND_DEPS)
 
-test_reader: test_reader.c reader.o writer.o $(LISPENV_O_AND_DEPS) helper/writer.h $(LISPENV_H_AND_DEPS)
+test_reader: test_reader.c reader.o util.o writer.o $(LISPENV_O_AND_DEPS) helper/writer.h $(LISPENV_H_AND_DEPS)
 
-test_eval: test_eval.c eval.o reader.o writer.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h helper/writer.h $(LISPENV_H_AND_DEPS)
+test_eval: test_eval.c eval.o reader.o util.o writer.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h helper/writer.h $(LISPENV_H_AND_DEPS)
 
-test_func-simple: test_func-simple.c func-simple.o eval.o reader.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h  $(LISPENV_H_AND_DEPS)
+test_func-simple: test_func-simple.c func-simple.o eval.o reader.o util.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
 
 test_util: test_util.c util.o ../src/util.h
 
@@ -55,7 +55,7 @@ functable.o: ../src/variable.c ../src/lispobject.h ../src/mempool.h ../src/symbo
 
 lispenv.o: ../src/lispenv.c $(LISPENV_H_AND_DEPS)
 
-reader.o: ../src/reader.c $(LISPENV_H_AND_DEPS)
+reader.o: ../src/reader.c ../src/util.h $(LISPENV_H_AND_DEPS)
 
 eval.o: ../src/eval.c  ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
 
