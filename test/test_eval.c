@@ -55,8 +55,7 @@ void testsuite_eval_atom(void) {
 */
 
 void test_eval_symbol(void) {
-    char *sym1 = str2symbol(lisp_env->symbol_pool, "foo", true);
-    set_variable(lisp_env->variable_pool, sym1, LISP_INT(32));
+    set_variable_from_cstr(lisp_env->variable_pool, "foo", LISP_INT(32), true);
     Lisp_Object result1 = eval_expr(reader("foo", lisp_env), lisp_env);
     CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Int);
     CU_ASSERT_EQUAL(GET_IVAL(result1), 32);

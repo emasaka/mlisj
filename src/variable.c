@@ -11,6 +11,12 @@ int set_variable(variable_pool_t *vp, char *sym, Lisp_Object val) {
     }
 }
 
+int set_variable_from_cstr(variable_pool_t *vp, char *str, Lisp_Object val, bool copy_p) {
+    char *sym = str2symbol(vp->symbol_pool, str, copy_p);
+    if (sym == NULL) { return -1; }
+    return set_variable(vp, sym, val);
+}
+
 /* changing value of variable is not implemented */
 
 Lisp_Object get_variable(variable_pool_t *vp, char *sym) {

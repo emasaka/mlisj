@@ -191,9 +191,7 @@ void testsuite_simple_func_string_to_char(void) {
 */
 
 void test_simple_func_symbol_value_found(void) {
-    char *sym = str2symbol(lisp_env->symbol_pool, "foo", true);
-    CU_ASSERT_PTR_NOT_NULL(sym);
-    CU_ASSERT(set_variable(lisp_env->variable_pool, sym, LISP_INT(33)) == 0);
+    CU_ASSERT(set_variable_from_cstr(lisp_env->variable_pool, "foo", LISP_INT(33), true) == 0);
 
     Lisp_Object result = eval_expr(reader("(symbol-value 'foo)", lisp_env), lisp_env);
     CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_Int);

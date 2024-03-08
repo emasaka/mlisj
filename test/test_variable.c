@@ -59,10 +59,21 @@ void test_variable_notfound(void) {
     CU_ASSERT_EQUAL(GET_ERROR_TYPE(val), Variable_Error);
 }
 
+void test_variable_from_cstr(void) {
+    char *name = "foo";
+    CU_ASSERT(set_variable_from_cstr(variable_pool, name, LISP_INT(31), true) == 0);
+
+    char *sym = str2symbol(symbol_pool, name, true);
+    Lisp_Object val = get_variable(variable_pool, sym);
+    CU_ASSERT_EQUAL(GET_TYPE(val), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(val), 31);
+}
+
 void testsuite_variable_set_get(void) {
     CU_pSuite suite = CU_add_suite("variable_set_get", init_for_variabletest, end_for_variabletest);
     CU_add_test(suite, "variable_found", test_variable_found);
     CU_add_test(suite, "variable_notfound", test_variable_notfound);
+    CU_add_test(suite, "variable_from_cstr", test_variable_from_cstr);
 }
 
 void test_variable_stack_frame(void) {
