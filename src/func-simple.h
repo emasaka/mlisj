@@ -3,6 +3,6 @@
 
 #include "functable.h"
 
-extern int register_func_simple(func_pool_t *);
+extern int register_func_simple(lispenv_t *);
 
 #endif /* _FUNC_SIMPLE_H */

@@ -12,7 +12,7 @@ int init_for_func_simple_test(void) {
         return -1;
     }
 
-    if (register_func_simple(lisp_env->func_pool) != 0) {
+    if (register_func_simple(lisp_env) != 0) {
         end_lispenv(lisp_env);
         return -1;
     }

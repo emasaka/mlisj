@@ -5,11 +5,17 @@
 #include "lispenv.h"
 #include "util.h"
 
+/* dummy values for variables*/
+#define V_FILL_COLUMN 70
+#define V_COMMENT_START "#"
+
+/* syntax sugar macros */
 #define CHECK_CONDITION(c) if (!(c)) { return LISP_ERROR(Evaluation_Error); }
 #define CHECK_TYPE(x, tp) if (GET_TYPE(x) != tp) { return LISP_ERROR(Evaluation_Error); }
 #define CHECK_ALLOC(p) if ((p) == NULL) { return LISP_ERROR(Memory_Error); }
 
 #define ADD_FUNC_OR_RETURN(fp, s, f) if(add_func_from_cstr(fp, s, f, false) != 0) { return -1; }
+#define SET_VARIABVLE_OR_RETURN(vp, var, val) if(set_variable_from_cstr(vp, var, val, false) != 0) { return -1; }
 
 /*
     Function: -
@@ -233,10 +239,11 @@ Lisp_Object f_string_to_number(NArray *args, lispenv_t *env) {
 }
 
 /*
-    register functions
+    register functions and variables
 */
 
-int register_func_simple(func_pool_t *func_pool) {
+int register_func_simple(lispenv_t *env) {
+    func_pool_t *func_pool = env->func_pool;
     ADD_FUNC_OR_RETURN(func_pool, "-", f_minus);
     ADD_FUNC_OR_RETURN(func_pool, "car", f_car);
     ADD_FUNC_OR_RETURN(func_pool, "concat", f_concat);
@@ -245,6 +252,10 @@ int register_func_simple(func_pool_t *func_pool) {
     ADD_FUNC_OR_RETURN(func_pool, "symbol-value", f_symbol_value);
     ADD_FUNC_OR_RETURN(func_pool, "substring", f_substring);
     ADD_FUNC_OR_RETURN(func_pool, "string-to-number", f_string_to_number);
+
+    variable_pool_t *variable_pool = env->variable_pool;
+    SET_VARIABVLE_OR_RETURN(variable_pool, "fill-column", LISP_INT(V_FILL_COLUMN));
+    SET_VARIABVLE_OR_RETURN(variable_pool, "comment-start", LISP_STRING(V_COMMENT_START));
 
     return 0;
 }
