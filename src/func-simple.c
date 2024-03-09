@@ -1,13 +1,19 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "lispobject.h"
 #include "lispenv.h"
 #include "util.h"
 
-/* dummy values for variables*/
+#define EXPOSE_SYSEM_ENV 1
+
+#define TMP_BUFFSIZE 512
+
+/* dummy values for variables and functions */
 #define V_FILL_COLUMN 70
 #define V_COMMENT_START "#"
+#define V_CWD "/"
 
 /* syntax sugar macros */
 #define CHECK_CONDITION(c) if (!(c)) { return LISP_ERROR(Evaluation_Error); }
@@ -239,6 +245,31 @@ Lisp_Object f_string_to_number(NArray *args, lispenv_t *env) {
 }
 
 /*
+    Function: pwd
+*/
+
+Lisp_Object get_pwd_str(lispenv_t *env) {
+    char buffer[TMP_BUFFSIZE];
+    if (getcwd(buffer, TMP_BUFFSIZE)) {
+        char *path = copy_to_string_area(env->mempool, buffer);
+        CHECK_ALLOC(path);
+        return LISP_STRING(path);
+    } else {
+        return LISP_ERROR(Evaluation_Error);
+    }
+}
+
+#if EXPOSE_SYSTEM_ENV
+Lisp_Object f_pwd( __attribute__((unused)) NArray *args, lispenv_t *env) {
+    return get_pwd_str(env);
+}
+#else /* ! EXPOSE_SYSTEM_ENV*/
+Lisp_Object f_pwd( __attribute__((unused)) NArray *args, __attribute__((unused)) lispenv_t *env) {
+    return LISP_STRING(V_CWD);
+}
+#endif /* EXPOSE_SYSTEM_ENV*/
+
+/*
     register functions and variables
 */
 
@@ -252,6 +283,7 @@ int register_func_simple(lispenv_t *env) {
     ADD_FUNC_OR_RETURN(func_pool, "symbol-value", f_symbol_value);
     ADD_FUNC_OR_RETURN(func_pool, "substring", f_substring);
     ADD_FUNC_OR_RETURN(func_pool, "string-to-number", f_string_to_number);
+    ADD_FUNC_OR_RETURN(func_pool, "pwd", f_pwd);
 
     variable_pool_t *variable_pool = env->variable_pool;
     SET_VARIABVLE_OR_RETURN(variable_pool, "fill-column", LISP_INT(V_FILL_COLUMN));

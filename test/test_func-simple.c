@@ -1,8 +1,11 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
+#include <unistd.h>
 #include "../src/reader.h"
 #include "../src/eval.h"
 #include "../src/func-simple.h"
+
+#define TMP_BUFFSIZE 256
 
 static lispenv_t *lisp_env;
 
@@ -292,6 +295,30 @@ void testsuite_simple_func_string_to_number(void) {
 }
 
 /*
+    Function: string-to-number
+*/
+
+void test_simple_func_pwd_call(void) {
+    Lisp_Object result = eval_expr(reader("(pwd)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+}
+
+void test_simple_func_pwd_body(void) {
+    Lisp_Object result = get_pwd_str(lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+
+    char buffer[TMP_BUFFSIZE];
+    getcwd(buffer, TMP_BUFFSIZE);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result), buffer);
+}
+
+void testsuite_simple_func_pwd(void) {
+    CU_pSuite suite = CU_add_suite("simplt-func pwd", init_for_func_simple_test, end_for_func_simple_test);
+    CU_add_test(suite, "simple-func pwd call", test_simple_func_pwd_call);
+    CU_add_test(suite, "simple-func pwd body", test_simple_func_pwd_body);
+}
+
+/*
     Variables
 */
 
@@ -323,6 +350,7 @@ int main(void) {
     testsuite_simple_func_symbol_value();
     testsuite_simple_func_substring();
     testsuite_simple_func_string_to_number();
+    testsuite_simple_func_pwd();
     testsuite_simple_func_predefined_variables();
 
     CU_basic_run_tests();
