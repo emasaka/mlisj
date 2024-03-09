@@ -292,6 +292,23 @@ void testsuite_simple_func_string_to_number(void) {
 }
 
 /*
+    Variables
+*/
+
+void test_simple_func_predefined_variables1(void) {
+    Lisp_Object result1 = eval_expr(reader("fill-column", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Int);
+
+    Lisp_Object result2 = eval_expr(reader("comment-start", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+}
+
+void testsuite_simple_func_predefined_variables(void) {
+    CU_pSuite suite = CU_add_suite("simplt-func predefined variables", init_for_func_simple_test, end_for_func_simple_test);
+    CU_add_test(suite, "simple-func predefined variables", test_simple_func_predefined_variables1);
+}
+
+/*
   Main
  */
 
@@ -306,6 +323,7 @@ int main(void) {
     testsuite_simple_func_symbol_value();
     testsuite_simple_func_substring();
     testsuite_simple_func_string_to_number();
+    testsuite_simple_func_predefined_variables();
 
     CU_basic_run_tests();
     int ret = CU_get_number_of_failures();
