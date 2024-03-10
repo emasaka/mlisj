@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <time.h>
 #include "lispobject.h"
 #include "lispenv.h"
 #include "util.h"
@@ -9,6 +10,7 @@
 #define EXPOSE_SYSEM_ENV 1
 
 #define TMP_BUFFSIZE 512
+#define STRFTIME_BUFFSIZE 64
 
 /* dummy values for variables and functions */
 #define V_FILL_COLUMN 70
@@ -270,6 +272,24 @@ Lisp_Object f_pwd( __attribute__((unused)) NArray *args, __attribute__((unused))
 #endif /* EXPOSE_SYSTEM_ENV*/
 
 /*
+    Function: current-time-string
+*/
+
+Lisp_Object f_current_time_string(NArray *args, lispenv_t *env) {
+    struct tm newtime;
+    time_t ltime;
+    char buffer[STRFTIME_BUFFSIZE];
+
+    CHECK_CONDITION(args->size == 0);
+    time(&ltime);
+    localtime_r(&ltime, &newtime);
+    strftime(buffer, STRFTIME_BUFFSIZE, "%a %b %d %H:%M:%S %Y", &newtime);
+    char *str = copy_to_string_area(env->mempool, buffer);
+    CHECK_ALLOC(str);
+    return LISP_STRING(str);
+}
+
+/*
     register functions and variables
 */
 
@@ -284,6 +304,7 @@ int register_func_simple(lispenv_t *env) {
     ADD_FUNC_OR_RETURN(func_pool, "substring", f_substring);
     ADD_FUNC_OR_RETURN(func_pool, "string-to-number", f_string_to_number);
     ADD_FUNC_OR_RETURN(func_pool, "pwd", f_pwd);
+    ADD_FUNC_OR_RETURN(func_pool, "current-time-string", f_current_time_string);
 
     variable_pool_t *variable_pool = env->variable_pool;
     SET_VARIABVLE_OR_RETURN(variable_pool, "fill-column", LISP_INT(V_FILL_COLUMN));

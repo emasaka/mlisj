@@ -319,6 +319,20 @@ void testsuite_simple_func_pwd(void) {
 }
 
 /*
+    Function: current-time-string
+*/
+
+void test_simple_func_current_time_string_call(void) {
+    Lisp_Object result = eval_expr(reader("(current-time-string)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+}
+
+void testsuite_simple_func_current_time_string(void) {
+    CU_pSuite suite = CU_add_suite("simplt-func current_time_string", init_for_func_simple_test, end_for_func_simple_test);
+    CU_add_test(suite, "simple-func pwd call", test_simple_func_current_time_string_call);
+}
+
+/*
     Variables
 */
 
@@ -351,6 +365,7 @@ int main(void) {
     testsuite_simple_func_substring();
     testsuite_simple_func_string_to_number();
     testsuite_simple_func_pwd();
+    testsuite_simple_func_current_time_string();
     testsuite_simple_func_predefined_variables();
 
     CU_basic_run_tests();
