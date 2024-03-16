@@ -120,6 +120,26 @@ void testsuite_eval_func_call(void) {
 }
 
 /*
+  dynamic variable
+ */
+
+static Lisp_Object dummy_dynamic_var_func(__attribute__((unused)) lispenv_t *env) {
+    return LISP_INT(52);
+}
+
+void test_eval_dynamic_var_call(void) {
+    set_variable_from_cstr(lisp_env->variable_pool, "foo", DYNAMIC_VAL(dummy_dynamic_var_func), true);
+    Lisp_Object result = eval_expr(reader("foo", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result), 52);
+}
+
+void testsuite_eval_dynamic_variable(void) {
+    CU_pSuite suite = CU_add_suite("eval dynamic variable", init_for_evaltest, end_for_evaltest);
+    CU_add_test(suite, "eval dynamic variable call", test_eval_dynamic_var_call);
+}
+
+/*
   Main
  */
 
@@ -130,6 +150,7 @@ int main(void) {
     testsuite_eval_symbol();
     testsuite_eval_specialform();
     testsuite_eval_func_call();
+    testsuite_eval_dynamic_variable();
 
     CU_basic_run_tests();
     int ret = CU_get_number_of_failures();

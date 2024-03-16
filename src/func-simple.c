@@ -189,7 +189,13 @@ Lisp_Object f_string_to_char(NArray *args, __attribute__((unused)) lispenv_t *en
 Lisp_Object f_symbol_value(NArray *args, lispenv_t *env) {
     CHECK_CONDITION(args->size == 1);
     CHECK_TYPE(args->data[0], Lisp_Symbol);
-    return get_variable(env->variable_pool, GET_SVAL(args->data[0]));
+    Lisp_Object val = get_variable(env->variable_pool, GET_SVAL(args->data[0]));
+    if (GET_TYPE(val) == Dynamic_Val) {
+        /* dynamic variable */
+        Lisp_Object (*fn)() =GET_FNVAL(val);
+        val = fn(env);
+    }
+    return val;
 }
 
 /*

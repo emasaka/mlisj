@@ -206,10 +206,22 @@ void test_simple_func_symbol_value_notfound(void) {
     CU_ASSERT_EQUAL(GET_TYPE(result), Internal_Error);
 }
 
+static Lisp_Object dummy_dynamic_var_func(__attribute__((unused)) lispenv_t *env) {
+    return LISP_INT(52);
+}
+
+void test_simple_func_symbol_value_dynamic(void) {
+   set_variable_from_cstr(lisp_env->variable_pool, "bar", DYNAMIC_VAL(dummy_dynamic_var_func), true);
+    Lisp_Object result = eval_expr(reader("(symbol-value 'bar)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result), 52);
+}
+
 void testsuite_simple_func_symbol_value(void) {
     CU_pSuite suite = CU_add_suite("simplt-func symbol-value", init_for_func_simple_test, end_for_func_simple_test);
     CU_add_test(suite, "simple-func symbol-value found", test_simple_func_symbol_value_found);
     CU_add_test(suite, "simple-func symbol-value fnotound", test_simple_func_symbol_value_notfound);
+    CU_add_test(suite, "simple-func symbol-value dynamic", test_simple_func_symbol_value_dynamic);
 }
 
 /*

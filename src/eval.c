@@ -8,10 +8,15 @@ static Lisp_Object eval_symbol(Lisp_Object sym, lispenv_t *env) {
     if (s[0] == ':') {
         /* keyword symbol*/
         return sym;
-    } else {
-        /* symbol as variable */
-        return get_variable(env->variable_pool, s);
     }
+    /* symbol as variable */
+    Lisp_Object val = get_variable(env->variable_pool, s);
+    if (GET_TYPE(val) == Dynamic_Val) {
+        /* dynamic variable */
+        Lisp_Object (*fn)() =GET_FNVAL(val);
+        val = fn(env);
+    }
+    return val;
 }
 
 static Lisp_Object eval_func_call(Lisp_Object lst, lispenv_t *env) {
