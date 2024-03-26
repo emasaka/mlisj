@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+#include <pwd.h>
+#include <sys/types.h>
+#include <limits.h>
+#include <stdio.h>
 #include "lispobject.h"
 #include "lispenv.h"
 #include "util.h"
@@ -16,6 +20,8 @@
 #define V_FILL_COLUMN 70
 #define V_COMMENT_START "#"
 #define V_CWD "/"
+#define V_USER_FULL_NAME "Jay Doe"
+#define V_USER_MAIL_ADDRESS "jaydoe@example.com"
 
 /* syntax sugar macros */
 #define CHECK_CONDITION(c) if (!(c)) { return LISP_ERROR(Evaluation_Error); }
@@ -296,6 +302,42 @@ Lisp_Object f_current_time_string(NArray *args, lispenv_t *env) {
 }
 
 /*
+    dynamic variables.
+    I suppose these variables are rarely used.
+    So, it is not efficient to set these variables every time interpreter is started.
+*/
+
+Lisp_Object dv_user_full_name(lispenv_t *env) {
+    struct passwd pwd_data;
+    struct passwd *result;
+    char buffer[TMP_BUFFSIZE];
+    uid_t uid = getuid();
+
+    int rtn = getpwuid_r(uid, &pwd_data, buffer, TMP_BUFFSIZE, &result);
+    CHECK_CONDITION(rtn == 0 && result != NULL);
+    char *comma_ptr = strchr(pwd_data.pw_gecos, ',');
+    if (comma_ptr) {
+        *comma_ptr = '\0';
+    }
+    char *str = copy_to_string_area(env->mempool, pwd_data.pw_gecos);
+    CHECK_ALLOC(str);
+    return LISP_STRING(str);
+}
+
+Lisp_Object dv_user_mail_address(lispenv_t *env) {
+    char buff1[LOGIN_NAME_MAX + 1];
+    CHECK_CONDITION(getlogin_r(buff1, LOGIN_NAME_MAX + 1) == 0);
+
+    char buff2[HOST_NAME_MAX + 1];
+    CHECK_CONDITION(gethostname(buff2, HOST_NAME_MAX + 1) == 0);
+
+    char *str = new_string_area(env->mempool, strlen(buff1) + strlen(buff2) + 2);
+    CHECK_ALLOC(str);
+    sprintf(str, "%s@%s", buff1, buff2);
+    return LISP_STRING(str);
+}
+
+/*
     register functions and variables
 */
 
@@ -315,6 +357,14 @@ int register_func_simple(lispenv_t *env) {
     variable_pool_t *variable_pool = env->variable_pool;
     SET_VARIABVLE_OR_RETURN(variable_pool, "fill-column", LISP_INT(V_FILL_COLUMN));
     SET_VARIABVLE_OR_RETURN(variable_pool, "comment-start", LISP_STRING(V_COMMENT_START));
+
+#if EXPOSE_SYSEM_ENV
+    SET_VARIABVLE_OR_RETURN(variable_pool, "user-full-name", DYNAMIC_VAL(dv_user_full_name));
+    SET_VARIABVLE_OR_RETURN(variable_pool, "user-mail-address", DYNAMIC_VAL(dv_user_mail_address));
+#else
+    SET_VARIABVLE_OR_RETURN(variable_pool, "user-full-name", LISP_STRING(V_USER_FULL_NAME));
+    SET_VARIABVLE_OR_RETURN(variable_pool, "user-mail-address", LISP_STRING(V_USER_MAIL_ADDRESS));
+#endif
 
     return 0;
 }

@@ -354,6 +354,12 @@ void test_simple_func_predefined_variables1(void) {
 
     Lisp_Object result2 = eval_expr(reader("comment-start", lisp_env), lisp_env);
     CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+
+    Lisp_Object result3 = eval_expr(reader("user-full-name", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result3), Lisp_String);
+
+    Lisp_Object result4 = eval_expr(reader("user-mail-address", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result4), Lisp_String);
 }
 
 void testsuite_simple_func_predefined_variables(void) {
