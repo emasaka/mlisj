@@ -331,6 +331,20 @@ void testsuite_simple_func_pwd(void) {
 }
 
 /*
+    Function: window_width
+*/
+
+void test_simple_func_window_width_call(void) {
+    Lisp_Object result = eval_expr(reader("(window-width)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_Int);
+}
+
+void testsuite_simple_func_window_width(void) {
+    CU_pSuite suite = CU_add_suite("simplt-func window_width", init_for_func_simple_test, end_for_func_simple_test);
+    CU_add_test(suite, "simple-func window_width call", test_simple_func_window_width_call);
+}
+
+/*
     Function: current-time-string
 */
 
@@ -383,6 +397,7 @@ int main(void) {
     testsuite_simple_func_substring();
     testsuite_simple_func_string_to_number();
     testsuite_simple_func_pwd();
+    testsuite_simple_func_window_width();
     testsuite_simple_func_current_time_string();
     testsuite_simple_func_predefined_variables();
 

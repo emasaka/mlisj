@@ -22,6 +22,7 @@
 #define V_CWD "/"
 #define V_USER_FULL_NAME "Jay Doe"
 #define V_USER_MAIL_ADDRESS "jaydoe@example.com"
+#define V_WINDOW_WIDTH 80
 
 /* syntax sugar macros */
 #define CHECK_CONDITION(c) if (!(c)) { return LISP_ERROR(Evaluation_Error); }
@@ -284,6 +285,14 @@ Lisp_Object f_pwd( __attribute__((unused)) NArray *args, __attribute__((unused))
 #endif /* EXPOSE_SYSTEM_ENV*/
 
 /*
+    Function: window-width
+*/
+
+Lisp_Object f_window_width( __attribute__((unused)) NArray *args, __attribute__((unused)) lispenv_t *env) {
+    return LISP_INT(V_WINDOW_WIDTH);
+}
+
+/*
     Function: current-time-string
 */
 
@@ -352,6 +361,7 @@ int register_func_simple(lispenv_t *env) {
     ADD_FUNC_OR_RETURN(func_pool, "substring", f_substring);
     ADD_FUNC_OR_RETURN(func_pool, "string-to-number", f_string_to_number);
     ADD_FUNC_OR_RETURN(func_pool, "pwd", f_pwd);
+    ADD_FUNC_OR_RETURN(func_pool, "window-width", f_window_width);
     ADD_FUNC_OR_RETURN(func_pool, "current-time-string", f_current_time_string);
 
     variable_pool_t *variable_pool = env->variable_pool;
