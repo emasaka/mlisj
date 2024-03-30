@@ -10,6 +10,7 @@
 #include "lispobject.h"
 #include "lispenv.h"
 #include "util.h"
+#include "func-helper.h"
 
 #define EXPOSE_SYSEM_ENV 1
 
@@ -23,14 +24,6 @@
 #define V_USER_FULL_NAME "Jay Doe"
 #define V_USER_MAIL_ADDRESS "jaydoe@example.com"
 #define V_WINDOW_WIDTH 80
-
-/* syntax sugar macros */
-#define CHECK_CONDITION(c) if (!(c)) { return LISP_ERROR(Evaluation_Error); }
-#define CHECK_TYPE(x, tp) if (GET_TYPE(x) != tp) { return LISP_ERROR(Evaluation_Error); }
-#define CHECK_ALLOC(p) if ((p) == NULL) { return LISP_ERROR(Memory_Error); }
-
-#define ADD_FUNC_OR_RETURN(fp, s, f) if(add_func_from_cstr(fp, s, f, false) != 0) { return -1; }
-#define SET_VARIABVLE_OR_RETURN(vp, var, val) if(set_variable_from_cstr(vp, var, val, false) != 0) { return -1; }
 
 /*
     Function: -

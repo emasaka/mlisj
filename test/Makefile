@@ -3,8 +3,8 @@ CC := gcc
 CFLAGS := -W -Wall -fsanitize=address -static-libasan
 TEST_CFLAGS := $(CFLAGS) -lcunit
 
-TEST_EXECS := test_mempool test_symbol test_variable test_functable test_lispenv test_reader test_eval test_func-simple test_util
-OBJS := mempool.o symbol.o variable.o functable.o lispenv.o reader.o eval.o func-simple.o util.o writer.o
+TEST_EXECS := test_mempool test_symbol test_variable test_functable test_lispenv test_reader test_eval test_func-simple test_func-skk-gadgets test_util
+OBJS := mempool.o symbol.o variable.o functable.o lispenv.o reader.o eval.o func-simple.o func-skk-gadgets.o util.o writer.o
 
 .DEFAULT_GOAL := test
 
@@ -38,6 +38,8 @@ test_eval: test_eval.c eval.o reader.o util.o writer.o $(LISPENV_O_AND_DEPS) ../
 
 test_func-simple: test_func-simple.c func-simple.o eval.o reader.o util.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
 
+test_func-skk-gadgets: test_func-skk-gadgets.c func-skk-gadgets.o eval.o reader.o util.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
+
 test_util: test_util.c util.o ../src/util.h
 
 # Object modules
@@ -59,7 +61,9 @@ reader.o: ../src/reader.c ../src/util.h $(LISPENV_H_AND_DEPS)
 
 eval.o: ../src/eval.c  ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
 
-func-simple.o: ../src/func-simple.c ../src/eval.h ../src/reader.h ../src/util.h $(LISPENV_H_AND_DEPS)
+func-simple.o: ../src/func-simple.c ../src/eval.h ../src/reader.h ../src/util.h ../src/func-helper.h $(LISPENV_H_AND_DEPS)
+
+func-skk-gadgets.o: ../src/func-skk-gadgets.c ../src/eval.h ../src/reader.h ../src/util.h ../src/func-helper.h $(LISPENV_H_AND_DEPS)
 
 util.o: ../src/util.c ../src/util.h
 
