@@ -68,7 +68,7 @@ void test_simple_func_minus_float(void) {
 }
 
 void testsuite_simple_func_minus(void) {
-    CU_pSuite suite = CU_add_suite("simplt-func minus", init_for_func_simple_test, end_for_func_simple_test);
+    CU_pSuite suite = CU_add_suite("simple-func minus", init_for_func_simple_test, end_for_func_simple_test);
     CU_add_test(suite, "simple-func minus int", test_simple_func_minus_int);
     CU_add_test(suite, "simple-func minus float", test_simple_func_minus_float);
 }
@@ -98,7 +98,7 @@ void test_simple_func_car_nonlist(void) {
 }
 
 void testsuite_simple_func_car(void) {
-    CU_pSuite suite = CU_add_suite("simplt-func car", init_for_func_simple_test, end_for_func_simple_test);
+    CU_pSuite suite = CU_add_suite("simple-func car", init_for_func_simple_test, end_for_func_simple_test);
     CU_add_test(suite, "simple-func car list", test_simple_func_car_list);
     CU_add_test(suite, "simple-func car nil", test_simple_func_car_nil);
     CU_add_test(suite, "simple-func car nonlist", test_simple_func_car_list);
@@ -127,7 +127,7 @@ void test_simple_func_concat_multiarg(void) {
 }
 
 void testsuite_simple_func_concat(void) {
-    CU_pSuite suite = CU_add_suite("simplt-func concat", init_for_func_simple_test, end_for_func_simple_test);
+    CU_pSuite suite = CU_add_suite("simple-func concat", init_for_func_simple_test, end_for_func_simple_test);
     CU_add_test(suite, "simple-func concat noarg", test_simple_func_concat_noarg);
     CU_add_test(suite, "simple-func concat onearg", test_simple_func_concat_onearg);
     CU_add_test(suite, "simple-func concat multiarg", test_simple_func_concat_multiarg);
@@ -165,7 +165,7 @@ void test_simple_func_make_string_error(void) {
 }
 
 void testsuite_simple_func_make_string(void) {
-    CU_pSuite suite = CU_add_suite("simplt-func make-string", init_for_func_simple_test, end_for_func_simple_test);
+    CU_pSuite suite = CU_add_suite("simple-func make-string", init_for_func_simple_test, end_for_func_simple_test);
     CU_add_test(suite, "simple-func make-string normal", test_simple_func_make_string_normal);
     CU_add_test(suite, "simple-func make-string error", test_simple_func_make_string_error);
 }
@@ -185,7 +185,7 @@ void test_simple_func_string_to_char(void) {
 }
 
 void testsuite_simple_func_string_to_char(void) {
-    CU_pSuite suite = CU_add_suite("simplt-func string-to-char", init_for_func_simple_test, end_for_func_simple_test);
+    CU_pSuite suite = CU_add_suite("simple-func string-to-char", init_for_func_simple_test, end_for_func_simple_test);
     CU_add_test(suite, "simple-func string-to-char normal", test_simple_func_string_to_char);
 }
 
@@ -218,7 +218,7 @@ void test_simple_func_symbol_value_dynamic(void) {
 }
 
 void testsuite_simple_func_symbol_value(void) {
-    CU_pSuite suite = CU_add_suite("simplt-func symbol-value", init_for_func_simple_test, end_for_func_simple_test);
+    CU_pSuite suite = CU_add_suite("simple-func symbol-value", init_for_func_simple_test, end_for_func_simple_test);
     CU_add_test(suite, "simple-func symbol-value found", test_simple_func_symbol_value_found);
     CU_add_test(suite, "simple-func symbol-value fnotound", test_simple_func_symbol_value_notfound);
     CU_add_test(suite, "simple-func symbol-value dynamic", test_simple_func_symbol_value_dynamic);
@@ -266,7 +266,7 @@ void test_simple_func_substring_error(void) {
 }
 
 void testsuite_simple_func_substring(void) {
-    CU_pSuite suite = CU_add_suite("simplt-func substring", init_for_func_simple_test, end_for_func_simple_test);
+    CU_pSuite suite = CU_add_suite("simple-func substring", init_for_func_simple_test, end_for_func_simple_test);
     CU_add_test(suite, "simple-func substring head", test_simple_func_substring_head);
     CU_add_test(suite, "simple-func substring middle", test_simple_func_substring_middle);
     CU_add_test(suite, "simple-func substring tail", test_simple_func_substring_tail);
@@ -300,7 +300,7 @@ void test_simple_func_string_to_number_notnumber(void) {
 }
 
 void testsuite_simple_func_string_to_number(void) {
-    CU_pSuite suite = CU_add_suite("simplt-func string-to-number", init_for_func_simple_test, end_for_func_simple_test);
+    CU_pSuite suite = CU_add_suite("simple-func string-to-number", init_for_func_simple_test, end_for_func_simple_test);
     CU_add_test(suite, "simple-func string-to-number int", test_simple_func_string_to_number_int);
     CU_add_test(suite, "simple-func string-to-number float", test_simple_func_string_to_number_float);
     CU_add_test(suite, "simple-func string-to-number notnumber", test_simple_func_string_to_number_notnumber);
@@ -325,7 +325,7 @@ void test_simple_func_pwd_body(void) {
 }
 
 void testsuite_simple_func_pwd(void) {
-    CU_pSuite suite = CU_add_suite("simplt-func pwd", init_for_func_simple_test, end_for_func_simple_test);
+    CU_pSuite suite = CU_add_suite("simple-func pwd", init_for_func_simple_test, end_for_func_simple_test);
     CU_add_test(suite, "simple-func pwd call", test_simple_func_pwd_call);
     CU_add_test(suite, "simple-func pwd body", test_simple_func_pwd_body);
 }
@@ -340,7 +340,7 @@ void test_simple_func_window_width_call(void) {
 }
 
 void testsuite_simple_func_window_width(void) {
-    CU_pSuite suite = CU_add_suite("simplt-func window_width", init_for_func_simple_test, end_for_func_simple_test);
+    CU_pSuite suite = CU_add_suite("simple-func window_width", init_for_func_simple_test, end_for_func_simple_test);
     CU_add_test(suite, "simple-func window_width call", test_simple_func_window_width_call);
 }
 
@@ -354,7 +354,7 @@ void test_simple_func_current_time_string_call(void) {
 }
 
 void testsuite_simple_func_current_time_string(void) {
-    CU_pSuite suite = CU_add_suite("simplt-func current_time_string", init_for_func_simple_test, end_for_func_simple_test);
+    CU_pSuite suite = CU_add_suite("simple-func current_time_string", init_for_func_simple_test, end_for_func_simple_test);
     CU_add_test(suite, "simple-func pwd call", test_simple_func_current_time_string_call);
 }
 
@@ -377,7 +377,7 @@ void test_simple_func_predefined_variables1(void) {
 }
 
 void testsuite_simple_func_predefined_variables(void) {
-    CU_pSuite suite = CU_add_suite("simplt-func predefined variables", init_for_func_simple_test, end_for_func_simple_test);
+    CU_pSuite suite = CU_add_suite("simple-func predefined variables", init_for_func_simple_test, end_for_func_simple_test);
     CU_add_test(suite, "simple-func predefined variables", test_simple_func_predefined_variables1);
 }
 
