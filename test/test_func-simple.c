@@ -307,7 +307,7 @@ void testsuite_simple_func_string_to_number(void) {
 }
 
 /*
-    Function: string-to-number
+    Function: pwd
 */
 
 void test_simple_func_pwd_call(void) {
