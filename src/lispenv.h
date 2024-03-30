@@ -16,9 +16,13 @@ typedef struct {
     /* reserved symbols */
     char * Symbol_quote;
     char * Symbol_lambda;
+
+    /* base of skk-num-list */
+    char **skk_num_list;
 } lispenv_t;
 
 extern lispenv_t *init_lispenv(void);
 extern void end_lispenv(lispenv_t *);
+extern void register_skk_num_list(lispenv_t *, char **);
 
 #endif /* _LISPENV_H */

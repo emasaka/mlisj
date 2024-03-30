@@ -40,6 +40,12 @@ lispenv_t *init_lispenv(void) {
     if (func_pool == NULL) { END_AND_RETURN_NULL(env); }
     env->func_pool = func_pool;
 
+    env->skk_num_list = NULL;
+
     return env;
 #undef END_AND_RETURN_NULL
+}
+
+void register_skk_num_list(lispenv_t *env, char **skk_num_list) {
+    env->skk_num_list = skk_num_list;
 }

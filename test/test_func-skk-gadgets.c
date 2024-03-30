@@ -40,6 +40,40 @@ void testsuite_skk_gadgets_func_skk_version(void) {
 }
 
 /*
+    Dynamic variable: skk-num-list
+*/
+
+void test_skk_gadgets_func_skk_num_list_empty(void) {
+    register_skk_num_list(lisp_env, NULL);
+
+    Lisp_Object result = eval_expr(reader("skk-num-list", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_Nil);
+}
+
+void test_skk_gadgets_func_skk_num_list_notempty(void) {
+    char *num_list[] = { "32", "50", NULL };
+    register_skk_num_list(lisp_env, num_list);
+
+    Lisp_Object result = eval_expr(reader("skk-num-list", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_CList);
+    CU_ASSERT_EQUAL(GET_AVAL(result)->size, 2);
+
+    Lisp_Object elm0 = GET_AVAL(result)->data[0];
+    CU_ASSERT_EQUAL(GET_TYPE(elm0), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(elm0), "32");
+
+    Lisp_Object elm1 = GET_AVAL(result)->data[1];
+    CU_ASSERT_EQUAL(GET_TYPE(elm1), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(elm1), "50");
+}
+
+void testsuite_skk_gadgets_func_skk_num_list(void) {
+    CU_pSuite suite = CU_add_suite("skk-gadgets-func skk-num-list", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
+    CU_add_test(suite, "skk-gadgets-func skk-num-list empty", test_skk_gadgets_func_skk_num_list_empty);
+    CU_add_test(suite, "skk-gadgets-func skk-num-list notempty", test_skk_gadgets_func_skk_num_list_notempty);
+}
+
+/*
   Main
  */
 
@@ -47,6 +81,7 @@ int main(void) {
     CU_initialize_registry();
 
     testsuite_skk_gadgets_func_skk_version();
+    testsuite_skk_gadgets_func_skk_num_list();
 
     CU_basic_run_tests();
     int ret = CU_get_number_of_failures();
