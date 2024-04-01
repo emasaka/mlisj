@@ -40,6 +40,33 @@ void testsuite_skk_gadgets_func_skk_version(void) {
 }
 
 /*
+    Function: skk-times
+*/
+
+void test_skk_gadgets_func_skk_times_zeronums(void) {
+    register_skk_num_list(lisp_env, NULL);
+
+    Lisp_Object result = eval_expr(reader("(skk-times)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "1");
+}
+
+void test_skk_gadgets_func_skk_times_somenums(void) {
+    char *num_list[] = { "3", "5", "7", NULL };
+    register_skk_num_list(lisp_env, num_list);
+
+    Lisp_Object result = eval_expr(reader("(skk-times)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "105");
+}
+
+void testsuite_skk_gadgets_func_skk_times(void) {
+    CU_pSuite suite = CU_add_suite("skk-gadgets-func skk-times", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
+    CU_add_test(suite, "skk-gadgets-func skk-times zero numbers", test_skk_gadgets_func_skk_times_zeronums);
+    CU_add_test(suite, "skk-gadgets-func skk-times zero numbers", test_skk_gadgets_func_skk_times_somenums);
+}
+
+/*
     Dynamic variable: skk-num-list
 */
 
@@ -81,6 +108,7 @@ int main(void) {
     CU_initialize_registry();
 
     testsuite_skk_gadgets_func_skk_version();
+    testsuite_skk_gadgets_func_skk_times();
     testsuite_skk_gadgets_func_skk_num_list();
 
     CU_basic_run_tests();
