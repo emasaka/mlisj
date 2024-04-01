@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "lispobject.h"
 #include "lispenv.h"
 #include "func-helper.h"
@@ -40,6 +41,50 @@ Lisp_Object f_skk_times(NArray *args, lispenv_t *env) {
 }
 
 /*
+    Function: skk-gadget-units-conversion
+*/
+
+static struct {
+    char *unit_from;
+    char *unit_to;
+    double ratio;
+} units_list[] = {
+    { "mile" ,"km" ,1.6093 },
+    { "mile" ,"yard" ,1760 },
+    { "yard" ,"feet" ,3 },
+    { "yard" ,"cm" ,91.44 },
+    { "feet" ,"inch" ,12 },
+    { "feet" ,"cm" ,30.48 },
+    { "inch" ,"feet" ,0.5 },
+    { "inch" ,"cm" ,2.54 }
+};
+
+Lisp_Object f_skk_gadget_units_conversion(NArray *args, lispenv_t *env) {
+    char buff[TMP_BUFFSIZE];
+    CHECK_CONDITION(args->size == 3);
+    CHECK_TYPE(args->data[0], Lisp_String);
+    char *unit_from = GET_SVAL(args->data[0]);
+    /* WORKAROUND: assume original value is integer */
+    CHECK_TYPE(args->data[1], Lisp_Int);
+    int val = GET_IVAL(args->data[1]);
+    CHECK_TYPE(args->data[2], Lisp_String);
+    char *unit_to = GET_SVAL(args->data[2]);
+
+    for (size_t i = 0; i < (sizeof(units_list) / sizeof(units_list[0])); i++) {
+        if (strcmp(unit_from, units_list[i].unit_from) == 0 &&
+            strcmp(unit_to, units_list[i].unit_to) == 0 ) {
+                sprintf(buff, "%g", val * units_list[i].ratio);
+                char *str = new_string_area(env->mempool, strlen(buff) + strlen(units_list[i].unit_to) + 1);
+                CHECK_ALLOC(str);
+                sprintf(str, "%s%s", buff, units_list[i].unit_to);
+                return LISP_STRING(str);
+        }
+    }
+    /* not matched */
+    return LISP_ERROR(Evaluation_Error);
+}
+
+/*
     Dynamic variable: skk-num-list
 */
 
@@ -67,6 +112,7 @@ int register_func_skk_gadgets(lispenv_t *env) {
     func_pool_t *func_pool = env->func_pool;
     ADD_FUNC_OR_RETURN(func_pool, "skk-version", f_skk_version);
     ADD_FUNC_OR_RETURN(func_pool, "skk-times", f_skk_times);
+    ADD_FUNC_OR_RETURN(func_pool, "skk-gadget-units-conversion", f_skk_gadget_units_conversion);
 
     variable_pool_t *variable_pool = env->variable_pool;
     SET_VARIABVLE_OR_RETURN(variable_pool, "skk-num-list", DYNAMIC_VAL(dv_skk_num_list));

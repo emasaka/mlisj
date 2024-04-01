@@ -26,6 +26,22 @@ int end_for_func_skk_gadgets_test(void) {
 }
 
 /*
+    Helper functions
+*/
+
+int string_endswith(char *str, char *ptn) {
+    size_t str_size = strlen(str);
+    size_t ptn_size = strlen(ptn);
+    if (str_size < ptn_size) { return -1; }
+    for (size_t i = 1; i <= ptn_size; i++) {
+        if (str[str_size - i] != ptn[ptn_size - i]) {
+            return -1;
+        }
+    }
+    return 0;
+}
+
+/*
     Function: skk-version
  */
 
@@ -64,6 +80,89 @@ void testsuite_skk_gadgets_func_skk_times(void) {
     CU_pSuite suite = CU_add_suite("skk-gadgets-func skk-times", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
     CU_add_test(suite, "skk-gadgets-func skk-times zero numbers", test_skk_gadgets_func_skk_times_zeronums);
     CU_add_test(suite, "skk-gadgets-func skk-times zero numbers", test_skk_gadgets_func_skk_times_somenums);
+}
+
+/*
+    Function: skk-gadget-units-conversion
+*/
+
+void test_skk_gadgets_func_units_conversion_mile_km(void) {
+    Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"mile\" 2 \"km\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    char *str = GET_SVAL(result);
+    CU_ASSERT_NSTRING_EQUAL(str, "3.2", 3);
+    CU_ASSERT(string_endswith(str, "km") == 0);
+}
+
+void test_skk_gadgets_func_units_conversion_mile_yard(void) {
+    Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"mile\" 2 \"yard\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    char *str = GET_SVAL(result);
+    CU_ASSERT_STRING_EQUAL(str, "3520yard");
+}
+
+void test_skk_gadgets_func_units_conversion_yard_feet(void) {
+    Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"yard\" 2 \"feet\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    char *str = GET_SVAL(result);
+    CU_ASSERT_STRING_EQUAL(str, "6feet");
+}
+
+void test_skk_gadgets_func_units_conversion_yard_cm(void) {
+    Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"yard\" 2 \"cm\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    char *str = GET_SVAL(result);
+    CU_ASSERT_NSTRING_EQUAL(str, "182.88", 6);
+    CU_ASSERT(string_endswith(str, "cm") == 0);
+}
+
+void test_skk_gadgets_func_units_conversion_feet_inch(void) {
+    Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"feet\" 2 \"inch\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    char *str = GET_SVAL(result);
+    CU_ASSERT_STRING_EQUAL(str, "24inch");
+}
+
+void test_skk_gadgets_func_units_conversion_feet_cm(void) {
+    Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"feet\" 2 \"cm\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    char *str = GET_SVAL(result);
+    CU_ASSERT_NSTRING_EQUAL(str, "60.96", 5);
+    CU_ASSERT(string_endswith(str, "cm") == 0);
+}
+
+void test_skk_gadgets_func_units_conversion_inch_feet(void) {
+    Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"inch\" 2 \"feet\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    char *str = GET_SVAL(result);
+    CU_ASSERT_NSTRING_EQUAL(str, "1", 1);
+    CU_ASSERT(string_endswith(str, "feet") == 0);
+}
+
+void test_skk_gadgets_func_units_conversion_inch_cm(void) {
+    Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"inch\" 2 \"cm\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    char *str = GET_SVAL(result);
+    CU_ASSERT_NSTRING_EQUAL(str, "5.0", 3);
+    CU_ASSERT(string_endswith(str, "cm") == 0);
+}
+
+void test_skk_gadgets_func_units_conversion_nomatch(void) {
+    Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"km\" 2 \"cm\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Internal_Error);
+}
+
+void testsuite_skk_gadgets_func_skk_gadget_units_conversion(void) {
+    CU_pSuite suite = CU_add_suite("skk-gadgets-func skk-gadget-units-conversion", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
+    CU_add_test(suite, "skk-gadgets-func skk-gadget-units-conversion mile->km", test_skk_gadgets_func_units_conversion_mile_km);
+    CU_add_test(suite, "skk-gadgets-func skk-gadget-units-conversion mile->yard", test_skk_gadgets_func_units_conversion_mile_yard);
+    CU_add_test(suite, "skk-gadgets-func skk-gadget-units-conversion yard->feet", test_skk_gadgets_func_units_conversion_yard_feet);
+    CU_add_test(suite, "skk-gadgets-func skk-gadget-units-conversion yard->cm", test_skk_gadgets_func_units_conversion_yard_cm);
+    CU_add_test(suite, "skk-gadgets-func skk-gadget-units-conversion feet->inch", test_skk_gadgets_func_units_conversion_feet_inch);
+    CU_add_test(suite, "skk-gadgets-func skk-gadget-units-conversion feet->cm", test_skk_gadgets_func_units_conversion_feet_cm);
+    CU_add_test(suite, "skk-gadgets-func skk-gadget-units-conversion inch->feet", test_skk_gadgets_func_units_conversion_inch_feet);
+    CU_add_test(suite, "skk-gadgets-func skk-gadget-units-conversion inch->cm", test_skk_gadgets_func_units_conversion_inch_cm);
+    CU_add_test(suite, "skk-gadgets-func skk-gadget-units-conversion nomtch", test_skk_gadgets_func_units_conversion_nomatch);
 }
 
 /*
@@ -109,6 +208,7 @@ int main(void) {
 
     testsuite_skk_gadgets_func_skk_version();
     testsuite_skk_gadgets_func_skk_times();
+    testsuite_skk_gadgets_func_skk_gadget_units_conversion();
     testsuite_skk_gadgets_func_skk_num_list();
 
     CU_basic_run_tests();
