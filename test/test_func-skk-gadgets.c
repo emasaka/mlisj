@@ -166,6 +166,50 @@ void testsuite_skk_gadgets_func_skk_gadget_units_conversion(void) {
 }
 
 /*
+    gengo_to_ad_1
+*/
+
+void test_skk_gadgets_func_gengo_to_ad_1_reiwa(void) {
+    CU_ASSERT_EQUAL(gengo_to_ad_1("れいわ", 6), 2024);
+    CU_ASSERT_EQUAL(gengo_to_ad_1("令和", 6), 2024);
+}
+
+void test_skk_gadgets_func_gengo_to_ad_1_heisei(void) {
+    CU_ASSERT_EQUAL(gengo_to_ad_1("へいせい", 22), 2010);
+    CU_ASSERT_EQUAL(gengo_to_ad_1("平成", 22), 2010);
+}
+
+void test_skk_gadgets_func_gengo_to_ad_1_shouwa(void) {
+    CU_ASSERT_EQUAL(gengo_to_ad_1("しょうわ", 55), 1980);
+    CU_ASSERT_EQUAL(gengo_to_ad_1("昭和", 55), 1980);
+}
+
+void test_skk_gadgets_func_gengo_to_ad_1_taishou(void) {
+    CU_ASSERT_EQUAL(gengo_to_ad_1("たいしょう", 10), 1921);
+    CU_ASSERT_EQUAL(gengo_to_ad_1("大正", 10), 1921);
+}
+
+void test_skk_gadgets_func_gengo_to_ad_1_meiji(void) {
+    CU_ASSERT_EQUAL(gengo_to_ad_1("めいじ", 40), 1907);
+    CU_ASSERT_EQUAL(gengo_to_ad_1("明治", 40), 1907);
+}
+
+void test_skk_gadgets_func_gengo_to_ad_1_keio(void) {
+    /* not found */
+    CU_ASSERT_EQUAL(gengo_to_ad_1("けいおう", 2), -1);
+}
+
+void testsuite_skk_gadgets_func_gengo_to_ad_1(void) {
+    CU_pSuite suite = CU_add_suite("skk-gadgets-func gengo_to_ad_1", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
+    CU_add_test(suite, "skk-gadgets-func gengo_to_ad_1 reiwa", test_skk_gadgets_func_gengo_to_ad_1_reiwa);
+    CU_add_test(suite, "skk-gadgets-func gengo_to_ad_1 heisei", test_skk_gadgets_func_gengo_to_ad_1_heisei);
+    CU_add_test(suite, "skk-gadgets-func gengo_to_ad_1 shouwa", test_skk_gadgets_func_gengo_to_ad_1_shouwa);
+    CU_add_test(suite, "skk-gadgets-func gengo_to_ad_1 taishou", test_skk_gadgets_func_gengo_to_ad_1_taishou);
+    CU_add_test(suite, "skk-gadgets-func gengo_to_ad_1 meiji", test_skk_gadgets_func_gengo_to_ad_1_meiji);
+    CU_add_test(suite, "skk-gadgets-func gengo_to_ad_1 keio", test_skk_gadgets_func_gengo_to_ad_1_keio);
+}
+
+/*
     Dynamic variable: skk-num-list
 */
 
@@ -209,6 +253,7 @@ int main(void) {
     testsuite_skk_gadgets_func_skk_version();
     testsuite_skk_gadgets_func_skk_times();
     testsuite_skk_gadgets_func_skk_gadget_units_conversion();
+    testsuite_skk_gadgets_func_gengo_to_ad_1();
     testsuite_skk_gadgets_func_skk_num_list();
 
     CU_basic_run_tests();

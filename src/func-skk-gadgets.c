@@ -85,6 +85,35 @@ Lisp_Object f_skk_gadget_units_conversion(NArray *args, lispenv_t *env) {
 }
 
 /*
+    gengo related routeines
+*/
+
+static struct {
+    char *gengo;
+    char *gengo_kana;
+    char *gengo_initial;
+    int start_y;
+    int start_m;
+    int start_d;
+} gengo_list[] = {
+    { "明治", "めいじ", "M", 1868, 10, 23 },
+    { "大正", "たいしょう", "T", 1912, 7, 30 },
+    { "昭和", "しょうわ", "S", 1926, 12, 25 },
+    { "平成", "へいせい", "H", 1989, 1, 8 },
+    { "令和", "れいわ", "R", 2019, 5, 1 }
+};
+
+int gengo_to_ad_1(char *gengo, int year) {
+    for (size_t i = 0; i < (sizeof(gengo_list) / sizeof(gengo_list[0])); i++) {
+        if (strcmp(gengo, gengo_list[i].gengo) == 0 || strcmp(gengo, gengo_list[i].gengo_kana) == 0) {
+            return year + gengo_list[i].start_y - 1;
+        }
+    }
+    /* unknown gengo */
+    return -1;
+}
+
+/*
     Dynamic variable: skk-num-list
 */
 
