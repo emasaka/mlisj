@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "lispobject.h"
 #include "lispenv.h"
+#include "mempool.h"
 #include "func-helper.h"
 
 #define TMP_BUFFSIZE 512
@@ -111,6 +113,28 @@ int gengo_to_ad_1(char *gengo, int year) {
     }
     /* unknown gengo */
     return -1;
+}
+
+/* month and day can be 0 (unspecified)*/
+Lisp_Object ad_to_gengo_1(lispenv_t *env, int ad, bool not_gannen, int month, int day) {
+    size_t i = 0;
+    for ( ; i < sizeof(gengo_list) / sizeof(gengo_list[0]); i++) {
+        if ((ad * 10000 + (month ? month : 13) * 100 + (day ? day : 32)) <
+            (gengo_list[i].start_y * 10000 + gengo_list[i].start_m * 100 + gengo_list[i].start_d) ) {
+            break;
+        }
+    }
+    if (i == 0) {
+        /* before first gengo */
+        return LISP_ERROR(Evaluation_Error);
+    }
+    int year = ad - gengo_list[i - 1].start_y + 1;
+    NArray *ary = new_narray(env->mempool, 3);
+    CHECK_ALLOC(ary);
+    ary->data[0] = LISP_STRING(gengo_list[i - 1].gengo);
+    ary->data[1] = LISP_STRING(gengo_list[i - 1].gengo_initial);
+    ary->data[2] = (!not_gannen && year == 1) ? LISP_STRING("元") : LISP_INT(year);
+    return LISP_CLIST(ary);
 }
 
 /*

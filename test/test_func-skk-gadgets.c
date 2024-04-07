@@ -4,6 +4,9 @@
 #include "../src/reader.h"
 #include "../src/eval.h"
 #include "../src/func-skk-gadgets.h"
+#include "helper/writer.h"
+
+#define TMP_BUFFSIZE 128
 
 static lispenv_t *lisp_env;
 
@@ -210,6 +213,160 @@ void testsuite_skk_gadgets_func_gengo_to_ad_1(void) {
 }
 
 /*
+    ad_to_gengo_1
+*/
+
+void test_skk_gadgets_func_ad_to_gengo_1_notmatch(void) {
+    Lisp_Object result = ad_to_gengo_1(lisp_env, 1867, true, 0, 0);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Internal_Error);
+}
+
+void test_skk_gadgets_func_ad_to_gengo_1_meiji_beg(void) {
+    char tmp_buf[TMP_BUFFSIZE];
+
+    Lisp_Object result1 = ad_to_gengo_1(lisp_env, 1868, true, 10, 23);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result1), Internal_Error);
+    writer(result1, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"明治\" \"M\" 1)");
+
+    Lisp_Object result2 = ad_to_gengo_1(lisp_env, 1868, false, 10, 23);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result2), Internal_Error);
+    writer(result2, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"明治\" \"M\" \"元\")");
+
+    Lisp_Object result3 = ad_to_gengo_1(lisp_env, 1868, true, 0, 0);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result3), Internal_Error);
+    writer(result3, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"明治\" \"M\" 1)");
+}
+
+void test_skk_gadgets_func_ad_to_gengo_1_meiji_end(void) {
+    char tmp_buf[TMP_BUFFSIZE];
+
+    Lisp_Object result1 = ad_to_gengo_1(lisp_env, 1912, true, 7, 29);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result1), Internal_Error);
+    writer(result1, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"明治\" \"M\" 45)");
+
+    Lisp_Object result2 = ad_to_gengo_1(lisp_env, 1911, true, 0, 0);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result2), Internal_Error);
+    writer(result2, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"明治\" \"M\" 44)");
+}
+
+void test_skk_gadgets_func_ad_to_gengo_1_taisho_beg(void) {
+    char tmp_buf[TMP_BUFFSIZE];
+
+    Lisp_Object result1 = ad_to_gengo_1(lisp_env, 1912, true, 7, 30);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result1), Internal_Error);
+    writer(result1, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"大正\" \"T\" 1)");
+
+    Lisp_Object result2 = ad_to_gengo_1(lisp_env, 1912, true, 0, 0);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result2), Internal_Error);
+    writer(result2, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"大正\" \"T\" 1)");
+}
+
+void test_skk_gadgets_func_ad_to_gengo_1_taisho_end(void) {
+    char tmp_buf[TMP_BUFFSIZE];
+
+    Lisp_Object result1 = ad_to_gengo_1(lisp_env, 1926, true, 12, 24);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result1), Internal_Error);
+    writer(result1, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"大正\" \"T\" 15)");
+
+    Lisp_Object result2 = ad_to_gengo_1(lisp_env, 1925, true, 0, 0);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result2), Internal_Error);
+    writer(result2, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"大正\" \"T\" 14)");
+}
+
+void test_skk_gadgets_func_ad_to_gengo_1_showa_beg(void) {
+    char tmp_buf[TMP_BUFFSIZE];
+
+    Lisp_Object result1 = ad_to_gengo_1(lisp_env, 1926, true, 12, 25);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result1), Internal_Error);
+    writer(result1, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"昭和\" \"S\" 1)");
+
+    Lisp_Object result2 = ad_to_gengo_1(lisp_env, 1926, true, 0, 0);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result2), Internal_Error);
+    writer(result2, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"昭和\" \"S\" 1)");
+}
+
+void test_skk_gadgets_func_ad_to_gengo_1_showa_end(void) {
+    char tmp_buf[TMP_BUFFSIZE];
+
+    Lisp_Object result1 = ad_to_gengo_1(lisp_env, 1989, true, 1, 7);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result1), Internal_Error);
+    writer(result1, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"昭和\" \"S\" 64)");
+
+    Lisp_Object result2 = ad_to_gengo_1(lisp_env, 1988, true, 0, 0);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result2), Internal_Error);
+    writer(result2, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"昭和\" \"S\" 63)");
+}
+
+void test_skk_gadgets_func_ad_to_gengo_1_heisei_beg(void) {
+    char tmp_buf[TMP_BUFFSIZE];
+
+    Lisp_Object result1 = ad_to_gengo_1(lisp_env, 1989, true, 1, 8);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result1), Internal_Error);
+    writer(result1, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"平成\" \"H\" 1)");
+
+    Lisp_Object result2 = ad_to_gengo_1(lisp_env, 1989, true, 0, 0);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result2), Internal_Error);
+    writer(result2, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"平成\" \"H\" 1)");
+}
+
+void test_skk_gadgets_func_ad_to_gengo_1_heisei_end(void) {
+    char tmp_buf[TMP_BUFFSIZE];
+
+    Lisp_Object result1 = ad_to_gengo_1(lisp_env, 2019, true, 4, 30);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result1), Internal_Error);
+    writer(result1, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"平成\" \"H\" 31)");
+
+    Lisp_Object result2 = ad_to_gengo_1(lisp_env, 2018, true, 0, 0);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result2), Internal_Error);
+    writer(result2, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"平成\" \"H\" 30)");
+}
+
+void test_skk_gadgets_func_ad_to_gengo_1_reiwa_beg(void) {
+    char tmp_buf[TMP_BUFFSIZE];
+
+    Lisp_Object result1 = ad_to_gengo_1(lisp_env, 2019, true, 5, 1);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result1), Internal_Error);
+    writer(result1, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"令和\" \"R\" 1)");
+
+    Lisp_Object result2 = ad_to_gengo_1(lisp_env, 2019, true, 0, 0);
+    CU_ASSERT_NOT_EQUAL(GET_TYPE(result2), Internal_Error);
+    writer(result2, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"令和\" \"R\" 1)");
+}
+
+void testsuite_skk_gadgets_func_ad_to_gengo_1(void) {
+    CU_pSuite suite = CU_add_suite("skk-gadgets-func ad_to_gengo_1", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
+    CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 nomatch", test_skk_gadgets_func_ad_to_gengo_1_notmatch);
+    CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 meiji begin", test_skk_gadgets_func_ad_to_gengo_1_meiji_beg);
+    CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 meiji end", test_skk_gadgets_func_ad_to_gengo_1_meiji_end);
+    CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 taisho begin", test_skk_gadgets_func_ad_to_gengo_1_taisho_beg);
+    CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 taisho end", test_skk_gadgets_func_ad_to_gengo_1_taisho_end);
+    CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 showa begin", test_skk_gadgets_func_ad_to_gengo_1_showa_beg);
+    CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 showa end", test_skk_gadgets_func_ad_to_gengo_1_showa_end);
+    CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 heisei begin", test_skk_gadgets_func_ad_to_gengo_1_heisei_beg);
+    CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 heisei end", test_skk_gadgets_func_ad_to_gengo_1_heisei_end);
+    CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 reiwa begin", test_skk_gadgets_func_ad_to_gengo_1_reiwa_beg);
+}
+
+/*
     Dynamic variable: skk-num-list
 */
 
@@ -254,6 +411,7 @@ int main(void) {
     testsuite_skk_gadgets_func_skk_times();
     testsuite_skk_gadgets_func_skk_gadget_units_conversion();
     testsuite_skk_gadgets_func_gengo_to_ad_1();
+    testsuite_skk_gadgets_func_ad_to_gengo_1();
     testsuite_skk_gadgets_func_skk_num_list();
 
     CU_basic_run_tests();

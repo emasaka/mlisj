@@ -38,7 +38,7 @@ test_eval: test_eval.c eval.o reader.o util.o writer.o $(LISPENV_O_AND_DEPS) ../
 
 test_func-simple: test_func-simple.c func-simple.o eval.o reader.o util.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
 
-test_func-skk-gadgets: test_func-skk-gadgets.c func-skk-gadgets.o eval.o reader.o util.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
+test_func-skk-gadgets: test_func-skk-gadgets.c func-skk-gadgets.o eval.o reader.o util.o writer.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
 
 test_util: test_util.c util.o ../src/util.h
 
