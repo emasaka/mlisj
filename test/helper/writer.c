@@ -56,14 +56,14 @@ int writer_nil(writer_context *c) {
 
 int writer_string(Lisp_Object obj, writer_context *c) {
     char tmp_buf[TMP_BUFFSIZE];
-    char *p = obj.val.sval;
+    unsigned char *p = (unsigned char *)obj.val.sval;
     int ch;
     int ret;
     ret = writer_putc('"', c);
     if (ret != 0) { return ret; }
     while ((ch = *p++) != '\0') {
-        if (isprint(ch)) {
-            // XXX: printing multibyte character is not supported yet
+        if (isprint(ch) || ch > 0x7f) {
+            // WORKAROUND: assume a character larger than 0x7f is a part of multibyte character
             if (ch == '\"') {
                 ret = writer_putc('\\', c);
                 if (ret != 0) { return ret; }
