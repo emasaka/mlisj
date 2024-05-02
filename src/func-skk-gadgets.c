@@ -211,10 +211,10 @@ Lisp_Object f_skk_ad_to_gengo(NArray *args, lispenv_t *env) {
     size_t len = strlen(gengo) + strlen(divider) + strlen(nengo) + strlen(tail);
     char *newstr = new_string_area(env->mempool, len + 1);
     CHECK_ALLOC(newstr);
-    strncpy(newstr, gengo, len);
-    strncat(newstr, divider, len);
-    strncat(newstr, nengo, len);
-    strncat(newstr, tail, len);
+    strcpy(newstr, gengo);
+    strcat(newstr, divider);
+    strcat(newstr, nengo);
+    strcat(newstr, tail);
     return LISP_STRING(newstr);
 }
 
@@ -257,9 +257,9 @@ Lisp_Object f_skk_gengo_to_ad(NArray *args, lispenv_t *env) {
     size_t len = strlen(head) + strlen(buff) + strlen(tail);
     char *newstr = new_string_area(env->mempool, len + 1);
     CHECK_ALLOC(newstr);
-    strncpy(newstr, head, len);
-    strncat(newstr, buff, len);
-    strncat(newstr, tail, len);
+    strcpy(newstr, head);
+    strcat(newstr, buff);
+    strcat(newstr, tail);
     return LISP_STRING(newstr);
 }
 
