@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <ctype.h>
 #include "lispobject.h"
 #include "lispenv.h"
 #include "mempool.h"
@@ -11,6 +12,21 @@
 
 /* dummy values for variables and functions */
 #define V_SKK_VERSION "MLISJ/0.0.0 (NO-CODENAME)"
+
+/*
+    Helper functions
+*/
+
+static void str_cpy_up_to_digit(char *dst, char *src, size_t len) {
+    char *d = dst;
+    char *s = src;
+    size_t i = 0;
+    while ( !isdigit(*s) && (*s != '\0') && (i < len)) {
+        *d++ = *s++;
+        i++;
+    }
+    *d = '\0';
+}
 
 /*
     Function: skk-version
@@ -202,6 +218,51 @@ Lisp_Object f_skk_ad_to_gengo(NArray *args, lispenv_t *env) {
     return LISP_STRING(newstr);
 }
 
+
+/*
+    Function: f_skk_gengo_to_ad
+*/
+
+Lisp_Object f_skk_gengo_to_ad(NArray *args, lispenv_t *env) {
+    CHECK_CONDITION(args->size <= 2);
+
+    char *tail;
+    if (args->size < 2 || GET_TYPE(args->data[1]) == Lisp_Nil) {
+        tail = "";
+    } else {
+        CHECK_TYPE(args->data[1], Lisp_String);
+        tail = GET_SVAL(args->data[1]);
+    }
+
+    char *head;
+    if (args->size < 1 || GET_TYPE(args->data[0]) == Lisp_Nil) {
+        head = "";
+    } else {
+        CHECK_TYPE(args->data[0], Lisp_String);
+        head = GET_SVAL(args->data[0]);
+    }
+    CHECK_CONDITION(env->skk_num_list != NULL);
+    char *endptr;
+    int nengo = (int)strtol(env->skk_num_list[0], &endptr, 10);
+
+    CHECK_CONDITION(env->skk_henkan_key != NULL);
+    char gengo_buf[TMP_BUFFSIZE];
+    str_cpy_up_to_digit(gengo_buf, env->skk_henkan_key, TMP_BUFFSIZE);
+
+    int v = gengo_to_ad_1(gengo_buf, nengo);
+    CHECK_CONDITION(v != -1);
+
+    char buff[INT_STRLEN + 1];
+    sprintf(buff, "%d", v);
+    size_t len = strlen(head) + strlen(buff) + strlen(tail);
+    char *newstr = new_string_area(env->mempool, len + 1);
+    CHECK_ALLOC(newstr);
+    strncpy(newstr, head, len);
+    strncat(newstr, buff, len);
+    strncat(newstr, tail, len);
+    return LISP_STRING(newstr);
+}
+
 /*
     Dynamic variable: skk-num-list
 */
@@ -232,6 +293,7 @@ int register_func_skk_gadgets(lispenv_t *env) {
     ADD_FUNC_OR_RETURN(func_pool, "skk-times", f_skk_times);
     ADD_FUNC_OR_RETURN(func_pool, "skk-gadget-units-conversion", f_skk_gadget_units_conversion);
     ADD_FUNC_OR_RETURN(func_pool, "skk-ad-to-gengo", f_skk_ad_to_gengo);
+    ADD_FUNC_OR_RETURN(func_pool, "skk-gengo-to-ad", f_skk_gengo_to_ad);
 
     variable_pool_t *variable_pool = env->variable_pool;
     SET_VARIABVLE_OR_RETURN(variable_pool, "skk-num-list", DYNAMIC_VAL(dv_skk_num_list));

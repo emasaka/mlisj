@@ -41,6 +41,7 @@ lispenv_t *init_lispenv(void) {
     env->func_pool = func_pool;
 
     env->skk_num_list = NULL;
+    env->skk_henkan_key = NULL;
 
     return env;
 #undef END_AND_RETURN_NULL
@@ -48,4 +49,8 @@ lispenv_t *init_lispenv(void) {
 
 void register_skk_num_list(lispenv_t *env, char **skk_num_list) {
     env->skk_num_list = skk_num_list;
+}
+
+void register_skk_henkan_key(lispenv_t *env, char *skk_henkan_key) {
+    env->skk_henkan_key = skk_henkan_key;
 }

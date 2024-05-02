@@ -429,6 +429,46 @@ void testsuite_skk_gadgets_func_skk_ad_to_gengo(void) {
     CU_add_test(suite, "skk-gadgets-func skk-ad-to-gengo with 3 args", test_skk_gadgets_func_skk_ad_to_gengo_3args);
     CU_add_test(suite, "skk-gadgets-func skk-ad-to-gengo with 4 args", test_skk_gadgets_func_skk_ad_to_gengo_4args);
 }
+/*
+    Function: skk-gengo-to-ad
+ */
+
+void test_skk_gadgets_func_skk_gengo_to_ad_0arg(void) {
+    char *num_list[] = { "6", NULL };
+    register_skk_num_list(lisp_env, num_list);
+    register_skk_henkan_key(lisp_env, "れいわ6ねん");
+
+    Lisp_Object result = eval_expr(reader("(skk-gengo-to-ad)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "2024");
+}
+
+void test_skk_gadgets_func_skk_gengo_to_ad_1arg(void) {
+    char *num_list[] = { "6", NULL };
+    register_skk_num_list(lisp_env, num_list);
+    register_skk_henkan_key(lisp_env, "れいわ6ねん");
+
+    Lisp_Object result = eval_expr(reader("(skk-gengo-to-ad \"西暦\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "西暦2024");
+}
+
+void test_skk_gadgets_func_skk_gengo_to_ad_2args(void) {
+    char *num_list[] = { "6", NULL };
+    register_skk_num_list(lisp_env, num_list);
+    register_skk_henkan_key(lisp_env, "れいわ6ねん");
+
+    Lisp_Object result = eval_expr(reader("(skk-gengo-to-ad \"西暦\" \"年\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "西暦2024年");
+}
+
+void testsuite_skk_gadgets_func_skk_gengo_to_ad(void) {
+    CU_pSuite suite = CU_add_suite("skk-gadgets-func skk-gengo-to-ad", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
+    CU_add_test(suite, "skk-gadgets-func skk-gengo-to-ad with 0 arg", test_skk_gadgets_func_skk_gengo_to_ad_0arg);
+    CU_add_test(suite, "skk-gadgets-func skk-gengo-to-ad with 1 arg", test_skk_gadgets_func_skk_gengo_to_ad_1arg);
+    CU_add_test(suite, "skk-gadgets-func skk-gengo-to-ad with 2 args", test_skk_gadgets_func_skk_gengo_to_ad_2args);
+}
 
 /*
     Dynamic variable: skk-num-list
@@ -477,6 +517,7 @@ int main(void) {
     testsuite_skk_gadgets_func_gengo_to_ad_1();
     testsuite_skk_gadgets_func_ad_to_gengo_1();
     testsuite_skk_gadgets_func_skk_ad_to_gengo();
+    testsuite_skk_gadgets_func_skk_gengo_to_ad();
     testsuite_skk_gadgets_func_skk_num_list();
 
     CU_basic_run_tests();

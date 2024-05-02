@@ -19,10 +19,13 @@ typedef struct {
 
     /* base of skk-num-list */
     char **skk_num_list;
+    /* skk-henkan-key */
+    char *skk_henkan_key;
 } lispenv_t;
 
 extern lispenv_t *init_lispenv(void);
 extern void end_lispenv(lispenv_t *);
 extern void register_skk_num_list(lispenv_t *, char **);
+extern void register_skk_henkan_key(lispenv_t *, char *);
 
 #endif /* _LISPENV_H */
