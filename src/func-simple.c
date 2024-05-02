@@ -15,7 +15,6 @@
 #define EXPOSE_SYSEM_ENV 1
 
 #define TMP_BUFFSIZE 512
-#define STRFTIME_BUFFSIZE 64
 
 /* dummy values for variables and functions */
 #define V_FILL_COLUMN 70
@@ -24,6 +23,9 @@
 #define V_USER_FULL_NAME "Jay Doe"
 #define V_USER_MAIL_ADDRESS "jaydoe@example.com"
 #define V_WINDOW_WIDTH 80
+
+/* buffer size for strftime() ("Thu May  2 14:01:18 2024") */
+#define STRFTIME_BUFFSIZE (4 + 4 + 3 + 8 + 1 + INT_STRLEN + 1)
 
 /*
     Function: -
@@ -292,7 +294,7 @@ Lisp_Object f_window_width( __attribute__((unused)) NArray *args, __attribute__(
 Lisp_Object f_current_time_string(NArray *args, lispenv_t *env) {
     struct tm newtime;
     time_t ltime;
-    char buffer[STRFTIME_BUFFSIZE];
+    char buffer[128];
 
     CHECK_CONDITION(args->size == 0);
     time(&ltime);

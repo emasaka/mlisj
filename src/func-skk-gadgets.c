@@ -26,7 +26,7 @@ Lisp_Object f_skk_version(__attribute__((unused)) NArray *args, __attribute__((u
 
 Lisp_Object f_skk_times(NArray *args, lispenv_t *env) {
     /* WORKAROUND: assume all args are integer */
-    char buff[TMP_BUFFSIZE];
+    char buff[INT_STRLEN + 1];
     CHECK_CONDITION(args->size == 0);
     int r = 1;
     if (env->skk_num_list != NULL) {
