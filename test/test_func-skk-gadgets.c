@@ -367,6 +367,70 @@ void testsuite_skk_gadgets_func_ad_to_gengo_1(void) {
 }
 
 /*
+    Function: skk-ad-to-gengo
+ */
+
+void test_skk_gadgets_func_skk_ad_to_gengo_1arg(void) {
+    char *num_list[] = { "2024", NULL };
+    register_skk_num_list(lisp_env, num_list);
+
+    Lisp_Object result1 = eval_expr(reader("(skk-ad-to-gengo 0)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "令和6");
+
+    Lisp_Object result2 = eval_expr(reader("(skk-ad-to-gengo 1)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result2), "R6");
+}
+
+void test_skk_gadgets_func_skk_ad_to_gengo_2args(void) {
+    char *num_list[] = { "2024", NULL };
+    register_skk_num_list(lisp_env, num_list);
+
+    Lisp_Object result1 = eval_expr(reader("(skk-ad-to-gengo 0 nil)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "令和6");
+
+    Lisp_Object result2 = eval_expr(reader("(skk-ad-to-gengo 0 \":\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result2), "令和:6");
+}
+
+void test_skk_gadgets_func_skk_ad_to_gengo_3args(void) {
+    char *num_list[] = { "2024", NULL };
+    register_skk_num_list(lisp_env, num_list);
+
+    Lisp_Object result1 = eval_expr(reader("(skk-ad-to-gengo 0 nil nil)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "令和6");
+
+    Lisp_Object result2 = eval_expr(reader("(skk-ad-to-gengo 0 nil \"年\")", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result2), "令和6年");
+}
+
+void test_skk_gadgets_func_skk_ad_to_gengo_4args(void) {
+    char *num_list[] = { "2019", NULL };
+    register_skk_num_list(lisp_env, num_list);
+
+    Lisp_Object result1 = eval_expr(reader("(skk-ad-to-gengo 0 nil \"年\" nil)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "令和元年");
+
+    Lisp_Object result2 = eval_expr(reader("(skk-ad-to-gengo 0 nil \"年\" 1)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result2), "令和1年");
+}
+
+void testsuite_skk_gadgets_func_skk_ad_to_gengo(void) {
+    CU_pSuite suite = CU_add_suite("skk-gadgets-func skk-ad-to-gengo", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
+    CU_add_test(suite, "skk-gadgets-func skk-ad-to-gengo with 1 arg", test_skk_gadgets_func_skk_ad_to_gengo_1arg);
+    CU_add_test(suite, "skk-gadgets-func skk-ad-to-gengo with 2 args", test_skk_gadgets_func_skk_ad_to_gengo_2args);
+    CU_add_test(suite, "skk-gadgets-func skk-ad-to-gengo with 3 args", test_skk_gadgets_func_skk_ad_to_gengo_3args);
+    CU_add_test(suite, "skk-gadgets-func skk-ad-to-gengo with 4 args", test_skk_gadgets_func_skk_ad_to_gengo_4args);
+}
+
+/*
     Dynamic variable: skk-num-list
 */
 
@@ -412,6 +476,7 @@ int main(void) {
     testsuite_skk_gadgets_func_skk_gadget_units_conversion();
     testsuite_skk_gadgets_func_gengo_to_ad_1();
     testsuite_skk_gadgets_func_ad_to_gengo_1();
+    testsuite_skk_gadgets_func_skk_ad_to_gengo();
     testsuite_skk_gadgets_func_skk_num_list();
 
     CU_basic_run_tests();

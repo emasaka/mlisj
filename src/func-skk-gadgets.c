@@ -138,6 +138,71 @@ Lisp_Object ad_to_gengo_1(lispenv_t *env, int ad, bool not_gannen, int month, in
 }
 
 /*
+    Function: f_skk_ad_to_gengo
+*/
+
+Lisp_Object f_skk_ad_to_gengo(NArray *args, lispenv_t *env) {
+    char *divider;
+    char *tail;
+    bool not_gannen;
+
+    CHECK_CONDITION(args->size >= 1 && args->size <= 4);
+
+    if (args->size < 4 || GET_TYPE(args->data[3]) == Lisp_Nil) {
+        not_gannen = false;
+    } else {
+        not_gannen = true;
+    }
+
+    if (args->size < 3 || GET_TYPE(args->data[2]) == Lisp_Nil) {
+        tail = "";
+    } else {
+        CHECK_TYPE(args->data[2], Lisp_String);
+        tail = GET_SVAL(args->data[2]);
+    }
+
+    if (args->size < 2 || GET_TYPE(args->data[1]) == Lisp_Nil) {
+        divider = "";
+    } else {
+        CHECK_TYPE(args->data[1], Lisp_String);
+        divider = GET_SVAL(args->data[1]);
+    }
+
+    CHECK_TYPE(args->data[0], Lisp_Int);
+    size_t gengo_index = GET_IVAL(args->data[0]);
+    CHECK_CONDITION(gengo_index == 0 || gengo_index == 1);
+
+    CHECK_CONDITION(env->skk_num_list != NULL);
+    char *endptr;
+    int ad = (int)strtol(env->skk_num_list[0], &endptr, 10);
+
+    Lisp_Object v = ad_to_gengo_1(env, ad, not_gannen, 0, 0);
+    if (GET_TYPE(v) == Internal_Error) { return v; }
+
+    char *gengo = GET_SVAL(GET_AVAL(v)->data[gengo_index]);
+    Lisp_Object nengo_o = GET_AVAL(v)->data[2];
+    char *nengo;
+    char buff[INT_STRLEN + 1];
+    if (GET_TYPE(nengo_o) == Lisp_Int) {
+        sprintf(buff, "%d", GET_IVAL(nengo_o));
+        nengo = buff;
+    } else if (GET_TYPE(nengo_o) == Lisp_String) {
+        nengo = GET_SVAL(nengo_o);
+    } else {
+        return LISP_ERROR(Evaluation_Error);
+    }
+
+    size_t len = strlen(gengo) + strlen(divider) + strlen(nengo) + strlen(tail);
+    char *newstr = new_string_area(env->mempool, len + 1);
+    CHECK_ALLOC(newstr);
+    strncpy(newstr, gengo, len);
+    strncat(newstr, divider, len);
+    strncat(newstr, nengo, len);
+    strncat(newstr, tail, len);
+    return LISP_STRING(newstr);
+}
+
+/*
     Dynamic variable: skk-num-list
 */
 
@@ -166,6 +231,7 @@ int register_func_skk_gadgets(lispenv_t *env) {
     ADD_FUNC_OR_RETURN(func_pool, "skk-version", f_skk_version);
     ADD_FUNC_OR_RETURN(func_pool, "skk-times", f_skk_times);
     ADD_FUNC_OR_RETURN(func_pool, "skk-gadget-units-conversion", f_skk_gadget_units_conversion);
+    ADD_FUNC_OR_RETURN(func_pool, "skk-ad-to-gengo", f_skk_ad_to_gengo);
 
     variable_pool_t *variable_pool = env->variable_pool;
     SET_VARIABVLE_OR_RETURN(variable_pool, "skk-num-list", DYNAMIC_VAL(dv_skk_num_list));
