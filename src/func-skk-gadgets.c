@@ -155,7 +155,7 @@ Lisp_Object ad_to_gengo_1(lispenv_t *env, int ad, bool not_gannen, int month, in
 }
 
 /*
-    Function: f_skk_ad_to_gengo
+    Function: skk-ad-to-gengo
 */
 
 Lisp_Object f_skk_ad_to_gengo(NArray *args, lispenv_t *env) {
@@ -221,7 +221,7 @@ Lisp_Object f_skk_ad_to_gengo(NArray *args, lispenv_t *env) {
 
 
 /*
-    Function: f_skk_gengo_to_ad
+    Function: skk-gengo-to-ad
 */
 
 Lisp_Object f_skk_gengo_to_ad(NArray *args, lispenv_t *env) {
@@ -265,7 +265,7 @@ Lisp_Object f_skk_gengo_to_ad(NArray *args, lispenv_t *env) {
 }
 
 /*
-    Function: f_skk_default_current_date
+    Function: skk-default-current-date
 */
 
 typedef char *str_tuple3[3];
