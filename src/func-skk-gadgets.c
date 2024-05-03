@@ -301,38 +301,39 @@ static char *dow_ja(char *name) {
     return NULL;
 }
 
-Lisp_Object f_skk_default_current_date(NArray *args, lispenv_t *env) {
+Lisp_Object skk_default_current_date(
+        Lisp_Object date_information,
+        Lisp_Object format,
+        Lisp_Object num_type_o,
+        Lisp_Object gengo_p,
+        Lisp_Object gengo_index_o, /* assumed not nil */
+        __attribute__((unused)) Lisp_Object month_alist_index,
+        Lisp_Object dayofweek_alist_index, /* assumed 0 or nil */
+        __attribute__((unused)) Lisp_Object and_time,
+        lispenv_t *env ) {
+
     char buff[TMP_BUFFSIZE];
 
-    CHECK_CONDITION(args->size == 7 || args->size <= 8);
-
-    CHECK_TYPE(args->data[0], Lisp_CList);
-    CHECK_CONDITION(GET_AVAL(args->data[0])->size == 7);
-    Lisp_Object *date_information = GET_AVAL(args->data[0])->data;
-    CHECK_TYPE(date_information[0], Lisp_String);
-    char *year = GET_SVAL(date_information[0]);
-    CHECK_TYPE(date_information[1], Lisp_String);
-    char *month = GET_SVAL(date_information[1]);
-    CHECK_TYPE(date_information[2], Lisp_String);
-    char *day = GET_SVAL(date_information[2]);
-    CHECK_TYPE(date_information[3], Lisp_String);
-    char *day_of_week = GET_SVAL(date_information[3]);
+    CHECK_TYPE(date_information, Lisp_CList);
+    CHECK_CONDITION(GET_AVAL(date_information)->size == 7);
+    Lisp_Object *date_inf = GET_AVAL(date_information)->data;
+    CHECK_TYPE(date_inf[0], Lisp_String);
+    char *year = GET_SVAL(date_inf[0]);
+    CHECK_TYPE(date_inf[1], Lisp_String);
+    char *month = GET_SVAL(date_inf[1]);
+    CHECK_TYPE(date_inf[2], Lisp_String);
+    char *day = GET_SVAL(date_inf[2]);
+    CHECK_TYPE(date_inf[3], Lisp_String);
+    char *day_of_week = GET_SVAL(date_inf[3]);
     /* hour, minute, minute are ignored */
     /* Lisp_Object hour = date_information[4]; */
     /* Lisp_Object minute = date_information[5]; */
     /* Lisp_Object second = date_information[6]; */
 
-    Lisp_Object format = args->data[1];
-    CHECK_TYPE(args->data[2], Lisp_Int);
-    int num_type = GET_IVAL(args->data[2]);
-    Lisp_Object gengo_p = args->data[3];
-    CHECK_TYPE(args->data[4], Lisp_Int);
-    int gengo_index = GET_IVAL(args->data[4]); /* assumed not nil */
-    /* month_alist_index is ignored (assumed 0) */
-    /* Lisp_Object month_alist_index = args->data[5]; */
-    Lisp_Object dayofweek_alist_index = args->data[6]; /* assumed 0 or nil */
-    /* and_time is ignored (assumed nil) */
-    /* Lisp_Object and_time = (args->size == 7) ? LISP_NIL : args->data[7]; */
+    CHECK_TYPE(num_type_o, Lisp_Int);
+    int num_type = GET_IVAL(num_type_o);
+    CHECK_TYPE(gengo_index_o, Lisp_Int);
+    int gengo_index = GET_IVAL(gengo_index_o);
 
     char *endptr;
     int year_i = (int)strtol(year, &endptr, 10);
@@ -389,6 +390,16 @@ Lisp_Object f_skk_default_current_date(NArray *args, lispenv_t *env) {
     char *result = copy_to_string_area(env->mempool, buff);
     CHECK_ALLOC(result);
     return LISP_STRING(result);
+}
+
+Lisp_Object f_skk_default_current_date(NArray *args, lispenv_t *env) {
+    CHECK_CONDITION(args->size == 7 || args->size <= 8);
+
+    return skk_default_current_date(
+               args->data[0], args->data[1], args->data[2], args->data[3],
+               args->data[4],args->data[5], args->data[6],
+               ((args->size == 7) ? LISP_NIL : args->data[7]),
+               env );
 }
 
 /*
