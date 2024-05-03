@@ -24,9 +24,6 @@
 #define V_USER_MAIL_ADDRESS "jaydoe@example.com"
 #define V_WINDOW_WIDTH 80
 
-/* buffer size for strftime() ("Thu May  2 14:01:18 2024") */
-#define STRFTIME_BUFFSIZE (4 + 4 + 3 + 8 + 1 + INT_STRLEN + 1)
-
 /*
     Function: -
 */

@@ -514,6 +514,24 @@ void testsuite_skk_gadgets_func_skk_default_current_date(void) {
 }
 
 /*
+    split_time_string
+*/
+
+void test_skk_gadgets_func_split_time_string(void) {
+    char tmp_buf1[TMP_BUFFSIZE];
+    strcpy(tmp_buf1, "Thu May  2 14:01:18 2024");
+    Lisp_Object result = split_time_string(tmp_buf1, lisp_env);
+    char tmp_buf2[TMP_BUFFSIZE];
+    writer(result, tmp_buf2);
+    CU_ASSERT_STRING_EQUAL(tmp_buf2, "(\"2024\" \"May\" \"2\" \"Thu\" \"14\" \"01\" \"18\")");
+}
+
+void testsuite_skk_gadgets_func_split_time_string(void) {
+    CU_pSuite suite = CU_add_suite("skk-gadgets-func split_time_string", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
+    CU_add_test(suite, "skk-gadgets-func split_time_string", test_skk_gadgets_func_split_time_string);
+}
+
+/*
     Dynamic variable: skk-num-list
 */
 
@@ -562,6 +580,7 @@ int main(void) {
     testsuite_skk_gadgets_func_skk_ad_to_gengo();
     testsuite_skk_gadgets_func_skk_gengo_to_ad();
     testsuite_skk_gadgets_func_skk_default_current_date();
+    testsuite_skk_gadgets_func_split_time_string();
     testsuite_skk_gadgets_func_skk_num_list();
 
     CU_basic_run_tests();

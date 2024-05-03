@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <time.h>
 #include "lispobject.h"
 #include "lispenv.h"
 #include "mempool.h"
@@ -400,6 +401,57 @@ Lisp_Object f_skk_default_current_date(NArray *args, lispenv_t *env) {
                args->data[4],args->data[5], args->data[6],
                ((args->size == 7) ? LISP_NIL : args->data[7]),
                env );
+}
+
+/*
+    Function: skk-current-date
+*/
+
+Lisp_Object split_time_string(char *str, lispenv_t *env) {
+    char *saveptr;
+    char *dow = strtok_r(str, " ", &saveptr);
+    char *dow_s = copy_to_string_area(env->mempool, dow);
+    CHECK_ALLOC(dow_s);
+    char *month = strtok_r(NULL, " ", &saveptr);
+    char *month_s = copy_to_string_area(env->mempool, month);
+    CHECK_ALLOC(month_s);
+    char *day = strtok_r(NULL, " ", &saveptr);
+    char *day_s = copy_to_string_area(env->mempool, day);
+    CHECK_ALLOC(day_s);
+    char *time = strtok_r(NULL, " ", &saveptr);
+    char *year = strtok_r(NULL, " ", &saveptr);
+    char *year_s = copy_to_string_area(env->mempool, year);
+    CHECK_ALLOC(year_s);
+
+    char *hh = strtok_r(time, ":", &saveptr);
+    char *hh_s = copy_to_string_area(env->mempool, hh);
+    CHECK_ALLOC(hh_s);
+    char *mm = strtok_r(NULL, ":", &saveptr);
+    char *mm_s = copy_to_string_area(env->mempool, mm);
+    CHECK_ALLOC(mm_s);
+    char *ss = strtok_r(NULL, ":", &saveptr);
+    char *ss_s = copy_to_string_area(env->mempool, ss);
+    CHECK_ALLOC(ss_s);
+
+    NArray *ary = new_narray(env->mempool, 7);
+    CHECK_ALLOC(ary);
+    ary->data[0] = LISP_STRING(year_s);
+    ary->data[1] = LISP_STRING(month_s);
+    ary->data[2] = LISP_STRING(day_s);
+    ary->data[3] = LISP_STRING(dow_s);
+    ary->data[4] = LISP_STRING(hh_s);
+    ary->data[5] = LISP_STRING(mm_s);
+    ary->data[6] = LISP_STRING(ss_s);
+    return LISP_CLIST(ary);
+}
+
+Lisp_Object skk_current_date_1(lispenv_t *env) {
+    struct tm newtime;
+    char buffer[STRFTIME_BUFFSIZE];
+
+    env->current_time_func(&newtime);
+    strftime(buffer, STRFTIME_BUFFSIZE, "%a %b %d %H:%M:%S %Y", &newtime);
+    return split_time_string(buffer, env);
 }
 
 /*

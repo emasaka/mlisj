@@ -18,4 +18,7 @@
 /* max string length of int */
 #define INT_STRLEN ((size_t)(((sizeof(int) * 8 - 1) * LOG_10_2 + 1 + 1)))
 
+/* buffer size for strftime() ("Thu May  2 14:01:18 2024") */
+#define STRFTIME_BUFFSIZE (4 + 4 + 3 + 8 + 1 + INT_STRLEN + 1)
+
 #endif /* _FUNC_HELPER_H */
