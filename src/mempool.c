@@ -81,6 +81,20 @@ NArray *new_narray(mempool_t *mp, size_t n) {
     return node;
 }
 
+/* cdr of narray (body is shared) */
+NArray *cdr_narray(mempool_t *mp, NArray *src) {
+    if (src->size == 0) {
+        return src;
+    }
+    if (mp->narray_node_pool_used == NARRAY_NODE_POOL_SIZE) {
+        return NULL;
+    }
+    NArray *node = &(mp->narray_node_pool[mp->narray_node_pool_used++]);
+    node->size = src->size - 1;
+    node->data = (node->size == 0) ? NULL : (src->data + 1);
+    return node;
+}
+
 void end_mempool(mempool_t *mempool) {
 #define MAYBE_FREE(p) { if (p != NULL) { free(p); } }
 

@@ -34,6 +34,7 @@ extern char *new_string_area(mempool_t *, size_t);
 extern char *copy_to_string_area(mempool_t *, char *);
 extern double *cdouble2float(mempool_t *, double);
 extern NArray *new_narray(mempool_t *, size_t);
+extern NArray *cdr_narray(mempool_t *, NArray *);
 
 extern void end_mempool(mempool_t *);
 extern mempool_t *init_mempool(void);

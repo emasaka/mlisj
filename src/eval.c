@@ -19,25 +19,20 @@ static Lisp_Object eval_symbol(Lisp_Object sym, lispenv_t *env) {
     return val;
 }
 
-static Lisp_Object eval_func_call(Lisp_Object lst, lispenv_t *env) {
-    cfunc_t func = get_func(env->func_pool, GET_SVAL(GET_AVAL(lst)->data[0]));
-    if (func == NULL) {
-        return LISP_ERROR(Evaluation_Error);
-    }
-    /* eval arguments*/
-    NArray *args = new_narray(env->mempool, GET_AVAL(lst)->size - 1);
+static Lisp_Object eval_args(NArray *args, lispenv_t *env) {
+    NArray *new_args = new_narray(env->mempool, args->size);
     if (args == NULL) {
         return LISP_ERROR(Evaluation_Error);
     }
-    size_t sz = GET_AVAL(lst)->size;
-    for (size_t i = 1; i < sz; i++) {
-        Lisp_Object ret = eval_expr(GET_AVAL(lst)->data[i], env);
+    size_t sz = args->size;
+    for (size_t i = 0; i < sz; i++) {
+        Lisp_Object ret = eval_expr(args->data[i], env);
         if (GET_TYPE(ret) == Internal_Error) {
             return ret;
         }
-        args->data[i - 1] = ret;
+        new_args->data[i] = ret;
     }
-    return func(args, env);
+    return LISP_CLIST(new_args);
 }
 
 static Lisp_Object eval_list(Lisp_Object lst, lispenv_t *env) {
@@ -57,7 +52,16 @@ static Lisp_Object eval_list(Lisp_Object lst, lispenv_t *env) {
             /* return (lambda ...) itself*/
             return lst;
         }
-        return eval_func_call(lst, env);
+        /* eval function call */
+        cfunc_t func = get_func(env->func_pool, GET_SVAL(GET_AVAL(lst)->data[0]));
+        if (func == NULL) {
+            return LISP_ERROR(Evaluation_Error);
+        }
+        Lisp_Object new_args = eval_args(cdr_narray(env->mempool, GET_AVAL(lst)), env);
+        if (GET_TYPE(new_args) == Internal_Error) {
+            return new_args;
+        }
+        return func(GET_AVAL(new_args), env);
     }
     return LISP_ERROR(Evaluation_Error);
 }
