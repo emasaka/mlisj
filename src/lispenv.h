@@ -21,6 +21,9 @@ typedef struct {
     char **skk_num_list;
     /* skk-henkan-key */
     char *skk_henkan_key;
+
+    /* function to get current time */
+    void (*current_time_func)();
 } lispenv_t;
 
 extern lispenv_t *init_lispenv(void);

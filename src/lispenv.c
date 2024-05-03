@@ -1,5 +1,13 @@
 #include <stdlib.h>
+#include <time.h>
 #include "lispenv.h"
+
+void get_current_tm(struct tm *tm_ptr) {
+    time_t ltime;
+
+    time(&ltime);
+    localtime_r(&ltime, tm_ptr);
+}
 
 void end_lispenv(lispenv_t *env) {
     if (env->func_pool != NULL) { end_func_table(env->func_pool); }
@@ -42,6 +50,9 @@ lispenv_t *init_lispenv(void) {
 
     env->skk_num_list = NULL;
     env->skk_henkan_key = NULL;
+
+    /* pluggable for test */
+    env->current_time_func = get_current_tm;
 
     return env;
 #undef END_AND_RETURN_NULL

@@ -293,12 +293,10 @@ Lisp_Object f_window_width( __attribute__((unused)) NArray *args, __attribute__(
 
 Lisp_Object f_current_time_string(NArray *args, lispenv_t *env) {
     struct tm newtime;
-    time_t ltime;
-    char buffer[128];
+    char buffer[STRFTIME_BUFFSIZE];
 
     CHECK_CONDITION(args->size == 0);
-    time(&ltime);
-    localtime_r(&ltime, &newtime);
+    env->current_time_func(&newtime);
     strftime(buffer, STRFTIME_BUFFSIZE, "%a %b %d %H:%M:%S %Y", &newtime);
     char *str = copy_to_string_area(env->mempool, buffer);
     CHECK_ALLOC(str);

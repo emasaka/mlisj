@@ -1,6 +1,7 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
 #include <unistd.h>
+#include <time.h>
 #include "../src/reader.h"
 #include "../src/eval.h"
 #include "../src/func-simple.h"
@@ -348,9 +349,23 @@ void testsuite_simple_func_window_width(void) {
     Function: current-time-string
 */
 
+static void dummy_tm(struct tm *tm_ptr) {
+    tm_ptr->tm_year = 2023 - 1900;
+    tm_ptr->tm_mon = 12 - 1;
+    tm_ptr->tm_mday = 31;
+    tm_ptr->tm_wday = 0;
+    tm_ptr->tm_hour = 13;
+    tm_ptr->tm_min = 21;
+    tm_ptr->tm_sec = 45;
+}
+
 void test_simple_func_current_time_string_call(void) {
+    void (*saved_func)() = lisp_env->current_time_func;
+    lisp_env->current_time_func = dummy_tm;
     Lisp_Object result = eval_expr(reader("(current-time-string)", lisp_env), lisp_env);
     CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result),  "Sun Dec 31 13:21:45 2023");
+    lisp_env->current_time_func = saved_func;
 }
 
 void testsuite_simple_func_current_time_string(void) {
