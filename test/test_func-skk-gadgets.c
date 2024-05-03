@@ -471,6 +471,42 @@ void testsuite_skk_gadgets_func_skk_gengo_to_ad(void) {
 }
 
 /*
+    Function: skk-default-current-date
+ */
+
+void test_skk_gadgets_func_skk_default_current_date_example(void) {
+    Lisp_Object result = eval_expr(reader("(skk-default-current-date '(\"2013\" \"Jan\" \"29\" \"Tue\" \"22\" \"59\" \"50\") nil 3 'gengo 0 0 0)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "平成二十五年一月二十九日(火)");
+}
+
+void test_skk_gadgets_func_skk_default_current_date_numtype0(void) {
+    Lisp_Object result = eval_expr(reader("(skk-default-current-date '(\"2013\" \"Jan\" \"29\" \"Tue\" \"22\" \"59\" \"50\") nil 0 'gengo 0 0 0)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "平成25年1月29日(火)");
+}
+
+void test_skk_gadgets_func_skk_default_current_date_not_gengo(void) {
+    Lisp_Object result = eval_expr(reader("(skk-default-current-date '(\"2013\" \"Jan\" \"29\" \"Tue\" \"22\" \"59\" \"50\") nil 0 nil 0 0 0)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "2013年1月29日(火)");
+}
+
+void test_skk_gadgets_func_skk_default_current_date_gengo1(void) {
+    Lisp_Object result = eval_expr(reader("(skk-default-current-date '(\"2013\" \"Jan\" \"29\" \"Tue\" \"22\" \"59\" \"50\") nil 0 'gengo 1 0 0)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "H25年1月29日(火)");
+}
+
+void testsuite_skk_gadgets_func_skk_default_current_date(void) {
+    CU_pSuite suite = CU_add_suite("skk-gadgets-func skk-default-current-date", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
+    CU_add_test(suite, "skk-gadgets-func skk-default-current-date from skk-gadget.el comment", test_skk_gadgets_func_skk_default_current_date_example);
+    CU_add_test(suite, "skk-gadgets-func skk-default-current-date num-type 0", test_skk_gadgets_func_skk_default_current_date_numtype0);
+    CU_add_test(suite, "skk-gadgets-func skk-default-current-date not gengo", test_skk_gadgets_func_skk_default_current_date_not_gengo);
+    CU_add_test(suite, "skk-gadgets-func skk-default-current-date gengo-index 1", test_skk_gadgets_func_skk_default_current_date_gengo1);
+}
+
+/*
     Dynamic variable: skk-num-list
 */
 
@@ -518,6 +554,7 @@ int main(void) {
     testsuite_skk_gadgets_func_ad_to_gengo_1();
     testsuite_skk_gadgets_func_skk_ad_to_gengo();
     testsuite_skk_gadgets_func_skk_gengo_to_ad();
+    testsuite_skk_gadgets_func_skk_default_current_date();
     testsuite_skk_gadgets_func_skk_num_list();
 
     CU_basic_run_tests();

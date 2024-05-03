@@ -7,6 +7,7 @@
 #include "lispenv.h"
 #include "mempool.h"
 #include "func-helper.h"
+#include "util.h"
 
 #define TMP_BUFFSIZE 512
 
@@ -264,6 +265,133 @@ Lisp_Object f_skk_gengo_to_ad(NArray *args, lispenv_t *env) {
 }
 
 /*
+    Function: f_skk_default_current_date
+*/
+
+typedef char *str_tuple3[3];
+
+static str_tuple3 skk_month_list[] = {
+    {"Jan", "1", "Januar"}, {"Feb", "2", "Februar"}, {"Mar", "3", "März"},
+    {"Apr", "4", "April"}, {"May", "5", "Mai"},
+    {"Jun", "6", "Juni"}, {"Jul", "7", "Juli"}, {"Aug", "8", "August"},
+    {"Sep", "9", "September"}, {"Oct", "10", "Oktober"},
+    {"Nov", "11", "November"}, {"Dec", "12", "Dezember"}
+};
+
+static str_tuple3 skk_day_of_week_list[] = {
+    {"Sun", "日", "So"}, {"Mon", "月", "Mo"}, {"Tue", "火", "Di"}, {"Wed", "水", "Mi"},
+    {"Thu", "木", "Do"}, {"Fri", "金", "Fr"}, {"Sat", "土", "Sa"}
+};
+
+static int month_name_to_month(char *name) {
+    for (size_t i = 0; i < (sizeof(skk_month_list) / sizeof(skk_month_list[0])); i++) {
+        if (strcmp(skk_month_list[i][0], name) == 0) {
+            return i + 1;
+        }
+    }
+    return -1;
+}
+
+static char *dow_ja(char *name) {
+    for (size_t i = 0; i < (sizeof(skk_day_of_week_list) / sizeof(skk_day_of_week_list[0])); i++) {
+        if (strcmp(skk_day_of_week_list[i][0], name) == 0) {
+            return skk_day_of_week_list[i][1];
+        }
+    }
+    return NULL;
+}
+
+Lisp_Object f_skk_default_current_date(NArray *args, lispenv_t *env) {
+    char buff[TMP_BUFFSIZE];
+
+    CHECK_CONDITION(args->size == 7 || args->size <= 8);
+
+    CHECK_TYPE(args->data[0], Lisp_CList);
+    CHECK_CONDITION(GET_AVAL(args->data[0])->size == 7);
+    Lisp_Object *date_information = GET_AVAL(args->data[0])->data;
+    CHECK_TYPE(date_information[0], Lisp_String);
+    char *year = GET_SVAL(date_information[0]);
+    CHECK_TYPE(date_information[1], Lisp_String);
+    char *month = GET_SVAL(date_information[1]);
+    CHECK_TYPE(date_information[2], Lisp_String);
+    char *day = GET_SVAL(date_information[2]);
+    CHECK_TYPE(date_information[3], Lisp_String);
+    char *day_of_week = GET_SVAL(date_information[3]);
+    /* hour, minute, minute are ignored */
+    /* Lisp_Object hour = date_information[4]; */
+    /* Lisp_Object minute = date_information[5]; */
+    /* Lisp_Object second = date_information[6]; */
+
+    Lisp_Object format = args->data[1];
+    CHECK_TYPE(args->data[2], Lisp_Int);
+    int num_type = GET_IVAL(args->data[2]);
+    Lisp_Object gengo_p = args->data[3];
+    CHECK_TYPE(args->data[4], Lisp_Int);
+    int gengo_index = GET_IVAL(args->data[4]); /* assumed not nil */
+    /* month_alist_index is ignored (assumed 0) */
+    /* Lisp_Object month_alist_index = args->data[5]; */
+    Lisp_Object dayofweek_alist_index = args->data[6]; /* assumed 0 or nil */
+    /* and_time is ignored (assumed nil) */
+    /* Lisp_Object and_time = (args->size == 7) ? LISP_NIL : args->data[7]; */
+
+    char *endptr;
+    int year_i = (int)strtol(year, &endptr, 10);
+    int month_i = month_name_to_month(month);
+    int day_i = (int)strtol(day, &endptr, 10);
+
+    char *year_str;
+    if (GET_TYPE(gengo_p) == Lisp_Nil) {
+        CHECK_CONDITION(skk_num_exp(year, num_type, buff, TMP_BUFFSIZE) == 0);
+        year_str = copy_to_string_area(env->mempool, buff);
+        CHECK_ALLOC(year_str);
+    } else {
+        Lisp_Object v = ad_to_gengo_1(env, year_i, false, month_i, day_i);
+        CHECK_TYPE(v, Lisp_CList);
+        Lisp_Object gengo_o = GET_AVAL(v)->data[gengo_index];
+        CHECK_TYPE(gengo_o, Lisp_String);
+        char *gengo_s = GET_SVAL(gengo_o);
+        char *nengo_s;
+        Lisp_Object nengo_o = GET_AVAL(v)->data[2];
+        if (GET_TYPE(nengo_o) == Lisp_String) {
+            nengo_s = GET_SVAL(nengo_o);
+        } else if (GET_TYPE(nengo_o) == Lisp_Int) {
+            char nengo_buff[INT_STRLEN + 1];
+            sprintf(nengo_buff, "%d", GET_IVAL(nengo_o));
+            CHECK_CONDITION(skk_num_exp(nengo_buff, num_type, buff, TMP_BUFFSIZE) == 0);
+            nengo_s = buff;
+        } else {
+            return LISP_ERROR(Evaluation_Error);
+        }
+        year_str = new_string_area(env->mempool, strlen(gengo_s) + strlen(nengo_s) + 1);
+        CHECK_ALLOC(year_str);
+        strcpy(year_str, gengo_s);
+        strcat(year_str, nengo_s);
+    }
+
+    CHECK_CONDITION(skk_num_exp(skk_month_list[month_i - 1][1], num_type, buff, TMP_BUFFSIZE) == 0);
+    char *month_str = copy_to_string_area(env->mempool, buff);
+    CHECK_ALLOC(month_str);
+
+    CHECK_CONDITION(skk_num_exp(day, num_type, buff, TMP_BUFFSIZE) == 0);
+    char *day_str = copy_to_string_area(env->mempool, buff);
+    CHECK_ALLOC(day_str);
+
+    char *dow_str = (GET_TYPE(dayofweek_alist_index) == Lisp_Nil) ? day_of_week : dow_ja(day_of_week);
+
+    char *format_s;
+    if (GET_TYPE(format) == Lisp_Nil) {
+        format_s = "%s年%s月%s日(%s)";
+    } else {
+        CHECK_TYPE(format, Lisp_String);
+        format_s = GET_SVAL(format);
+    }
+    sprintf(buff, format_s, year_str, month_str, day_str, dow_str);
+    char *result = copy_to_string_area(env->mempool, buff);
+    CHECK_ALLOC(result);
+    return LISP_STRING(result);
+}
+
+/*
     Dynamic variable: skk-num-list
 */
 
@@ -294,6 +422,7 @@ int register_func_skk_gadgets(lispenv_t *env) {
     ADD_FUNC_OR_RETURN(func_pool, "skk-gadget-units-conversion", f_skk_gadget_units_conversion);
     ADD_FUNC_OR_RETURN(func_pool, "skk-ad-to-gengo", f_skk_ad_to_gengo);
     ADD_FUNC_OR_RETURN(func_pool, "skk-gengo-to-ad", f_skk_gengo_to_ad);
+    ADD_FUNC_OR_RETURN(func_pool, "skk-default-current-date", f_skk_default_current_date);
 
     variable_pool_t *variable_pool = env->variable_pool;
     SET_VARIABVLE_OR_RETURN(variable_pool, "skk-num-list", DYNAMIC_VAL(dv_skk_num_list));
