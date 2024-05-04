@@ -491,6 +491,25 @@ Lisp_Object f_skk_current_date(NArray *args, lispenv_t *env) {
 }
 
 /*
+    Function: skk-relative-date
+*/
+
+Lisp_Object skk_relative_date_1(int offset_yy, int offset_mm, int offset_dd, lispenv_t *env) {
+    struct tm newtime;
+    char buffer[STRFTIME_BUFFSIZE];
+
+    env->current_time_func(&newtime);
+    newtime.tm_year += offset_yy;
+    newtime.tm_mon += offset_mm;
+    newtime.tm_mday += offset_dd;
+    time_t ltime = mktime(&newtime);
+    localtime_r(&ltime, &newtime);
+
+    strftime(buffer, STRFTIME_BUFFSIZE, "%a %b %d %H:%M:%S %Y", &newtime);
+    return split_time_string(buffer, env);
+}
+
+/*
     Dynamic variable: skk-num-list
 */
 

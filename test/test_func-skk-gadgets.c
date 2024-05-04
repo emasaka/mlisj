@@ -544,6 +544,7 @@ static void dummy_tm(struct tm *tm_ptr) {
     tm_ptr->tm_hour = 13;
     tm_ptr->tm_min = 21;
     tm_ptr->tm_sec = 45;
+    tm_ptr->tm_isdst = 0;
 }
 
 void test_skk_gadgets_func_skk_current_date_0arg(void) {
@@ -572,6 +573,42 @@ void testsuite_skk_gadgets_func_skk_current_date(void) {
     CU_pSuite suite = CU_add_suite("skk-gadgets-func skk-current-date", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
     CU_add_test(suite, "skk-gadgets-func skk-current-date with 0 arg", test_skk_gadgets_func_skk_current_date_0arg);
     CU_add_test(suite, "skk-gadgets-func skk-current-date with 1 arg", test_skk_gadgets_func_skk_current_date_1arg);
+}
+
+/*
+    skk_relative_date_1
+*/
+
+void test_skk_gadgets_func_skk_relative_date_1_ndaysafter(void) {
+    char tmp_buf[TMP_BUFFSIZE];
+
+    void (*saved_func)() = lisp_env->current_time_func;
+    lisp_env->current_time_func = dummy_tm;
+
+    Lisp_Object result = skk_relative_date_1(0, 0, 5, lisp_env);
+    writer(result, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"2024\" \"Jan\" \"05\" \"Fri\" \"13\" \"21\" \"45\")");
+
+    lisp_env->current_time_func = saved_func;
+}
+
+void test_skk_gadgets_func_skk_relative_date_1_nmonthsafter(void) {
+    char tmp_buf[TMP_BUFFSIZE];
+
+    void (*saved_func)() = lisp_env->current_time_func;
+    lisp_env->current_time_func = dummy_tm;
+
+    Lisp_Object result = skk_relative_date_1(0, 2, 0, lisp_env);
+    writer(result, tmp_buf);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"2024\" \"Mar\" \"02\" \"Sat\" \"13\" \"21\" \"45\")");
+
+    lisp_env->current_time_func = saved_func;
+}
+
+void testsuite_skk_gadgets_func_skk_relative_date_1(void) {
+    CU_pSuite suite = CU_add_suite("skk-gadgets-func skk_relative_date()", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
+    CU_add_test(suite, "skk-gadgets-func skk_relative_date() n days after", test_skk_gadgets_func_skk_relative_date_1_ndaysafter);
+    CU_add_test(suite, "skk-gadgets-func skk_relative_date() n months after", test_skk_gadgets_func_skk_relative_date_1_nmonthsafter);
 }
 
 /*
@@ -625,6 +662,7 @@ int main(void) {
     testsuite_skk_gadgets_func_skk_default_current_date();
     testsuite_skk_gadgets_func_split_time_string();
     testsuite_skk_gadgets_func_skk_current_date();
+    testsuite_skk_gadgets_func_skk_relative_date_1();
     testsuite_skk_gadgets_func_skk_num_list();
 
     CU_basic_run_tests();

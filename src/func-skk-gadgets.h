@@ -4,6 +4,7 @@
 #include "lispenv.h"
 
 extern int register_func_skk_gadgets(lispenv_t *);
+extern Lisp_Object skk_relative_date_1(int, int, int, lispenv_t *);
 
 /* export just for tests*/
 extern int gengo_to_ad_1(char *, int);
