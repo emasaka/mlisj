@@ -357,6 +357,7 @@ static void dummy_tm(struct tm *tm_ptr) {
     tm_ptr->tm_hour = 13;
     tm_ptr->tm_min = 21;
     tm_ptr->tm_sec = 45;
+    tm_ptr->tm_isdst = 0;
 }
 
 void test_simple_func_current_time_string_call(void) {
