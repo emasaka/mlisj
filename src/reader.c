@@ -8,21 +8,21 @@
 #define READER_ARRAY_BUFSIZE 128
 
 typedef struct {
-    char *ptr;
+    const char *ptr;
     lispenv_t *env;
 } reader_context;
 
 static Lisp_Object reader_sexp(reader_context *); /* prototype declaration */
 
 /* parse integer number */
-static Lisp_Object reader_get_intnum(char *str) {
+static Lisp_Object reader_get_intnum(const char *str) {
     char *endptr;
     int n = (int)strtol(str, &endptr, 10);
     return LISP_INT(n);
 }
 
 /* parse float number */
-static Lisp_Object reader_get_floatnum(char *str, lispenv_t *env) {
+static Lisp_Object reader_get_floatnum(const char *str, lispenv_t *env) {
     char *endptr;
     double fnum = strtod(str, &endptr);
     double *flt = cdouble2float(env->mempool, fnum);
@@ -176,7 +176,7 @@ static Lisp_Object reader_sexp(reader_context *c) {
     }
 }
 
-Lisp_Object reader(char *str, lispenv_t *env) {
+Lisp_Object reader(const char *str, lispenv_t *env) {
     reader_context c = (reader_context){ .ptr = str, .env = env };
     return reader_sexp(&c);
 }

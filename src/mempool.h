@@ -31,7 +31,7 @@ typedef struct {
 
 extern Lisp_Object *new_lispobject_array(mempool_t *, size_t);
 extern char *new_string_area(mempool_t *, size_t);
-extern char *copy_to_string_area(mempool_t *, char *);
+extern char *copy_to_string_area(mempool_t *, const char *);
 extern double *cdouble2float(mempool_t *, double);
 extern NArray *new_narray(mempool_t *, size_t);
 extern NArray *cdr_narray(mempool_t *, NArray *);

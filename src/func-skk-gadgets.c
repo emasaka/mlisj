@@ -24,9 +24,9 @@
     Helper functions
 */
 
-static void str_cpy_up_to_digit(char *dst, char *src, size_t len) {
+static void str_cpy_up_to_digit(char *dst, const char *src, size_t len) {
     char *d = dst;
-    char *s = src;
+    const char *s = src;
     size_t i = 0;
     while ( !isdigit(*s) && (*s != '\0') && (i < len)) {
         *d++ = *s++;
@@ -70,8 +70,8 @@ Lisp_Object f_skk_times(NArray *args, lispenv_t *env) {
 */
 
 static struct {
-    char *unit_from;
-    char *unit_to;
+    const char *unit_from;
+    const char *unit_to;
     double ratio;
 } units_list[] = {
     { "mile" ,"km" ,1.6093 },
@@ -128,7 +128,7 @@ static struct {
     { "令和", "れいわ", "R", 2019, 5, 1 }
 };
 
-int gengo_to_ad_1(char *gengo, int year) {
+int gengo_to_ad_1(const char *gengo, int year) {
     for (size_t i = 0; i < (sizeof(gengo_list) / sizeof(gengo_list[0])); i++) {
         if (strcmp(gengo, gengo_list[i].gengo) == 0 || strcmp(gengo, gengo_list[i].gengo_kana) == 0) {
             return year + gengo_list[i].start_y - 1;
@@ -282,7 +282,7 @@ static str_tuple3 skk_day_of_week_list[] = {
     {"Thu", "木", "Do"}, {"Fri", "金", "Fr"}, {"Sat", "土", "Sa"}
 };
 
-static int month_name_to_month(char *name) {
+static int month_name_to_month(const char *name) {
     for (size_t i = 0; i < (sizeof(skk_month_list) / sizeof(skk_month_list[0])); i++) {
         if (strcmp(skk_month_list[i][0], name) == 0) {
             return i + 1;
@@ -291,7 +291,7 @@ static int month_name_to_month(char *name) {
     return -1;
 }
 
-static char *dow_ja(char *name) {
+static char *dow_ja(const char *name) {
     for (size_t i = 0; i < (sizeof(skk_day_of_week_list) / sizeof(skk_day_of_week_list[0])); i++) {
         if (strcmp(skk_day_of_week_list[i][0], name) == 0) {
             return skk_day_of_week_list[i][1];

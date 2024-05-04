@@ -6,7 +6,7 @@
 #include "symbol.h"
 
 /* linear search, for simplicity */
-char *symbol_table_lookup(symbol_pool_t *sp, char *str) {
+char *symbol_table_lookup(symbol_pool_t *sp, const char *str) {
     for (size_t i = 0; i < sp->symbol_table_used; i++) {
         if (strcmp(str, sp->symbol_table[i]) == 0) {
             return sp->symbol_table[i];

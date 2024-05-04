@@ -13,7 +13,7 @@ typedef struct {
     mempool_t *mempool;
 } symbol_pool_t;
 
-extern char *symbol_table_lookup(symbol_pool_t *, char *);
+extern char *symbol_table_lookup(symbol_pool_t *, const char *);
 extern char *new_symbol(symbol_pool_t *, char *, bool);
 extern char *str2symbol(symbol_pool_t *, char *, bool);
 

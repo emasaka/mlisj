@@ -62,6 +62,6 @@ void register_skk_num_list(lispenv_t *env, char **skk_num_list) {
     env->skk_num_list = skk_num_list;
 }
 
-void register_skk_henkan_key(lispenv_t *env, char *skk_henkan_key) {
+void register_skk_henkan_key(lispenv_t *env, const char *skk_henkan_key) {
     env->skk_henkan_key = skk_henkan_key;
 }

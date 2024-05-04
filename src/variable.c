@@ -19,7 +19,7 @@ int set_variable_from_cstr(variable_pool_t *vp, char *str, Lisp_Object val, bool
 
 /* changing value of variable is not implemented */
 
-Lisp_Object get_variable(variable_pool_t *vp, char *sym) {
+Lisp_Object get_variable(variable_pool_t *vp, const char *sym) {
     size_t i = vp->variable_stack_used;
     while (i > 0) {
         i--;

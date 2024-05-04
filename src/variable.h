@@ -20,7 +20,7 @@ typedef struct {
 
 extern int set_variable(variable_pool_t *, char *, Lisp_Object);
 extern int set_variable_from_cstr(variable_pool_t *, char *, Lisp_Object, bool);
-extern Lisp_Object get_variable(variable_pool_t *, char *);
+extern Lisp_Object get_variable(variable_pool_t *, const char *);
 extern int save_variable_status(variable_pool_t *);
 extern void restore_variable_status(variable_pool_t *, int);
 

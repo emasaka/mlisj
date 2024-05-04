@@ -77,8 +77,8 @@ static char *zenkaku_digits_list[] = {
 
 #define ZENKAKU_DIGIT_STRLEN (sizeof("０") - 1)
 
-int skk_num_type1_kanji(char *src, char *dst, size_t size) {
-    char *s = src;
+int skk_num_type1_kanji(const char *src, char *dst, size_t size) {
+    const char *s = src;
     char *d = dst;
     size_t i = 0;
     while (*s != '\0') {
@@ -106,9 +106,9 @@ static char *japanese_keta_4[] = {
     "", "十", "百", "千"
 };
 
-static void skk_num_to_kanji_4digits(char *src, char *dst) {
+static void skk_num_to_kanji_4digits(const char *src, char *dst) {
     size_t len = strlen(src);
-    char *s = src;
+    const char *s = src;
     char *d = dst;
     while (*s != '\0') {
         char c = *s++;
@@ -198,7 +198,7 @@ static int (*skk_num_type_list[])() = {
     NULL  /* 9: not implemented */
 };
 
-int skk_num_exp(char *num, size_t type_idx, char *dst, size_t size) {
+int skk_num_exp(const char *num, size_t type_idx, char *dst, size_t size) {
     if (type_idx > (sizeof(skk_num_type_list) / sizeof(skk_num_type_list[0]))) {
         return -1;
     }
