@@ -1,6 +1,7 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
 #include <unistd.h>
+#include <time.h>
 #include "../src/reader.h"
 #include "../src/eval.h"
 #include "../src/func-skk-gadgets.h"
@@ -532,6 +533,48 @@ void testsuite_skk_gadgets_func_split_time_string(void) {
 }
 
 /*
+    Function: skk-current-date
+ */
+
+static void dummy_tm(struct tm *tm_ptr) {
+    tm_ptr->tm_year = 2023 - 1900;
+    tm_ptr->tm_mon = 12 - 1;
+    tm_ptr->tm_mday = 31;
+    tm_ptr->tm_wday = 0;
+    tm_ptr->tm_hour = 13;
+    tm_ptr->tm_min = 21;
+    tm_ptr->tm_sec = 45;
+}
+
+void test_skk_gadgets_func_skk_current_date_0arg(void) {
+    void (*saved_func)() = lisp_env->current_time_func;
+    lisp_env->current_time_func = dummy_tm;
+
+    Lisp_Object result = eval_expr(reader("(skk-current-date)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result),  "令和５年１２月３１日(日)");
+
+    lisp_env->current_time_func = saved_func;
+}
+
+void test_skk_gadgets_func_skk_current_date_1arg(void) {
+    void (*saved_func)() = lisp_env->current_time_func;
+    lisp_env->current_time_func = dummy_tm;
+
+    Lisp_Object result = eval_expr(reader("(skk-current-date (lambda (date-information format gengo and-time) (skk-default-current-date date-information \"%s-%s-%s(%s)\" 0 nil 0 0 nil)))", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result),  "2023-12-31(Sun)");
+
+    lisp_env->current_time_func = saved_func;
+}
+
+void testsuite_skk_gadgets_func_skk_current_date(void) {
+    CU_pSuite suite = CU_add_suite("skk-gadgets-func skk-current-date", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
+    CU_add_test(suite, "skk-gadgets-func skk-current-date with 0 arg", test_skk_gadgets_func_skk_current_date_0arg);
+    CU_add_test(suite, "skk-gadgets-func skk-current-date with 1 arg", test_skk_gadgets_func_skk_current_date_1arg);
+}
+
+/*
     Dynamic variable: skk-num-list
 */
 
@@ -581,6 +624,7 @@ int main(void) {
     testsuite_skk_gadgets_func_skk_gengo_to_ad();
     testsuite_skk_gadgets_func_skk_default_current_date();
     testsuite_skk_gadgets_func_split_time_string();
+    testsuite_skk_gadgets_func_skk_current_date();
     testsuite_skk_gadgets_func_skk_num_list();
 
     CU_basic_run_tests();

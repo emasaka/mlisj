@@ -7,8 +7,13 @@
 #include "lispobject.h"
 #include "lispenv.h"
 #include "mempool.h"
+#include "eval.h"
 #include "func-helper.h"
 #include "util.h"
+
+/* difinitions from skk-vars.el */
+#define SKK_NUMBER_STYPE 1
+#define SKK_DATE_AD LISP_NIL
 
 #define TMP_BUFFSIZE 512
 
@@ -454,6 +459,44 @@ Lisp_Object skk_current_date_1(lispenv_t *env) {
     return split_time_string(buffer, env);
 }
 
+static Lisp_Object skk_default_current_date_function(
+        Lisp_Object date_information,
+        __attribute__((unused)) Lisp_Object format,
+        Lisp_Object gengo_p, Lisp_Object and_time, lispenv_t *env) {
+    return skk_default_current_date(date_information, LISP_NIL, LISP_INT(SKK_NUMBER_STYPE),
+            gengo_p, LISP_INT(0), LISP_INT(0), LISP_INT(0), and_time,env );
+}
+
+static Lisp_Object lisp_not(Lisp_Object x) {
+    if (GET_TYPE(x) == Lisp_Nil) {
+        return LISP_INT(1); /* instead of 't' */
+    } else {
+        return LISP_NIL;
+    }
+}
+
+Lisp_Object f_skk_current_date(NArray *args, lispenv_t *env) {
+    CHECK_CONDITION(args->size <= 3);
+    Lisp_Object and_time = OPTIONAL_ARG(args, 2);
+    Lisp_Object format = OPTIONAL_ARG(args, 1);
+    Lisp_Object pp_function = OPTIONAL_ARG(args, 0);
+
+    Lisp_Object datetime = skk_current_date_1(env);
+    if (GET_TYPE(datetime) == Internal_Error) { return datetime; }
+    if (GET_TYPE(pp_function) == Lisp_Nil) {
+        return skk_default_current_date_function(
+                    datetime, format, lisp_not(SKK_DATE_AD), and_time, env );
+    } else {
+        NArray *args = new_narray(env->mempool, 4);
+        CHECK_ALLOC(args);
+        args->data[0] = datetime;
+        args->data[1] = format;
+        args->data[2] = lisp_not(SKK_DATE_AD);
+        args->data[3] = and_time;
+        return call_lambda(pp_function, args, env);
+    }
+}
+
 /*
     Dynamic variable: skk-num-list
 */
@@ -486,6 +529,7 @@ int register_func_skk_gadgets(lispenv_t *env) {
     ADD_FUNC_OR_RETURN(func_pool, "skk-ad-to-gengo", f_skk_ad_to_gengo);
     ADD_FUNC_OR_RETURN(func_pool, "skk-gengo-to-ad", f_skk_gengo_to_ad);
     ADD_FUNC_OR_RETURN(func_pool, "skk-default-current-date", f_skk_default_current_date);
+    ADD_FUNC_OR_RETURN(func_pool, "skk-current-date", f_skk_current_date);
 
     variable_pool_t *variable_pool = env->variable_pool;
     SET_VARIABVLE_OR_RETURN(variable_pool, "skk-num-list", DYNAMIC_VAL(dv_skk_num_list));
