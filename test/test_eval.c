@@ -140,6 +140,32 @@ void testsuite_eval_dynamic_variable(void) {
 }
 
 /*
+  call lambda
+ */
+
+void test_eval_call_lambda_call(void) {
+    Lisp_Object lambda_lst = reader("(lambda (x) x)", lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(lambda_lst), Lisp_CList);
+    Lisp_Object args = reader("(5)", lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(args), Lisp_CList);
+    Lisp_Object result = call_lambda(lambda_lst, GET_AVAL(args), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(result), 5);
+}
+
+void test_eval_call_lambda_restore_var(void) {
+    char *sym_x = str2symbol(lisp_env->symbol_pool, "x", true);
+    Lisp_Object result = get_variable(lisp_env->variable_pool, sym_x);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Internal_Error);
+}
+
+void testsuite_eval_call_lambda(void) {
+    CU_pSuite suite = CU_add_suite("eval call_lambda", init_for_evaltest, end_for_evaltest);
+    CU_add_test(suite, "eval call_lambda call", test_eval_call_lambda_call);
+    CU_add_test(suite, "eval call_lambda restore variable", test_eval_call_lambda_restore_var);
+}
+
+/*
   Main
  */
 
@@ -151,6 +177,7 @@ int main(void) {
     testsuite_eval_specialform();
     testsuite_eval_func_call();
     testsuite_eval_dynamic_variable();
+    testsuite_eval_call_lambda();
 
     CU_basic_run_tests();
     int ret = CU_get_number_of_failures();

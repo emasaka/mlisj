@@ -59,7 +59,7 @@ lispenv.o: ../src/lispenv.c $(LISPENV_H_AND_DEPS)
 
 reader.o: ../src/reader.c ../src/util.h $(LISPENV_H_AND_DEPS)
 
-eval.o: ../src/eval.c  ../src/eval.h ../src/reader.h $(LISPENV_H_AND_DEPS)
+eval.o: ../src/eval.c  ../src/eval.h ../src/reader.h ../src/func-helper.h $(LISPENV_H_AND_DEPS)
 
 func-simple.o: ../src/func-simple.c ../src/eval.h ../src/reader.h ../src/util.h ../src/func-helper.h $(LISPENV_H_AND_DEPS)
 

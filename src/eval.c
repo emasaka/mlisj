@@ -1,7 +1,38 @@
 #include "lispobject.h"
 #include "lispenv.h"
+#include "func-helper.h"
 
 Lisp_Object eval_expr(Lisp_Object, lispenv_t *); /* prototype declaration */
+
+Lisp_Object call_lambda(Lisp_Object lambda_lst, NArray *args, lispenv_t *env) {
+    CHECK_TYPE(lambda_lst, Lisp_CList);
+    size_t lambda_size = GET_AVAL(lambda_lst)->size;
+    CHECK_CONDITION(lambda_size >= 2);
+    CHECK_TYPE(GET_AVAL(lambda_lst)->data[0], Lisp_Symbol);
+    CHECK_CONDITION(GET_SVAL(GET_AVAL(lambda_lst)->data[0]) == env->Symbol_lambda);
+
+    Lisp_Object params = GET_AVAL(lambda_lst)->data[1];
+    CHECK_TYPE(params, Lisp_CList);
+    CHECK_CONDITION(GET_AVAL(params)->size == args->size);
+    int var_stat = save_variable_status(env->variable_pool);
+    for (size_t i = 0; i < args->size; i++) {
+        Lisp_Object param = GET_AVAL(params)->data[i];
+        CHECK_TYPE(param, Lisp_Symbol);
+        if (set_variable(env->variable_pool, GET_SVAL(param), args->data[i]) != 0) {
+            return LISP_ERROR(Evaluation_Error);
+        }
+    }
+
+    Lisp_Object r = LISP_NIL;
+    for (size_t i = 2; i < lambda_size; i++) {
+        r = eval_expr(GET_AVAL(lambda_lst)->data[i], env);
+        if (GET_TYPE(r) == Internal_Error) {
+            break;
+        }
+    }
+    restore_variable_status(env->variable_pool, var_stat);
+    return r;
+}
 
 static Lisp_Object eval_symbol(Lisp_Object sym, lispenv_t *env) {
     char *s = GET_SVAL(sym);
