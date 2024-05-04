@@ -165,31 +165,21 @@ Lisp_Object ad_to_gengo_1(lispenv_t *env, int ad, bool not_gannen, int month, in
 */
 
 Lisp_Object f_skk_ad_to_gengo(NArray *args, lispenv_t *env) {
-    char *divider;
-    char *tail;
-    bool not_gannen;
-
     CHECK_CONDITION(args->size >= 1 && args->size <= 4);
 
-    if (args->size < 4 || GET_TYPE(args->data[3]) == Lisp_Nil) {
-        not_gannen = false;
-    } else {
-        not_gannen = true;
-    }
+    bool not_gannen = (GET_TYPE(OPTIONAL_ARG(args, 3)) != Lisp_Nil);
 
-    if (args->size < 3 || GET_TYPE(args->data[2]) == Lisp_Nil) {
+    Lisp_Object tail_o = OPTIONAL_ARG(args, 2);
+    char *tail;
+    if (GET_TYPE(tail_o) == Lisp_Nil) {
         tail = "";
     } else {
-        CHECK_TYPE(args->data[2], Lisp_String);
-        tail = GET_SVAL(args->data[2]);
+        CHECK_TYPE(tail_o, Lisp_String);
+        tail = GET_SVAL(tail_o);
     }
 
-    if (args->size < 2 || GET_TYPE(args->data[1]) == Lisp_Nil) {
-        divider = "";
-    } else {
-        CHECK_TYPE(args->data[1], Lisp_String);
-        divider = GET_SVAL(args->data[1]);
-    }
+    Lisp_Object divider_o = OPTIONAL_ARG(args, 1);
+    char *divider = (GET_TYPE(divider_o) == Lisp_Nil) ? "" : GET_SVAL(args->data[1]);
 
     CHECK_TYPE(args->data[0], Lisp_Int);
     size_t gengo_index = GET_IVAL(args->data[0]);
@@ -233,21 +223,24 @@ Lisp_Object f_skk_ad_to_gengo(NArray *args, lispenv_t *env) {
 Lisp_Object f_skk_gengo_to_ad(NArray *args, lispenv_t *env) {
     CHECK_CONDITION(args->size <= 2);
 
+    Lisp_Object tail_o = OPTIONAL_ARG(args, 1);
     char *tail;
-    if (args->size < 2 || GET_TYPE(args->data[1]) == Lisp_Nil) {
+    if (GET_TYPE(tail_o) == Lisp_Nil) {
         tail = "";
     } else {
-        CHECK_TYPE(args->data[1], Lisp_String);
-        tail = GET_SVAL(args->data[1]);
+        CHECK_TYPE(tail_o, Lisp_String);
+        tail = GET_SVAL(tail_o);
     }
 
+    Lisp_Object head_o = OPTIONAL_ARG(args, 0);
     char *head;
-    if (args->size < 1 || GET_TYPE(args->data[0]) == Lisp_Nil) {
+    if (GET_TYPE(head_o) == Lisp_Nil) {
         head = "";
     } else {
-        CHECK_TYPE(args->data[0], Lisp_String);
-        head = GET_SVAL(args->data[0]);
+        CHECK_TYPE(head_o, Lisp_String);
+        head = GET_SVAL(head_o);
     }
+
     CHECK_CONDITION(env->skk_num_list != NULL);
     char *endptr;
     int nengo = (int)strtol(env->skk_num_list[0], &endptr, 10);
@@ -404,7 +397,7 @@ Lisp_Object f_skk_default_current_date(NArray *args, lispenv_t *env) {
     return skk_default_current_date(
                args->data[0], args->data[1], args->data[2], args->data[3],
                args->data[4],args->data[5], args->data[6],
-               ((args->size == 7) ? LISP_NIL : args->data[7]),
+               OPTIONAL_ARG(args, 7),
                env );
 }
 

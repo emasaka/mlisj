@@ -11,6 +11,8 @@
 #define ADD_FUNC_OR_RETURN(fp, s, f) if(add_func_from_cstr(fp, s, f, false) != 0) { return -1; }
 #define SET_VARIABVLE_OR_RETURN(vp, var, val) if(set_variable_from_cstr(vp, var, val, false) != 0) { return -1; }
 
+#define OPTIONAL_ARG(ary, nth) (((ary)->size <= (nth)) ? LISP_NIL : (ary)->data[(nth)])
+
 /* log_10(2) (roundup) */
 #define LOG_10_2 0.302
 /* max string length of unsigned int */
