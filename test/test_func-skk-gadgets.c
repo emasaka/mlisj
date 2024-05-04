@@ -612,6 +612,26 @@ void testsuite_skk_gadgets_func_skk_relative_date_1(void) {
 }
 
 /*
+    Function: skk-relative-date
+ */
+
+void test_skk_gadgets_func_skk_relative_date_dd(void) {
+    void (*saved_func)() = lisp_env->current_time_func;
+    lisp_env->current_time_func = dummy_tm;
+
+    Lisp_Object result = eval_expr(reader("(skk-relative-date (lambda (date-information format gengo and-time) (skk-default-current-date date-information \"%s-%s-%s(%s)\" 0 nil 0 0 nil)) nil nil :dd -1)", lisp_env), lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(result),  "2023-12-30(Sat)");
+
+    lisp_env->current_time_func = saved_func;
+}
+
+void testsuite_skk_gadgets_func_skk_relative_date(void) {
+    CU_pSuite suite = CU_add_suite("skk-gadgets-func skk-relative-date", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
+    CU_add_test(suite, "skk-gadgets-func skk-relative-date with :dd", test_skk_gadgets_func_skk_relative_date_dd);
+}
+
+/*
     Dynamic variable: skk-num-list
 */
 
@@ -663,6 +683,7 @@ int main(void) {
     testsuite_skk_gadgets_func_split_time_string();
     testsuite_skk_gadgets_func_skk_current_date();
     testsuite_skk_gadgets_func_skk_relative_date_1();
+    testsuite_skk_gadgets_func_skk_relative_date();
     testsuite_skk_gadgets_func_skk_num_list();
 
     CU_basic_run_tests();

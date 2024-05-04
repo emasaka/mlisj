@@ -509,6 +509,54 @@ Lisp_Object skk_relative_date_1(int offset_yy, int offset_mm, int offset_dd, lis
     return split_time_string(buffer, env);
 }
 
+Lisp_Object f_skk_relative_date(NArray *args, lispenv_t *env) {
+    size_t args_size = args->size;
+    CHECK_CONDITION(args_size >= 3);
+    Lisp_Object pp_function = args->data[0];
+    Lisp_Object format = args->data[1];
+    Lisp_Object and_time = args->data[2];
+
+    char *yy_sym = str2symbol(env->symbol_pool, ":yy", false);
+    CHECK_ALLOC(yy_sym);
+    char *mm_sym = str2symbol(env->symbol_pool, ":mm", false);
+    CHECK_ALLOC(mm_sym);
+    char *dd_sym = str2symbol(env->symbol_pool, ":dd", false);
+    CHECK_ALLOC(dd_sym);
+
+    int yy = 0; int mm = 0; int dd = 0;
+    for (size_t i = 3; i < args_size; i += 2) {
+        Lisp_Object elm = args->data[i];
+        if (GET_TYPE(elm) == Lisp_Symbol) {
+            CHECK_CONDITION(i + 1 < args_size);
+            CHECK_TYPE(args->data[i + 1], Lisp_Int);
+            if (GET_SVAL(elm) == yy_sym) {
+                yy = GET_IVAL(args->data[i + 1]);
+            } else if (GET_SVAL(elm) == mm_sym) {
+                mm = GET_IVAL(args->data[i + 1]);
+            } else if (GET_SVAL(elm) == dd_sym) {
+                dd = GET_IVAL(args->data[i + 1]);
+            }
+        } else {
+            return LISP_ERROR(Evaluation_Error);
+        }
+    }
+
+    Lisp_Object datetime = skk_relative_date_1(yy, mm, dd, env);
+    if (GET_TYPE(datetime) == Internal_Error) { return datetime; }
+    if (GET_TYPE(pp_function) == Lisp_Nil) {
+        return skk_default_current_date_function(
+                    datetime, format, lisp_not(SKK_DATE_AD), and_time, env );
+    } else {
+        NArray *args = new_narray(env->mempool, 4);
+        CHECK_ALLOC(args);
+        args->data[0] = datetime;
+        args->data[1] = format;
+        args->data[2] = SKK_DATE_AD;
+        args->data[3] = and_time;
+        return call_lambda(pp_function, args, env);
+    }
+}
+
 /*
     Dynamic variable: skk-num-list
 */
@@ -542,6 +590,7 @@ int register_func_skk_gadgets(lispenv_t *env) {
     ADD_FUNC_OR_RETURN(func_pool, "skk-gengo-to-ad", f_skk_gengo_to_ad);
     ADD_FUNC_OR_RETURN(func_pool, "skk-default-current-date", f_skk_default_current_date);
     ADD_FUNC_OR_RETURN(func_pool, "skk-current-date", f_skk_current_date);
+    ADD_FUNC_OR_RETURN(func_pool, "skk-relative-date", f_skk_relative_date);
 
     variable_pool_t *variable_pool = env->variable_pool;
     SET_VARIABVLE_OR_RETURN(variable_pool, "skk-num-list", DYNAMIC_VAL(dv_skk_num_list));
