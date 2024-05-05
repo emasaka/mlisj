@@ -4,7 +4,7 @@
 #include "lispobject.h"
 #include "symbol.h"
 
-#define VARIABLE_STACK_SIZE 256
+#define VARIABLE_STACK_SIZE 32
 
 typedef struct {
     char *symbol;

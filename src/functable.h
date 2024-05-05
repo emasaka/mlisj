@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-#define FUNC_TABLE_SIZE 256
+#define FUNC_TABLE_SIZE 32
 
 typedef Lisp_Object (*cfunc_t)();
 

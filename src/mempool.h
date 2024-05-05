@@ -4,10 +4,10 @@
 #include <stddef.h>
 #include "lispobject.h"
 
-#define LISPOBJECT_POOL_SIZE 8192
-#define STRING_POOL_SIZE 4096
-#define FLOAT_POOL_SIZE 512
-#define NARRAY_NODE_POOL_SIZE 1024
+#define LISPOBJECT_POOL_SIZE 1024
+#define STRING_POOL_SIZE 1024
+#define FLOAT_POOL_SIZE 32
+#define NARRAY_NODE_POOL_SIZE 64
 
 /* array node */
 typedef struct _NArray {
