@@ -50,7 +50,7 @@ int mlisj_eval(const char *src, char *dest, size_t size, char **skk_num_list, co
         dest[(size > 0) ? (size - 1) : 0] = 0;
         break;
     case Internal_Error:
-        exitcode = (GET_ERROR_TYPE(lisp_expr) == Evaluation_Error) ?
+        exitcode = (GET_ERROR_TYPE(result) == Evaluation_Error) ?
                 MLISJ_ERROR_EVALUATION : MLISJ_ERROR_RUNTIME;
         break;
     default:
