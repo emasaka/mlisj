@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -W -Wall
+CFLAGS := -W -Wall -fPIC
 TARGET_LIB := libmlisj.so
 OBJS := mlisj.o mempool.o symbol.o variable.o functable.o lispenv.o reader.o eval.o func-simple.o func-skk-gadgets.o util.o
 LINKER_VERSION_SCRIPT := libmlisj.map
