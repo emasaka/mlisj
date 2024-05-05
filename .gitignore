@@ -2,6 +2,7 @@
 *.swp
 /src/*
 /test/*
+/example/*
 !*.[ch]
 !Makefile
 !*.map
