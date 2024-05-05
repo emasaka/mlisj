@@ -21,6 +21,8 @@ LISPENV_O_AND_DEPS :=  lispenv.o mempool.o symbol.o variable.o functable.o
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@
 
+mlisj.o: mlisj.c mlisj.h lispobject.h lispenv.h reader.h eval.h func-simple.h func-skk-gadgets.h
+
 mempool.o: mempool.c lispobject.h mempool.h
 
 symbol.o: symbol.c lispobject.h mempool.h symbol.h
