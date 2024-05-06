@@ -1,6 +1,10 @@
 TESTDIR := test
 CC := gcc
-CFLAGS := -W -Wall -fsanitize=address -static-libasan
+ifeq ($(CC),gcc)
+  CFLAGS := -W -Wall -fsanitize=address -static-libasan
+else
+  CFLAGS := -W -Wall -fsanitize=address
+endif
 TEST_CFLAGS := $(CFLAGS) -lcunit
 
 TEST_EXECS := test_mempool test_symbol test_variable test_functable test_lispenv test_reader test_eval test_func-simple test_func-skk-gadgets test_util
