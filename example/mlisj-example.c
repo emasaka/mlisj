@@ -9,11 +9,11 @@ void call_mlisj(char *str, char **skk_num_list) {
     puts(str);
     int ret = mlisj_eval(str, buffer, BUFSIZE, skk_num_list, NULL);
     if (ret == 0) {
-	printf("-> %s\n", buffer);
+        printf("-> %s\n", buffer);
     } else if (ret == MLISJ_ERROR_EVALUATION) {
-	printf("-> %s\n", str);
+        printf("-> %s\n", str);
     } else {
-	puts("-> error!");
+        puts("-> error!");
     }
 }
 
