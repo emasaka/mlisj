@@ -8,6 +8,9 @@ SKK-JISYO内のLisp式を評価する最小限のインタプリタ。ライブ�
 
 ## USAGE
 
+Cの場合：
+
+
 ```
 #include <mlisj.h>
 
@@ -25,7 +28,7 @@ int mlisj_eval(const char *src, char *dest, size_t size, char **skk_num_list, co
 * `skk_num_list`
     * 数値変換で渡す数値のリスト
     * 文字列の配列（NULL終わり）
-        * 例：`["3", "1", NULL]`
+        * 例：`{"3", "1", NULL}`
     * 指定しない場合はNULLでよい
 * `skk_henkan_key`
     * 変換前の文字列（見出し語）を渡す
@@ -82,10 +85,11 @@ int mlisj_eval(const char *src, char *dest, size_t size, char **skk_num_list, co
 ### 全体的な方針
 
 * SKK辞書で使われている関数や特殊形式、機能のみ実装
-* パフォーマンスより実装の単純さを優先
 * 1つの式を評価して文字列を返すだけに特化
 * 環境はそのたびに作ってクリアする。GC無し
-* データ構造はLispのレベルではイミュータブル
+    * 初期化に時間をかけない
+* パフォーマンスより実装の単純さを優先
+* データはLispのレベルではイミュータブル
 * 実行エラーの場合はすみやかに返る（“(笑)”のような文字列を渡された場合など）
 * libc以外の外部ライブラリにはあまり異存したくない
 
@@ -113,10 +117,10 @@ int mlisj_eval(const char *src, char *dest, size_t size, char **skk_num_list, co
 * Lisp_Object構造体（タグ付きポインタのようなもの）は、だいたいポインタ2つぶんのサイズになっていて無駄が多い
     * 一応、src/lispobject.hの定義を変えるだけで小さくはできるはず
 * skk_num_listに入ってくるのは整数の文字列のみを想定（DDSKKでいうとskk-num-convert-floatがnilの想定）
-* skk-default-current-date関数関連は、SKK-JISYO.lispで使われている引数のみ対応
+* `skk-default-current-date`関数関連は、SKK-JISYO.lispで使われている引数のみ対応
 
 ### Emacs Lispと違う仕様
 
 * ()とnilは別
-* 1引数のconcatは引数の文字列をそのまま返す
+* 1引数の`concat`は引数の文字列をそのまま返す
     * SKK辞書では文字列エスケープの手段として多用されているため
