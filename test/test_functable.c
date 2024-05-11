@@ -35,12 +35,12 @@ int end_for_functabletest(void) {
     return 0;
 }
 
-Lisp_Object dummy_func1(int n) {
-    return LISP_INT(n + 1);
+Lisp_Object dummy_func1(NArray *args, __attribute__((unused)) struct _lispenv *env) {
+    return LISP_INT(GET_IVAL(args->data[0]) + 1);
 }
 
-Lisp_Object dummy_func2(int n) {
-    return LISP_INT(n + 2);
+Lisp_Object dummy_func2(NArray *args, __attribute__((unused)) struct _lispenv *env) {
+    return LISP_INT(GET_IVAL(args->data[0]) + 2);
 }
 
 void test_functable_found(void) {
@@ -54,13 +54,17 @@ void test_functable_found(void) {
     CU_ASSERT_PTR_NOT_NULL(sym1);
     CU_ASSERT_PTR_NOT_NULL(sym2);
 
+    NArray *args = new_narray(mempool, 1);
+    CU_ASSERT_PTR_NOT_NULL(args);
+    args->data[0] = LISP_INT(3);
+
     cfunc_t func1 = get_func(func_pool, sym1);
     CU_ASSERT_PTR_NOT_NULL(func1);
-    CU_ASSERT_EQUAL(GET_IVAL(func1(3)), 4);
+    CU_ASSERT_EQUAL(GET_IVAL(func1(args, NULL)), 4);
 
     cfunc_t func2 = get_func(func_pool, sym2);
     CU_ASSERT_PTR_NOT_NULL(func2);
-    CU_ASSERT_EQUAL(GET_IVAL(func2(3)), 5);
+    CU_ASSERT_EQUAL(GET_IVAL(func2(args, NULL)), 5);
 }
 
 void test_functable_notfound(void) {

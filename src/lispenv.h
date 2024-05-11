@@ -1,13 +1,14 @@
 #ifndef _LISPENV_H
 #define _LISPENV_H
 
+#include <time.h>
 #include "lispobject.h"
 #include "mempool.h"
 #include "symbol.h"
 #include "variable.h"
 #include "functable.h"
 
-typedef struct {
+typedef struct _lispenv {
     mempool_t *mempool;
     symbol_pool_t *symbol_pool;
     variable_pool_t *variable_pool;
@@ -23,7 +24,7 @@ typedef struct {
     const char *skk_henkan_key;
 
     /* function to get current time */
-    void (*current_time_func)();
+    void (*current_time_func)(struct tm *);
 } lispenv_t;
 
 extern lispenv_t *init_lispenv(void);

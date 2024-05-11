@@ -191,7 +191,7 @@ Lisp_Object f_symbol_value(NArray *args, lispenv_t *env) {
     Lisp_Object val = get_variable(env->variable_pool, GET_SVAL(args->data[0]));
     if (GET_TYPE(val) == Dynamic_Val) {
         /* dynamic variable */
-        Lisp_Object (*fn)() =GET_FNVAL(val);
+        Lisp_Object (*fn)(lispenv_t *) = GET_FNVAL(val);
         val = fn(env);
     }
     return val;

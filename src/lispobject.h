@@ -22,7 +22,9 @@ enum Internal_Error_Type {
     Evaluation_Error
 };
 
-struct _Narray;                 /* prototype declaration */
+/* prototype declarations of struct */
+struct _Narray;
+struct _lispenv;
 
 /* naive implementation */
 typedef struct _Lisp_Object {
@@ -31,7 +33,7 @@ typedef struct _Lisp_Object {
         int ival;               /* Lisp_Int, Lisp_Nil (0) */
         double *fval;           /* Lisp_Float */
         char *sval;             /* Lisp_String, Lisp_Symbol */
-        struct _Lisp_Object (*fnval)(); /* Dynamic_Val*/
+        struct _Lisp_Object (*fnval)(struct _lispenv *); /* Dynamic_Val */
         struct _NArray *aval;   /* Lisp_CList */
         enum Internal_Error_Type err; /* Internal_Error */
     } val;

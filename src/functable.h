@@ -5,7 +5,11 @@
 
 #define FUNC_TABLE_SIZE 32
 
-typedef Lisp_Object (*cfunc_t)();
+/* prototype declarations of struct */
+struct _Narray;
+struct _lispenv;
+
+typedef Lisp_Object (*cfunc_t)(struct _NArray *, struct _lispenv *);
 
 typedef struct {
     char *symbol;

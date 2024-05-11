@@ -138,7 +138,7 @@ static char *japanese_keta_man[] = {
     "", "万", "億", "兆", "京"
 };
 
-int skk_num_type3_kanji(char *src, char *dst, size_t size) {
+int skk_num_type3_kanji(const char *src, char *dst, size_t size) {
     char buff4_out[ZENKAKU_DIGIT_STRLEN * 8 + 1];
     char buff4[5];
     buff4[4] = '\0';
@@ -178,14 +178,16 @@ int skk_num_type3_kanji(char *src, char *dst, size_t size) {
     return -1;
 }
 
-int skk_num_type0_kanji(char *src, char *dst, size_t size) {
+int skk_num_type0_kanji(const char *src, char *dst, size_t size) {
     /* just copy */
     strncpy(dst, src, size);
     dst[size - 1] = '\0';
     return 0;
 }
 
-static int (*skk_num_type_list[])() = {
+typedef int(*skk_num_type_func_t)(const char *, char *, size_t);
+
+static skk_num_type_func_t skk_num_type_list[] = {
     skk_num_type0_kanji,  /* 0 */
     skk_num_type1_kanji,  /* 1 */
     NULL, /* 2: not implemented */
@@ -202,7 +204,7 @@ int skk_num_exp(const char *num, size_t type_idx, char *dst, size_t size) {
     if (type_idx > (sizeof(skk_num_type_list) / sizeof(skk_num_type_list[0]))) {
         return -1;
     }
-    int (*func)() = skk_num_type_list[type_idx];
+    skk_num_type_func_t func = skk_num_type_list[type_idx];
     if (func == NULL) {
         return -1;
     }

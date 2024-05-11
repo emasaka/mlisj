@@ -44,7 +44,7 @@ static Lisp_Object eval_symbol(Lisp_Object sym, lispenv_t *env) {
     Lisp_Object val = get_variable(env->variable_pool, s);
     if (GET_TYPE(val) == Dynamic_Val) {
         /* dynamic variable */
-        Lisp_Object (*fn)() =GET_FNVAL(val);
+        Lisp_Object (*fn)(lispenv_t *) = GET_FNVAL(val);
         val = fn(env);
     }
     return val;
