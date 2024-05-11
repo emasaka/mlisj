@@ -21,6 +21,7 @@
 #define V_COMMENT_START "#"
 #define V_CWD "/"
 #define V_USER_FULL_NAME "Jay Doe"
+#define DUMMY_USER_NAME "jaydoe"
 #define V_USER_MAIL_ADDRESS "jaydoe@example.com"
 #define V_WINDOW_WIDTH 80
 
@@ -325,7 +326,9 @@ Lisp_Object dv_user_full_name(lispenv_t *env) {
 
 Lisp_Object dv_user_mail_address(lispenv_t *env) {
     char buff1[LOGIN_NAME_MAX + 1];
-    CHECK_CONDITION(getlogin_r(buff1, LOGIN_NAME_MAX + 1) == 0);
+    if (getlogin_r(buff1, LOGIN_NAME_MAX + 1) != 0) {
+        strcpy(buff1, DUMMY_USER_NAME);
+    }
 
     char buff2[HOST_NAME_MAX + 1];
     CHECK_CONDITION(gethostname(buff2, HOST_NAME_MAX + 1) == 0);
