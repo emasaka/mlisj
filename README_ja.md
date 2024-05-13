@@ -50,7 +50,7 @@ int mlisj_eval(const char *src, char *dest, size_t size, char **skk_num_list, co
 
 ### 関数
 
-* -
+* \-
 * car
 * concat
 * current-time-string
