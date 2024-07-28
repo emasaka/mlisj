@@ -1,3 +1,11 @@
+/*
+  mlisj
+  Copyright (C) 2023-2024 emasaka
+  This program comes with ABSOLUTELY NO WARRANTY.
+  This is free software, and you are welcome to redistribute it
+  under certain conditions.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
