@@ -64,15 +64,15 @@ void test_simple_func_minus_int(void) {
 
 void test_simple_func_minus_float(void) {
     Lisp_Object result1 = eval_expr(reader("(- 5.0 3)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Float);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result1), Lisp_Float);
     CU_ASSERT_DOUBLE_EQUAL(*(GET_FVAL(result1)), 2.0, 1e-10);
 
     Lisp_Object result2 = eval_expr(reader("(- 5 3.0)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_Float);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result2), Lisp_Float);
     CU_ASSERT_DOUBLE_EQUAL(*(GET_FVAL(result2)), 2.0, 1e-10);
 
     Lisp_Object result3 = eval_expr(reader("(- 3.0 5)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result3), Lisp_Float);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result3), Lisp_Float);
     CU_ASSERT_DOUBLE_EQUAL(*(GET_FVAL(result3)), -2.0, 1e-10);
 }
 
@@ -88,7 +88,7 @@ void testsuite_simple_func_minus(void) {
 
 void test_simple_func_car_list(void) {
     Lisp_Object result = eval_expr(reader("(car '(a b c))", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_Symbol);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_Symbol);
     char *sym = str2symbol(lisp_env->symbol_pool, "a", true);
     CU_ASSERT_PTR_EQUAL(GET_SVAL(result), sym);
 }
@@ -119,19 +119,19 @@ void testsuite_simple_func_car(void) {
 
 void test_simple_func_concat_noarg(void) {
     Lisp_Object result = eval_expr(reader("(concat)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "");
 }
 
 void test_simple_func_concat_onearg(void) {
     Lisp_Object result = eval_expr(reader("(concat \"foo\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "foo");
 }
 
 void test_simple_func_concat_multiarg(void) {
     Lisp_Object result = eval_expr(reader("(concat \"foo\" \"bar\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "foobar");
 }
 
@@ -148,11 +148,11 @@ void testsuite_simple_func_concat(void) {
 
 void test_simple_func_make_string_normal(void) {
     Lisp_Object result1 = eval_expr(reader("(make-string 3 ?x)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result1), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "xxx");
 
     Lisp_Object result2 = eval_expr(reader("(make-string 0 ?x)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result2), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result2), "");
 }
 
@@ -239,27 +239,27 @@ void testsuite_simple_func_symbol_value(void) {
 
 void test_simple_func_substring_head(void) {
     Lisp_Object result1 = eval_expr(reader("(substring \"abcdef\" 0 2)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result1), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "ab");
 
     Lisp_Object result2 = eval_expr(reader("(substring \"abcdef\" 0 0)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result2), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result2), "");
 }
 
 void test_simple_func_substring_middle(void) {
     Lisp_Object result = eval_expr(reader("(substring \"abcdef\" 1 3)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "bc");
 }
 
 void test_simple_func_substring_tail(void) {
     Lisp_Object result1 = eval_expr(reader("(substring \"abcdef\" 4 6)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result1), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "ef");
 
     Lisp_Object result2 = eval_expr(reader("(substring \"abcdef\" 6 6)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result2), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result2), "");
 }
 
@@ -298,7 +298,7 @@ void test_simple_func_string_to_number_int(void) {
 
 void test_simple_func_string_to_number_float(void) {
     Lisp_Object result1 = eval_expr(reader("(string-to-number \"3.2\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Float);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result1), Lisp_Float);
     CU_ASSERT_DOUBLE_EQUAL(*(GET_FVAL(result1)), 3.2, 1e-10);
 }
 
@@ -321,12 +321,12 @@ void testsuite_simple_func_string_to_number(void) {
 
 void test_simple_func_pwd_call(void) {
     Lisp_Object result = eval_expr(reader("(pwd)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
 }
 
 void test_simple_func_pwd_body(void) {
     Lisp_Object result = get_pwd_str(lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
 
     char buffer[TMP_BUFFSIZE];
     getcwd(buffer, TMP_BUFFSIZE);
@@ -372,7 +372,7 @@ void test_simple_func_current_time_string_call(void) {
     void (*saved_func)() = lisp_env->current_time_func;
     lisp_env->current_time_func = dummy_tm;
     Lisp_Object result = eval_expr(reader("(current-time-string)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result),  "Sun Dec 31 13:21:45 2023");
     lisp_env->current_time_func = saved_func;
 }
@@ -391,13 +391,13 @@ void test_simple_func_predefined_variables1(void) {
     CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_Int);
 
     Lisp_Object result2 = eval_expr(reader("comment-start", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result2), Lisp_String);
 
     Lisp_Object result3 = eval_expr(reader("user-full-name", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result3), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result3), Lisp_String);
 
     Lisp_Object result4 = eval_expr(reader("user-mail-address", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result4), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result4), Lisp_String);
 }
 
 void testsuite_simple_func_predefined_variables(void) {

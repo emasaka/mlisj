@@ -59,7 +59,7 @@ int string_endswith(char *str, char *ptn) {
 
 void test_skk_gadgets_func_skk_version_call(void) {
     Lisp_Object result = eval_expr(reader("(skk-version)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
 }
 
 void testsuite_skk_gadgets_func_skk_version(void) {
@@ -75,7 +75,7 @@ void test_skk_gadgets_func_skk_times_zeronums(void) {
     register_skk_num_list(lisp_env, NULL);
 
     Lisp_Object result = eval_expr(reader("(skk-times)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "1");
 }
 
@@ -84,7 +84,7 @@ void test_skk_gadgets_func_skk_times_somenums(void) {
     register_skk_num_list(lisp_env, num_list);
 
     Lisp_Object result = eval_expr(reader("(skk-times)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "105");
 }
 
@@ -100,7 +100,7 @@ void testsuite_skk_gadgets_func_skk_times(void) {
 
 void test_skk_gadgets_func_units_conversion_mile_km(void) {
     Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"mile\" 2 \"km\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     char *str = GET_SVAL(result);
     CU_ASSERT_NSTRING_EQUAL(str, "3.2", 3);
     CU_ASSERT(string_endswith(str, "km") == 0);
@@ -108,21 +108,21 @@ void test_skk_gadgets_func_units_conversion_mile_km(void) {
 
 void test_skk_gadgets_func_units_conversion_mile_yard(void) {
     Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"mile\" 2 \"yard\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     char *str = GET_SVAL(result);
     CU_ASSERT_STRING_EQUAL(str, "3520yard");
 }
 
 void test_skk_gadgets_func_units_conversion_yard_feet(void) {
     Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"yard\" 2 \"feet\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     char *str = GET_SVAL(result);
     CU_ASSERT_STRING_EQUAL(str, "6feet");
 }
 
 void test_skk_gadgets_func_units_conversion_yard_cm(void) {
     Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"yard\" 2 \"cm\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     char *str = GET_SVAL(result);
     CU_ASSERT_NSTRING_EQUAL(str, "182.88", 6);
     CU_ASSERT(string_endswith(str, "cm") == 0);
@@ -130,14 +130,14 @@ void test_skk_gadgets_func_units_conversion_yard_cm(void) {
 
 void test_skk_gadgets_func_units_conversion_feet_inch(void) {
     Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"feet\" 2 \"inch\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     char *str = GET_SVAL(result);
     CU_ASSERT_STRING_EQUAL(str, "24inch");
 }
 
 void test_skk_gadgets_func_units_conversion_feet_cm(void) {
     Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"feet\" 2 \"cm\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     char *str = GET_SVAL(result);
     CU_ASSERT_NSTRING_EQUAL(str, "60.96", 5);
     CU_ASSERT(string_endswith(str, "cm") == 0);
@@ -145,7 +145,7 @@ void test_skk_gadgets_func_units_conversion_feet_cm(void) {
 
 void test_skk_gadgets_func_units_conversion_inch_feet(void) {
     Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"inch\" 2 \"feet\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     char *str = GET_SVAL(result);
     CU_ASSERT_NSTRING_EQUAL(str, "1", 1);
     CU_ASSERT(string_endswith(str, "feet") == 0);
@@ -153,7 +153,7 @@ void test_skk_gadgets_func_units_conversion_inch_feet(void) {
 
 void test_skk_gadgets_func_units_conversion_inch_cm(void) {
     Lisp_Object result = eval_expr(reader("(skk-gadget-units-conversion \"inch\" 2 \"cm\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     char *str = GET_SVAL(result);
     CU_ASSERT_NSTRING_EQUAL(str, "5.0", 3);
     CU_ASSERT(string_endswith(str, "cm") == 0);
@@ -393,11 +393,11 @@ void test_skk_gadgets_func_skk_ad_to_gengo_1arg(void) {
     register_skk_num_list(lisp_env, num_list);
 
     Lisp_Object result1 = eval_expr(reader("(skk-ad-to-gengo 0)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result1), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "令和6");
 
     Lisp_Object result2 = eval_expr(reader("(skk-ad-to-gengo 1)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result2), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result2), "R6");
 }
 
@@ -406,11 +406,11 @@ void test_skk_gadgets_func_skk_ad_to_gengo_2args(void) {
     register_skk_num_list(lisp_env, num_list);
 
     Lisp_Object result1 = eval_expr(reader("(skk-ad-to-gengo 0 nil)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result1), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "令和6");
 
     Lisp_Object result2 = eval_expr(reader("(skk-ad-to-gengo 0 \":\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result2), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result2), "令和:6");
 }
 
@@ -419,11 +419,11 @@ void test_skk_gadgets_func_skk_ad_to_gengo_3args(void) {
     register_skk_num_list(lisp_env, num_list);
 
     Lisp_Object result1 = eval_expr(reader("(skk-ad-to-gengo 0 nil nil)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result1), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "令和6");
 
     Lisp_Object result2 = eval_expr(reader("(skk-ad-to-gengo 0 nil \"年\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result2), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result2), "令和6年");
 }
 
@@ -432,11 +432,11 @@ void test_skk_gadgets_func_skk_ad_to_gengo_4args(void) {
     register_skk_num_list(lisp_env, num_list);
 
     Lisp_Object result1 = eval_expr(reader("(skk-ad-to-gengo 0 nil \"年\" nil)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result1), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "令和元年");
 
     Lisp_Object result2 = eval_expr(reader("(skk-ad-to-gengo 0 nil \"年\" 1)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result2), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result2), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result2), "令和1年");
 }
 
@@ -457,7 +457,7 @@ void test_skk_gadgets_func_skk_gengo_to_ad_0arg(void) {
     register_skk_henkan_key(lisp_env, "れいわ6ねん");
 
     Lisp_Object result = eval_expr(reader("(skk-gengo-to-ad)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "2024");
 }
 
@@ -467,7 +467,7 @@ void test_skk_gadgets_func_skk_gengo_to_ad_1arg(void) {
     register_skk_henkan_key(lisp_env, "れいわ6ねん");
 
     Lisp_Object result = eval_expr(reader("(skk-gengo-to-ad \"西暦\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "西暦2024");
 }
 
@@ -477,7 +477,7 @@ void test_skk_gadgets_func_skk_gengo_to_ad_2args(void) {
     register_skk_henkan_key(lisp_env, "れいわ6ねん");
 
     Lisp_Object result = eval_expr(reader("(skk-gengo-to-ad \"西暦\" \"年\")", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "西暦2024年");
 }
 
@@ -494,31 +494,31 @@ void testsuite_skk_gadgets_func_skk_gengo_to_ad(void) {
 
 void test_skk_gadgets_func_skk_default_current_date_example(void) {
     Lisp_Object result = eval_expr(reader("(skk-default-current-date '(\"2013\" \"Jan\" \"29\" \"Tue\" \"22\" \"59\" \"50\") nil 3 'gengo 0 0 0)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "平成二十五年一月二十九日(火)");
 }
 
 void test_skk_gadgets_func_skk_default_current_date_numtype0(void) {
     Lisp_Object result = eval_expr(reader("(skk-default-current-date '(\"2013\" \"Jan\" \"29\" \"Tue\" \"22\" \"59\" \"50\") nil 0 'gengo 0 0 0)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "平成25年1月29日(火)");
 }
 
 void test_skk_gadgets_func_skk_default_current_date_not_gengo(void) {
     Lisp_Object result = eval_expr(reader("(skk-default-current-date '(\"2013\" \"Jan\" \"29\" \"Tue\" \"22\" \"59\" \"50\") nil 0 nil 0 0 0)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "2013年1月29日(火)");
 }
 
 void test_skk_gadgets_func_skk_default_current_date_gengo1(void) {
     Lisp_Object result = eval_expr(reader("(skk-default-current-date '(\"2013\" \"Jan\" \"29\" \"Tue\" \"22\" \"59\" \"50\") nil 0 'gengo 1 0 0)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "H25年1月29日(火)");
 }
 
 void test_skk_gadgets_func_skk_default_current_date_format(void) {
     Lisp_Object result = eval_expr(reader("(skk-default-current-date '(\"2013\" \"Jan\" \"29\" \"Tue\" \"22\" \"59\" \"50\") \"%s-%s-%s(%s)\" 0 nil 0 0 0)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), "2013-1-29(火)");
 }
 
@@ -569,7 +569,7 @@ void test_skk_gadgets_func_skk_current_date_0arg(void) {
     lisp_env->current_time_func = dummy_tm;
 
     Lisp_Object result = eval_expr(reader("(skk-current-date)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result),  "令和５年１２月３１日(日)");
 
     lisp_env->current_time_func = saved_func;
@@ -580,7 +580,7 @@ void test_skk_gadgets_func_skk_current_date_1arg(void) {
     lisp_env->current_time_func = dummy_tm;
 
     Lisp_Object result = eval_expr(reader("(skk-current-date (lambda (date-information format gengo and-time) (skk-default-current-date date-information \"%s-%s-%s(%s)\" 0 nil 0 0 nil)))", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result),  "2023-12-31(Sun)");
 
     lisp_env->current_time_func = saved_func;
@@ -637,7 +637,7 @@ void test_skk_gadgets_func_skk_relative_date_dd(void) {
     lisp_env->current_time_func = dummy_tm;
 
     Lisp_Object result = eval_expr(reader("(skk-relative-date (lambda (date-information format gengo and-time) (skk-default-current-date date-information \"%s-%s-%s(%s)\" 0 nil 0 0 nil)) nil nil :dd -1)", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result),  "2023-12-30(Sat)");
 
     lisp_env->current_time_func = saved_func;
@@ -664,15 +664,15 @@ void test_skk_gadgets_func_skk_num_list_notempty(void) {
     register_skk_num_list(lisp_env, num_list);
 
     Lisp_Object result = eval_expr(reader("skk-num-list", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_CList);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_CList);
     CU_ASSERT_EQUAL(GET_AVAL(result)->size, 2);
 
     Lisp_Object elm0 = GET_AVAL(result)->data[0];
-    CU_ASSERT_EQUAL(GET_TYPE(elm0), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(elm0), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(elm0), "32");
 
     Lisp_Object elm1 = GET_AVAL(result)->data[1];
-    CU_ASSERT_EQUAL(GET_TYPE(elm1), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(elm1), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(elm1), "50");
 }
 

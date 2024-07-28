@@ -42,7 +42,7 @@ void test_eval_number(void) {
 
 void test_eval_string(void) {
     Lisp_Object result1 = eval_expr(reader("\"foo\"", lisp_env), lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result1), Lisp_String);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result1), Lisp_String);
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result1), "\"foo\"");
 }
 
@@ -71,9 +71,9 @@ void test_eval_symbol(void) {
 
 void test_eval_keyword_symbol(void) {
     Lisp_Object sym = reader(":foo", lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(sym), Lisp_Symbol);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(sym), Lisp_Symbol);
     Lisp_Object result = eval_expr(sym, lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_Symbol);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_Symbol);
     CU_ASSERT_PTR_EQUAL(GET_SVAL(result), GET_SVAL(sym));
 }
 
@@ -153,9 +153,9 @@ void testsuite_eval_dynamic_variable(void) {
 
 void test_eval_call_lambda_call(void) {
     Lisp_Object lambda_lst = reader("(lambda (x) x)", lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(lambda_lst), Lisp_CList);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(lambda_lst), Lisp_CList);
     Lisp_Object args = reader("(5)", lisp_env);
-    CU_ASSERT_EQUAL(GET_TYPE(args), Lisp_CList);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(args), Lisp_CList);
     Lisp_Object result = call_lambda(lambda_lst, GET_AVAL(args), lisp_env);
     CU_ASSERT_EQUAL(GET_TYPE(result), Lisp_Int);
     CU_ASSERT_EQUAL(GET_IVAL(result), 5);
