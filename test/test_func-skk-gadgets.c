@@ -353,6 +353,14 @@ void test_skk_gadgets_func_ad_to_gengo_1_reiwa_beg(void) {
     CU_ASSERT_STRING_EQUAL(tmp_buf, "(\"令和\" \"R\" 1)");
 }
 
+void test_skk_gadgets_func_ad_to_gengo_1_illegal_month_and_date(void) {
+    Lisp_Object result1 = ad_to_gengo_1(lisp_env, 2024, true, 13, 1);
+    CU_ASSERT_EQUAL(GET_TYPE(result1), Internal_Error);
+
+    Lisp_Object result2 = ad_to_gengo_1(lisp_env, 2024, true, 1, 32);
+    CU_ASSERT_EQUAL(GET_TYPE(result2), Internal_Error);
+}
+
 void testsuite_skk_gadgets_func_ad_to_gengo_1(void) {
     CU_pSuite suite = CU_add_suite("skk-gadgets-func ad_to_gengo_1", init_for_func_skk_gadgets_test, end_for_func_skk_gadgets_test);
     CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 nomatch", test_skk_gadgets_func_ad_to_gengo_1_notmatch);
@@ -365,6 +373,7 @@ void testsuite_skk_gadgets_func_ad_to_gengo_1(void) {
     CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 heisei begin", test_skk_gadgets_func_ad_to_gengo_1_heisei_beg);
     CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 heisei end", test_skk_gadgets_func_ad_to_gengo_1_heisei_end);
     CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 reiwa begin", test_skk_gadgets_func_ad_to_gengo_1_reiwa_beg);
+    CU_add_test(suite, "skk-gadgets-func ad_to_gengo_1 illegal month and date", test_skk_gadgets_func_ad_to_gengo_1_illegal_month_and_date);
 }
 
 /*

@@ -140,6 +140,14 @@ int gengo_to_ad_1(const char *gengo, int year) {
 
 /* month and day can be 0 (unspecified)*/
 Lisp_Object ad_to_gengo_1(lispenv_t *env, int ad, bool not_gannen, int month, int day) {
+    /* check values of month and day*/
+    CHECK_CONDITION(month <= 12);
+    static int days_in_a_month[] = { 0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    if (month > 0 && day > 0) {
+        CHECK_CONDITION(day <= days_in_a_month[month]);
+        /* check of leap year is omitted */
+    }
+
     size_t i = 0;
     for ( ; i < sizeof(gengo_list) / sizeof(gengo_list[0]); i++) {
         if ((ad * 10000 + (month ? month : 13) * 100 + (day ? day : 32)) <
