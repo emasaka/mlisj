@@ -96,7 +96,11 @@ static Lisp_Object eval_list(Lisp_Object lst, lispenv_t *env) {
         if (func == NULL) {
             return LISP_ERROR(Evaluation_Error);
         }
-        Lisp_Object new_args = eval_args(cdr_narray(env->mempool, GET_AVAL(lst)), env);
+        NArray *cdr_args = cdr_narray(env->mempool, GET_AVAL(lst));
+        if (cdr_args == NULL) {
+            return LISP_ERROR(Evaluation_Error);
+        }
+        Lisp_Object new_args = eval_args(cdr_args, env);
         if (GET_TYPE(new_args) == Internal_Error) {
             return new_args;
         }
