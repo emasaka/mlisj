@@ -60,7 +60,7 @@ static Lisp_Object eval_symbol(Lisp_Object sym, lispenv_t *env) {
 
 static Lisp_Object eval_args(NArray *args, lispenv_t *env) {
     NArray *new_args = new_narray(env->mempool, args->size);
-    if (args == NULL) {
+    if (new_args == NULL) {
         return LISP_ERROR(Evaluation_Error);
     }
     size_t sz = args->size;
