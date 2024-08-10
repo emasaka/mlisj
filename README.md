@@ -111,7 +111,6 @@ Below are the specifications and implementation notes.
      * Escape character literals.
      * Multibyte character literal.
      * Hexadecimal notation and unicode code notation in strings.
-     * Check the number of digits in octal notation in a string.
      * Escape multibyte characters in strings.
 * Name resolution from string to symbol and from symbol to function is performed using linear search.
      * Since the number is small, it should not be a problem.

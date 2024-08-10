@@ -141,6 +141,14 @@ void test_reader_string_escaped_octet2(void) {
     CU_ASSERT_STRING_EQUAL(tmp_buf, "\"\\033\"");
 }
 
+void test_reader_string_escaped_octet3(void) {
+    char tmp_buf[TMP_BUFFSIZE];
+    Lisp_Object obj = reader("\"\\06100\"", lisp_env);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(obj), Lisp_String);
+    CU_ASSERT(writer(obj, tmp_buf) == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "\"100\"");
+}
+
 void test_reader_string_escaped_visible(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("\"\\W\"", lisp_env);
@@ -154,6 +162,7 @@ void testsuite_reader_string(void) {
     CU_add_test(suite, "reader_string_visible", test_reader_string_visible);
     CU_add_test(suite, "reader_string_escaped_octet1", test_reader_string_escaped_octet1);
     CU_add_test(suite, "reader_string_escaped_octet2", test_reader_string_escaped_octet2);
+    CU_add_test(suite, "reader_string_escaped_octet3", test_reader_string_escaped_octet3);
     CU_add_test(suite, "reader_string_escaped_visible", test_reader_string_escaped_visible);
 }
 
