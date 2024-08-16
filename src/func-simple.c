@@ -33,6 +33,14 @@
 #define V_USER_MAIL_ADDRESS "jaydoe@example.com"
 #define V_WINDOW_WIDTH 80
 
+/* workaround for non-Linux system*/
+#if !defined(HOST_NAME_MAX)
+#define HOST_NAME_MAX 64
+#endif
+#if !defined(LOGIN_NAME_MAX)
+#define LOGIN_NAME_MAX 256
+#endif
+
 /*
     Function: -
 */
