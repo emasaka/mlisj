@@ -273,8 +273,8 @@ Lisp_Object f_string_to_number(NArray *args, lispenv_t *env) {
 */
 
 Lisp_Object get_pwd_str(lispenv_t *env) {
-    char buffer[TMP_BUFFSIZE];
-    if (getcwd(buffer, TMP_BUFFSIZE)) {
+    char buffer[PATH_MAX];
+    if (getcwd(buffer, PATH_MAX)) {
         char *path = copy_to_string_area(env->mempool, buffer);
         CHECK_ALLOC(path);
         return LISP_STRING(path);
