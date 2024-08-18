@@ -349,9 +349,10 @@ Lisp_Object dv_user_mail_address(lispenv_t *env) {
     char buff2[HOST_NAME_MAX + 1];
     CHECK_CONDITION(gethostname(buff2, HOST_NAME_MAX + 1) == 0);
 
-    char *str = new_string_area(env->mempool, strlen(buff1) + strlen(buff2) + 2);
+    size_t len = strlen(buff1) + strlen(buff2) + 2;
+    char *str = new_string_area(env->mempool, len);
     CHECK_ALLOC(str);
-    sprintf(str, "%s@%s", buff1, buff2);
+    snprintf(str, len, "%s@%s", buff1, buff2);
     return LISP_STRING(str);
 }
 
