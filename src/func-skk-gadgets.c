@@ -43,42 +43,11 @@ static void str_cpy_up_to_digit(char *dst, const char *src, size_t len) {
     *d = '\0';
 }
 
-static char *cat_2strings(lispenv_t *env, char *str1, char *str2) {
-    size_t str1_len = strlen(str1);
-    size_t str2_len = strlen(str2);
-    char *newstr = new_string_area(env->mempool, str1_len + str2_len + 1);
-    if (newstr == NULL) { return NULL; }
-    char *p = newstr;
-    memcpy(p, str1, str1_len);
-    p += str1_len;
-    memcpy(p, str2, str2_len);
-    p += str2_len;
-    p[0] = '\0';
-    return newstr;
-}
-
-static char *cat_3strings(lispenv_t *env, char *str1, char *str2, char *str3) {
-    size_t str1_len = strlen(str1);
-    size_t str2_len = strlen(str2);
-    size_t str3_len = strlen(str3);
-    char *newstr = new_string_area(env->mempool, str1_len + str2_len + str3_len + 1);
-    if (newstr == NULL) { return NULL; }
-    char *p = newstr;
-    memcpy(p, str1, str1_len);
-    p += str1_len;
-    memcpy(p, str2, str2_len);
-    p += str2_len;
-    memcpy(p, str3, str3_len);
-    p+= str3_len;
-    p[0] = '\0';
-    return newstr;
-}
-
 static char *cat_4strings(lispenv_t *env, char *str1, char *str2, char *str3, char *str4) {
     size_t str1_len = strlen(str1);
     size_t str2_len = strlen(str2);
-    size_t str3_len = strlen(str3);
-    size_t str4_len = strlen(str4);
+    size_t str3_len = (str3 == NULL ? 0 : strlen(str3));
+    size_t str4_len = (str4 == NULL ? 0 : strlen(str4));
     char *newstr = new_string_area(env->mempool, str1_len + str2_len + str3_len + str4_len + 1);
     if (newstr == NULL) { return NULL; }
     char *p = newstr;
@@ -86,13 +55,21 @@ static char *cat_4strings(lispenv_t *env, char *str1, char *str2, char *str3, ch
     p += str1_len;
     memcpy(p, str2, str2_len);
     p += str2_len;
-    memcpy(p, str3, str3_len);
-    p+= str3_len;
-    memcpy(p, str4, str4_len);
-    p+= str4_len;
+    if (str3 != NULL) {
+        memcpy(p, str3, str3_len);
+        p+= str3_len;
+    }
+    if (str4 != NULL) {
+        memcpy(p, str4, str4_len);
+        p+= str4_len;
+    }
     p[0] = '\0';
     return newstr;
 }
+
+#define cat_3strings(env, str1, str2, str3) cat_4strings(env, str1, str2, str3, NULL)
+#define cat_2strings(env, str1, str2) cat_4strings(env, str1, str2, NULL, NULL)
+
 
 /*
     Function: skk-version
