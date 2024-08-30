@@ -155,10 +155,10 @@ int skk_num_type3_kanji(const char *src, char *dst, size_t size) {
     dst[0] = '\0';
     while (keta < (sizeof(japanese_keta_man) / sizeof(japanese_keta_man[0]))) {
         if (slen > 4) {
-            strncpy(buff4, src + (slen - 4), 4);
+            memcpy(buff4, src + (slen - 4), 4);
             slen -= 4;
         } else {
-            strncpy(buff4, src, slen);
+            memcpy(buff4, src, slen);
             buff4[slen] = '\0';
             slen = 0;
         }

@@ -47,7 +47,7 @@ char *copy_to_string_area(mempool_t *mp, const char *str) {
     size_t len = strlen(str);
     char *area = new_string_area(mp, len + 1);
     if (area == NULL) { return NULL; }
-    strcpy(area, str);
+    memcpy(area, str, len + 1);
     return area;
 }
 

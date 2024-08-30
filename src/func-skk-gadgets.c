@@ -43,6 +43,57 @@ static void str_cpy_up_to_digit(char *dst, const char *src, size_t len) {
     *d = '\0';
 }
 
+static char *cat_2strings(lispenv_t *env, char *str1, char *str2) {
+    size_t str1_len = strlen(str1);
+    size_t str2_len = strlen(str2);
+    char *newstr = new_string_area(env->mempool, str1_len + str2_len + 1);
+    if (newstr == NULL) { return NULL; }
+    char *p = newstr;
+    memcpy(p, str1, str1_len);
+    p += str1_len;
+    memcpy(p, str2, str2_len);
+    p += str2_len;
+    p[0] = '\0';
+    return newstr;
+}
+
+static char *cat_3strings(lispenv_t *env, char *str1, char *str2, char *str3) {
+    size_t str1_len = strlen(str1);
+    size_t str2_len = strlen(str2);
+    size_t str3_len = strlen(str3);
+    char *newstr = new_string_area(env->mempool, str1_len + str2_len + str3_len + 1);
+    if (newstr == NULL) { return NULL; }
+    char *p = newstr;
+    memcpy(p, str1, str1_len);
+    p += str1_len;
+    memcpy(p, str2, str2_len);
+    p += str2_len;
+    memcpy(p, str3, str3_len);
+    p+= str3_len;
+    p[0] = '\0';
+    return newstr;
+}
+
+static char *cat_4strings(lispenv_t *env, char *str1, char *str2, char *str3, char *str4) {
+    size_t str1_len = strlen(str1);
+    size_t str2_len = strlen(str2);
+    size_t str3_len = strlen(str3);
+    size_t str4_len = strlen(str4);
+    char *newstr = new_string_area(env->mempool, str1_len + str2_len + str3_len + str4_len + 1);
+    if (newstr == NULL) { return NULL; }
+    char *p = newstr;
+    memcpy(p, str1, str1_len);
+    p += str1_len;
+    memcpy(p, str2, str2_len);
+    p += str2_len;
+    memcpy(p, str3, str3_len);
+    p+= str3_len;
+    memcpy(p, str4, str4_len);
+    p+= str4_len;
+    p[0] = '\0';
+    return newstr;
+}
+
 /*
     Function: skk-version
 */
@@ -222,13 +273,8 @@ Lisp_Object f_skk_ad_to_gengo(NArray *args, lispenv_t *env) {
         return LISP_ERROR(Evaluation_Error);
     }
 
-    size_t len = strlen(gengo) + strlen(divider) + strlen(nengo) + strlen(tail);
-    char *newstr = new_string_area(env->mempool, len + 1);
+    char *newstr = cat_4strings(env, gengo, divider, nengo, tail);
     CHECK_ALLOC(newstr);
-    strcpy(newstr, gengo);
-    strcat(newstr, divider);
-    strcat(newstr, nengo);
-    strcat(newstr, tail);
     return LISP_STRING(newstr);
 }
 
@@ -271,12 +317,8 @@ Lisp_Object f_skk_gengo_to_ad(NArray *args, lispenv_t *env) {
 
     char buff[INT_STRLEN + 1];
     snprintf(buff, sizeof(buff), "%d", v);
-    size_t len = strlen(head) + strlen(buff) + strlen(tail);
-    char *newstr = new_string_area(env->mempool, len + 1);
+    char *newstr = cat_3strings(env, head, buff, tail);
     CHECK_ALLOC(newstr);
-    strcpy(newstr, head);
-    strcat(newstr, buff);
-    strcat(newstr, tail);
     return LISP_STRING(newstr);
 }
 
@@ -379,10 +421,8 @@ Lisp_Object skk_default_current_date(
         } else {
             return LISP_ERROR(Evaluation_Error);
         }
-        year_str = new_string_area(env->mempool, strlen(gengo_s) + strlen(nengo_s) + 1);
+        year_str = cat_2strings(env, gengo_s, nengo_s);
         CHECK_ALLOC(year_str);
-        strcpy(year_str, gengo_s);
-        strcat(year_str, nengo_s);
     }
 
     CHECK_CONDITION(skk_num_exp(skk_month_list[month_i - 1][1], num_type, buff, TMP_BUFFSIZE) == 0);
