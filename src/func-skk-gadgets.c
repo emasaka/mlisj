@@ -43,7 +43,7 @@ static void str_cpy_up_to_digit(char *dst, const char *src, size_t len) {
     *d = '\0';
 }
 
-static char *cat_4strings(lispenv_t *env, char *str1, char *str2, char *str3, char *str4) {
+static char *cat_4strings(lispenv_t *env, const char *str1, const char *str2, const char *str3, const char *str4) {
     size_t str1_len = strlen(str1);
     size_t str2_len = strlen(str2);
     size_t str3_len = (str3 == NULL ? 0 : strlen(str3));
@@ -135,10 +135,8 @@ Lisp_Object f_skk_gadget_units_conversion(NArray *args, lispenv_t *env) {
         if (strcmp(unit_from, units_list[i].unit_from) == 0 &&
             strcmp(unit_to, units_list[i].unit_to) == 0 ) {
                 snprintf(buff,sizeof(buff), "%g", val * units_list[i].ratio);
-                size_t len = strlen(buff) + strlen(units_list[i].unit_to) + 1;
-                char *str = new_string_area(env->mempool, len);
+                char *str = cat_2strings(env, buff, units_list[i].unit_to);
                 CHECK_ALLOC(str);
-                snprintf(str, len, "%s%s", buff, units_list[i].unit_to);
                 return LISP_STRING(str);
         }
     }
