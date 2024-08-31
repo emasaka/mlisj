@@ -24,6 +24,7 @@
 #define SKK_DATE_AD LISP_NIL
 
 #define TMP_BUFFSIZE 512
+#define PRINTF_PERCENT_G_BUFFSIZE 32
 
 /* dummy values for variables and functions */
 #define V_SKK_VERSION "MLISJ/0.0.0 (NO-CODENAME)"
@@ -121,7 +122,7 @@ static struct {
 };
 
 Lisp_Object f_skk_gadget_units_conversion(NArray *args, lispenv_t *env) {
-    char buff[TMP_BUFFSIZE];
+    char buff[PRINTF_PERCENT_G_BUFFSIZE];
     CHECK_CONDITION(args->size == 3);
     CHECK_TYPE(args->data[0], Lisp_String);
     char *unit_from = GET_SVAL(args->data[0]);
@@ -285,7 +286,7 @@ Lisp_Object f_skk_gengo_to_ad(NArray *args, lispenv_t *env) {
 
     CHECK_CONDITION(env->skk_henkan_key != NULL);
     char gengo_buf[TMP_BUFFSIZE];
-    str_cpy_up_to_digit(gengo_buf, env->skk_henkan_key, TMP_BUFFSIZE);
+    str_cpy_up_to_digit(gengo_buf, env->skk_henkan_key, sizeof(gengo_buf));
 
     int v = gengo_to_ad_1(gengo_buf, nengo);
     CHECK_CONDITION(v != -1);
@@ -375,7 +376,7 @@ Lisp_Object skk_default_current_date(
 
     char *year_str;
     if (GET_TYPE(gengo_p) == Lisp_Nil) {
-        CHECK_CONDITION(skk_num_exp(year, num_type, buff, TMP_BUFFSIZE) == 0);
+        CHECK_CONDITION(skk_num_exp(year, num_type, buff, sizeof(buff)) == 0);
         year_str = copy_to_string_area(env->mempool, buff);
         CHECK_ALLOC(year_str);
     } else {
@@ -391,7 +392,7 @@ Lisp_Object skk_default_current_date(
         } else if (GET_TYPE(nengo_o) == Lisp_Int) {
             char nengo_buff[INT_STRLEN + 1];
             snprintf(nengo_buff, sizeof(nengo_buff), "%d", GET_IVAL(nengo_o));
-            CHECK_CONDITION(skk_num_exp(nengo_buff, num_type, buff, TMP_BUFFSIZE) == 0);
+            CHECK_CONDITION(skk_num_exp(nengo_buff, num_type, buff, sizeof(buff)) == 0);
             nengo_s = buff;
         } else {
             return LISP_ERROR(Evaluation_Error);
@@ -400,11 +401,11 @@ Lisp_Object skk_default_current_date(
         CHECK_ALLOC(year_str);
     }
 
-    CHECK_CONDITION(skk_num_exp(skk_month_list[month_i - 1][1], num_type, buff, TMP_BUFFSIZE) == 0);
+    CHECK_CONDITION(skk_num_exp(skk_month_list[month_i - 1][1], num_type, buff, sizeof(buff)) == 0);
     char *month_str = copy_to_string_area(env->mempool, buff);
     CHECK_ALLOC(month_str);
 
-    CHECK_CONDITION(skk_num_exp(day, num_type, buff, TMP_BUFFSIZE) == 0);
+    CHECK_CONDITION(skk_num_exp(day, num_type, buff, sizeof(buff)) == 0);
     char *day_str = copy_to_string_area(env->mempool, buff);
     CHECK_ALLOC(day_str);
 

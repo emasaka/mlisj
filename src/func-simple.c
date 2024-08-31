@@ -22,7 +22,7 @@
 
 #define EXPOSE_SYSEM_ENV 1
 
-#define TMP_BUFFSIZE 512
+#define GETPWUID_R_BUFFSIZE 1024
 
 /* dummy values for variables and functions */
 #define V_FILL_COLUMN 70
@@ -274,7 +274,7 @@ Lisp_Object f_string_to_number(NArray *args, lispenv_t *env) {
 
 Lisp_Object get_pwd_str(lispenv_t *env) {
     char buffer[PATH_MAX];
-    if (getcwd(buffer, PATH_MAX)) {
+    if (getcwd(buffer, sizeof(buffer))) {
         char *path = copy_to_string_area(env->mempool, buffer);
         CHECK_ALLOC(path);
         return LISP_STRING(path);
@@ -311,7 +311,7 @@ Lisp_Object f_current_time_string(NArray *args, lispenv_t *env) {
 
     CHECK_CONDITION(args->size == 0);
     env->current_time_func(&newtime);
-    strftime(buffer, STRFTIME_BUFFSIZE, "%a %b %d %H:%M:%S %Y", &newtime);
+    strftime(buffer, sizeof(buffer), "%a %b %d %H:%M:%S %Y", &newtime);
     char *str = copy_to_string_area(env->mempool, buffer);
     CHECK_ALLOC(str);
     return LISP_STRING(str);
@@ -326,10 +326,10 @@ Lisp_Object f_current_time_string(NArray *args, lispenv_t *env) {
 Lisp_Object dv_user_full_name(lispenv_t *env) {
     struct passwd pwd_data;
     struct passwd *result;
-    char buffer[TMP_BUFFSIZE];
+    char buffer[GETPWUID_R_BUFFSIZE];
     uid_t uid = getuid();
 
-    int rtn = getpwuid_r(uid, &pwd_data, buffer, TMP_BUFFSIZE, &result);
+    int rtn = getpwuid_r(uid, &pwd_data, buffer, sizeof(buffer), &result);
     CHECK_CONDITION(rtn == 0 && result != NULL);
     char *comma_ptr = strchr(pwd_data.pw_gecos, ',');
     if (comma_ptr) {
@@ -342,12 +342,12 @@ Lisp_Object dv_user_full_name(lispenv_t *env) {
 
 Lisp_Object dv_user_mail_address(lispenv_t *env) {
     char buff1[LOGIN_NAME_MAX + 1];
-    if (getlogin_r(buff1, LOGIN_NAME_MAX + 1) != 0) {
+    if (getlogin_r(buff1, sizeof(buff1)) != 0) {
         strcpy(buff1, DUMMY_USER_NAME);
     }
 
     char buff2[HOST_NAME_MAX + 1];
-    CHECK_CONDITION(gethostname(buff2, HOST_NAME_MAX + 1) == 0);
+    CHECK_CONDITION(gethostname(buff2, sizeof(buff2)) == 0);
 
     size_t len = strlen(buff1) + strlen(buff2) + 2;
     char *str = new_string_area(env->mempool, len);
