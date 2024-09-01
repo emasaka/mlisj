@@ -157,6 +157,11 @@ void test_reader_string_escaped_visible(void) {
     CU_ASSERT_STRING_EQUAL(tmp_buf, "\"W\"");
 }
 
+void test_reader_string_broken(void) {
+    Lisp_Object obj = reader("\"", lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(obj), Internal_Error);
+}
+
 void testsuite_reader_string(void) {
     CU_pSuite suite = CU_add_suite("reader_string", init_for_readertest, end_for_readertest);
     CU_add_test(suite, "reader_string_visible", test_reader_string_visible);
@@ -164,6 +169,7 @@ void testsuite_reader_string(void) {
     CU_add_test(suite, "reader_string_escaped_octet2", test_reader_string_escaped_octet2);
     CU_add_test(suite, "reader_string_escaped_octet3", test_reader_string_escaped_octet3);
     CU_add_test(suite, "reader_string_escaped_visible", test_reader_string_escaped_visible);
+    CU_add_test(suite, "reader_string_broken", test_reader_string_broken);
 }
 
 /*
@@ -218,6 +224,11 @@ void test_reader_list_nested2(void) {
     CU_ASSERT_STRING_EQUAL(tmp_buf, "(lambda (a b) (concat a b))");
 }
 
+void test_reader_list_broken(void) {
+    Lisp_Object obj = reader("(", lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(obj), Internal_Error);
+}
+
 void testsuite_reader_list(void) {
     CU_pSuite suite = CU_add_suite("reader_list", init_for_readertest, end_for_readertest);
     CU_add_test(suite, "reader_list_empty", test_reader_list_empty);
@@ -226,6 +237,27 @@ void testsuite_reader_list(void) {
     CU_add_test(suite, "reader_list_quoted", test_reader_list_quoted);
     CU_add_test(suite, "reader_list_nested1", test_reader_list_nested1);
     CU_add_test(suite, "reader_list_nested2", test_reader_list_nested2);
+    CU_add_test(suite, "reader_list_broken", test_reader_list_broken);
+}
+
+/*
+  empty
+ */
+
+void test_reader_empty_null(void) {
+    Lisp_Object obj = reader("", lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(obj), Internal_Error);
+}
+
+void test_reader_empty_only_spaces(void) {
+    Lisp_Object obj = reader("  ", lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(obj), Internal_Error);
+}
+
+void testsuite_reader_empty(void) {
+    CU_pSuite suite = CU_add_suite("reader_empty", init_for_readertest, end_for_readertest);
+    CU_add_test(suite, "reader_empty_null", test_reader_empty_null);
+    CU_add_test(suite, "reader_empty_only_spaces", test_reader_empty_only_spaces);
 }
 
 /*
@@ -240,6 +272,7 @@ int main(void) {
     testsuite_reader_nil();
     testsuite_reader_string();
     testsuite_reader_list();
+    testsuite_reader_empty();
 
     CU_basic_run_tests();
     int ret = CU_get_number_of_failures();
