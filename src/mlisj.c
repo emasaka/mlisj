@@ -55,7 +55,7 @@ int mlisj_eval(const char *src, char *dest, size_t size, char **skk_num_list, co
     switch (GET_TYPE(result)) {
     case Lisp_String:
         strncpy(dest, GET_SVAL(result), size);
-        if (size > 0) { dest[size - 1] = '\0''; }
+        if (size > 0) { dest[size - 1] = '\0'; }
         break;
     case Internal_Error:
         exitcode = (GET_ERROR_TYPE(result) == Evaluation_Error) ?
