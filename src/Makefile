@@ -1,8 +1,9 @@
 CC := gcc
-CFLAGS := -W -Wall -fPIC
+CFLAGS := -O3 -W -Wall -fPIC
 TARGET_LIB := libmlisj.so
 OBJS := mlisj.o mempool.o symbol.o variable.o functable.o lispenv.o reader.o eval.o func-simple.o func-skk-gadgets.o util.o
 LINKER_VERSION_SCRIPT := libmlisj.map
+LDFLAGS := --shared -Wl,--version-script=$(LINKER_VERSION_SCRIPT)
 
 .DEFAULT_GOAL := all
 
@@ -11,7 +12,7 @@ LINKER_VERSION_SCRIPT := libmlisj.map
 all: $(TARGET_LIB)
 
 $(TARGET_LIB): $(OBJS) $(LINKER_VERSION_SCRIPT)
-	$(CC) --shared -Wl,--version-script=$(LINKER_VERSION_SCRIPT) -o $(TARGET_LIB) $(OBJS)
+	$(CC) $(LDFLAGS) -o $(TARGET_LIB) $(OBJS)
 
 # Object modules
 

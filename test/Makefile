@@ -1,11 +1,10 @@
-TESTDIR := test
 CC := gcc
 ifeq ($(CC),gcc)
-  CFLAGS := -W -Wall -fsanitize=address -static-libasan
+  CFLAGS := -O3 -W -Wall -fsanitize=address -static-libasan
 else
-  CFLAGS := -W -Wall -fsanitize=address
+  CFLAGS := -O3 -W -Wall -fsanitize=address
 endif
-TEST_CFLAGS := $(CFLAGS) -lcunit
+LDFLAGS := -lcunit
 
 TEST_EXECS := test_mempool test_symbol test_variable test_functable test_lispenv test_reader test_eval test_func-simple test_func-skk-gadgets test_util
 OBJS := mempool.o symbol.o variable.o functable.o lispenv.o reader.o eval.o func-simple.o func-skk-gadgets.o util.o writer.o
@@ -15,13 +14,12 @@ OBJS := mempool.o symbol.o variable.o functable.o lispenv.o reader.o eval.o func
 .PHONY: test clean
 
 test: $(TEST_EXECS)
-	$(shell echo $(TEST_EXECS) | sed -e 's| | \&\& ./|g;s|^|./|')
-# foo bar baz -> ./foo && ./bar && ./baz
+	$(foreach CMD, $(TEST_EXECS), ./$(CMD) &&) true
 
 # Test executables
 
 %: %.c
-	$(CC) $< $(filter %.o,$^) $(TEST_CFLAGS) -o $@
+	$(CC) $< $(filter %.o,$^) $(CFLAGS) $(LDFLAGS) -o $@
 
 LISPENV_H_AND_DEPS := ../src/lispenv.h ../src/lispobject.h ../src/mempool.h ../src/symbol.h ../src/variable.h ../src/functable.h
 LISPENV_O_AND_DEPS :=  lispenv.o mempool.o symbol.o variable.o functable.o
