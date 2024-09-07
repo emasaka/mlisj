@@ -96,7 +96,9 @@ Lisp_Object f_skk_times(NArray *args, lispenv_t *env) {
             r *= n;
         }
     }
-    snprintf(buff, sizeof(buff), "%d", r);
+    if (snprintf(buff, sizeof(buff), "%d", r) >= (int)sizeof(buff)) {
+        return LISP_ERROR(Memory_Error);
+    }
     char *str = copy_to_string_area(env->mempool, buff);
     CHECK_ALLOC(str);
     return LISP_STRING(str);
@@ -135,7 +137,9 @@ Lisp_Object f_skk_gadget_units_conversion(NArray *args, lispenv_t *env) {
     for (size_t i = 0; i < (sizeof(units_list) / sizeof(units_list[0])); i++) {
         if (strcmp(unit_from, units_list[i].unit_from) == 0 &&
             strcmp(unit_to, units_list[i].unit_to) == 0 ) {
-                snprintf(buff,sizeof(buff), "%g", val * units_list[i].ratio);
+                if (snprintf(buff,sizeof(buff), "%g", val * units_list[i].ratio) >= (int)sizeof(buff)) {
+                    return LISP_ERROR(Memory_Error);
+                }
                 char *str = cat_2strings(env, buff, units_list[i].unit_to);
                 CHECK_ALLOC(str);
                 return LISP_STRING(str);
@@ -241,7 +245,9 @@ Lisp_Object f_skk_ad_to_gengo(NArray *args, lispenv_t *env) {
     char *nengo;
     char buff[INT_STRLEN + 1];
     if (GET_TYPE(nengo_o) == Lisp_Int) {
-        snprintf(buff, sizeof(buff), "%d", GET_IVAL(nengo_o));
+        if (snprintf(buff, sizeof(buff), "%d", GET_IVAL(nengo_o)) >= (int)sizeof(buff)) {
+            return LISP_ERROR(Memory_Error);
+        }
         nengo = buff;
     } else if (GET_TYPE(nengo_o) == Lisp_String) {
         nengo = GET_SVAL(nengo_o);
@@ -292,7 +298,9 @@ Lisp_Object f_skk_gengo_to_ad(NArray *args, lispenv_t *env) {
     CHECK_CONDITION(v != -1);
 
     char buff[INT_STRLEN + 1];
-    snprintf(buff, sizeof(buff), "%d", v);
+    if (snprintf(buff, sizeof(buff), "%d", v) >= (int)sizeof(buff)) {
+        return LISP_ERROR(Memory_Error);
+    }
     char *newstr = cat_3strings(env, head, buff, tail);
     CHECK_ALLOC(newstr);
     return LISP_STRING(newstr);
@@ -391,7 +399,9 @@ Lisp_Object skk_default_current_date(
             nengo_s = GET_SVAL(nengo_o);
         } else if (GET_TYPE(nengo_o) == Lisp_Int) {
             char nengo_buff[INT_STRLEN + 1];
-            snprintf(nengo_buff, sizeof(nengo_buff), "%d", GET_IVAL(nengo_o));
+            if (snprintf(nengo_buff, sizeof(nengo_buff), "%d", GET_IVAL(nengo_o)) >= (int)sizeof(nengo_buff)) {
+                return LISP_ERROR(Memory_Error);
+            }
             CHECK_CONDITION(skk_num_exp(nengo_buff, num_type, buff, sizeof(buff)) == 0);
             nengo_s = buff;
         } else {
@@ -418,7 +428,9 @@ Lisp_Object skk_default_current_date(
         CHECK_TYPE(format, Lisp_String);
         format_s = GET_SVAL(format);
     }
-    snprintf(buff, sizeof(buff), format_s, year_str, month_str, day_str, dow_str);
+    if (snprintf(buff, sizeof(buff), format_s, year_str, month_str, day_str, dow_str) >= (int)sizeof(buff)) {
+        return LISP_ERROR(Memory_Error);
+    }
     char *result = copy_to_string_area(env->mempool, buff);
     CHECK_ALLOC(result);
     return LISP_STRING(result);

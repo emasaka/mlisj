@@ -352,7 +352,9 @@ Lisp_Object dv_user_mail_address(lispenv_t *env) {
     size_t len = strlen(buff1) + strlen(buff2) + 2;
     char *str = new_string_area(env->mempool, len);
     CHECK_ALLOC(str);
-    snprintf(str, len, "%s@%s", buff1, buff2);
+    if (snprintf(str, len, "%s@%s", buff1, buff2) >= (int)len) {
+        return LISP_ERROR(Memory_Error);
+    }
     return LISP_STRING(str);
 }
 

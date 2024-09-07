@@ -46,8 +46,8 @@ int writer_putc(int ch, writer_context *c) {
 
 int writer_int(Lisp_Object obj, writer_context *c) {
     char tmp_buf[TMP_BUFFSIZE];
-    // coopying twide is not efficient but easy
-    if (snprintf(tmp_buf, TMP_BUFFSIZE, "%d", obj.val.ival) >= 0) {
+    // coopying twice is not efficient but easy
+    if (snprintf(tmp_buf, sizeof(tmp_buf), "%d", obj.val.ival) < (int)sizeof(tmp_buf)) {
         return writer_puts(tmp_buf, c);
     } else {
         return -1;
@@ -79,7 +79,7 @@ int writer_string(Lisp_Object obj, writer_context *c) {
             ret = writer_putc(ch, c);
             if (ret != 0) { return ret; }
         } else {
-            if (snprintf(tmp_buf, TMP_BUFFSIZE, "%03o", ch) >= 0) {
+            if (snprintf(tmp_buf, sizeof(tmp_buf), "%03o", ch) < (int)sizeof(tmp_buf)) {
                 ret = writer_puts("\\", c);
                 if (ret != 0) { return ret; }
                 ret = writer_puts(tmp_buf, c);
