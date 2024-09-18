@@ -171,17 +171,18 @@ static Lisp_Object reader_quoted(reader_context *c) {
 
 static Lisp_Object reader_sexp(reader_context *c) {
     while (isspace(c->ptr[0])) { c->ptr++; }
-    if (c->ptr[0] == '\0') {
+    switch (c->ptr[0]) {
+    case '\0':
         return LISP_ERROR(Reader_Error);
-    } else if (c->ptr[0] == '\'') {
+    case '\'':
         return reader_quoted(c);
-    } else if (c->ptr[0] == '(') {
+    case '(':
         return reader_list(c);
-    } else if (c->ptr[0] == '\"') {
+    case '\"':
         return reader_string(c);
-    } else if (c->ptr[0] == '?') {
+    case '?':
         return reader_char(c);
-    } else {
+    default:
         return reader_maybe_symbol(c);
     }
 }
