@@ -109,6 +109,11 @@ static Lisp_Object reader_string(reader_context *c) {
                 }
                 if (buffer_used++ == READER_BUFSIZE) { return LISP_ERROR(Memory_Error); }
                 *p++ = (char)n;
+            } else if (c->ptr[0] == 'n') {
+                /* "\n" */
+                if (buffer_used++ == READER_BUFSIZE) { return LISP_ERROR(Memory_Error); }
+                *p++ = '\n';
+                c->ptr++;
             } else {
                 if (buffer_used++ == READER_BUFSIZE) { return LISP_ERROR(Memory_Error); }
                 *p++ = *(c->ptr++);
