@@ -97,16 +97,15 @@ static Lisp_Object reader_string(reader_context *c) {
         switch (c->ptr[0]) {
         case '\\':
             c->ptr++;
-            if (c->ptr[0] == '0') {
+            if ((c->ptr[0] >= '0') && (c->ptr[0] <= '7')) {
                 /* "\<octet>" */
-                c->ptr++;
                 int n = 0;
                 size_t i = 0;
-                while ((c->ptr[0] >= '0') && (c->ptr[0] <= '7')) {
-                    if (++i >= 3) { break; }
+                do {
+                    if (i++ >= 3) { break; }
                     n = (n << 3) + (c->ptr[0] - '0');
                     c->ptr++;
-                }
+                } while ((c->ptr[0] >= '0') && (c->ptr[0] <= '7'));
                 if (buffer_used++ == READER_BUFSIZE) { return LISP_ERROR(Memory_Error); }
                 *p++ = (char)n;
             } else if (c->ptr[0] == 'n') {

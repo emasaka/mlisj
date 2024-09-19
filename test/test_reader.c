@@ -141,6 +141,12 @@ void test_reader_string_escaped_octet3(void) {
     CU_ASSERT_STRING_EQUAL(GET_SVAL(obj), "100");
 }
 
+void test_reader_string_escaped_octet4(void) {
+    Lisp_Object obj = reader("\"\\100\"", lisp_env);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(obj), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(obj), "@");
+}
+
 void test_reader_string_newline(void) {
     Lisp_Object obj = reader("\"a\\nb\"", lisp_env);
     CU_ASSERT_EQUAL_FATAL(GET_TYPE(obj), Lisp_String);
@@ -164,6 +170,7 @@ void testsuite_reader_string(void) {
     CU_add_test(suite, "reader_string_escaped_octet1", test_reader_string_escaped_octet1);
     CU_add_test(suite, "reader_string_escaped_octet2", test_reader_string_escaped_octet2);
     CU_add_test(suite, "reader_string_escaped_octet3", test_reader_string_escaped_octet3);
+    CU_add_test(suite, "reader_string_escaped_octet4", test_reader_string_escaped_octet4);
     CU_add_test(suite, "reader_string_newline", test_reader_string_newline);
     CU_add_test(suite, "reader_string_escaped_visible", test_reader_string_escaped_visible);
     CU_add_test(suite, "reader_string_broken", test_reader_string_broken);
