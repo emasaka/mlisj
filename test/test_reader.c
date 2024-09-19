@@ -118,35 +118,27 @@ void testsuite_reader_nil(void) {
  */
 
 void test_reader_string_visible(void) {
-    char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("\"Hello, World!\"", lisp_env);
     CU_ASSERT_EQUAL_FATAL(GET_TYPE(obj), Lisp_String);
-    CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT_STRING_EQUAL(tmp_buf, "\"Hello, World!\"");
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(obj), "Hello, World!");
 }
 
 void test_reader_string_escaped_octet1(void) {
-    char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("\"I\\057O\"", lisp_env);
     CU_ASSERT_EQUAL_FATAL(GET_TYPE(obj), Lisp_String);
-    CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT_STRING_EQUAL(tmp_buf, "\"I/O\"");
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(obj), "I/O");
 }
 
 void test_reader_string_escaped_octet2(void) {
-    char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("\"\\033\"", lisp_env);
     CU_ASSERT_EQUAL_FATAL(GET_TYPE(obj), Lisp_String);
-    CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT_STRING_EQUAL(tmp_buf, "\"\\033\"");
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(obj), "\033");
 }
 
 void test_reader_string_escaped_octet3(void) {
-    char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("\"\\06100\"", lisp_env);
     CU_ASSERT_EQUAL_FATAL(GET_TYPE(obj), Lisp_String);
-    CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT_STRING_EQUAL(tmp_buf, "\"100\"");
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(obj), "100");
 }
 
 void test_reader_string_newline(void) {
@@ -156,11 +148,9 @@ void test_reader_string_newline(void) {
 }
 
 void test_reader_string_escaped_visible(void) {
-    char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("\"\\W\"", lisp_env);
     CU_ASSERT_EQUAL_FATAL(GET_TYPE(obj), Lisp_String);
-    CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT_STRING_EQUAL(tmp_buf, "\"W\"");
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(obj), "W");
 }
 
 void test_reader_string_broken(void) {
