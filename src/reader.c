@@ -24,8 +24,7 @@ static Lisp_Object reader_sexp(reader_context *); /* prototype declaration */
 
 /* parse integer number */
 static Lisp_Object reader_get_intnum(const char *str) {
-    char *endptr;
-    int n = (int)strtol(str, &endptr, 10);
+    int n = (int)strtol(str, NULL, 10);
     return LISP_INT(n);
 }
 

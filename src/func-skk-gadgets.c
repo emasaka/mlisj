@@ -91,8 +91,7 @@ Lisp_Object f_skk_times(NArray *args, lispenv_t *env) {
     int r = 1;
     if (env->skk_num_list != NULL) {
         for (size_t i = 0; env->skk_num_list[i] != NULL; i++) {
-            char *endptr;
-            int n = (int)strtol(env->skk_num_list[i], &endptr, 10);
+            int n = (int)strtol(env->skk_num_list[i], NULL, 10);
             r *= n;
         }
     }
@@ -234,8 +233,7 @@ Lisp_Object f_skk_ad_to_gengo(NArray *args, lispenv_t *env) {
     CHECK_CONDITION(gengo_index == 0 || gengo_index == 1);
 
     CHECK_CONDITION(env->skk_num_list != NULL);
-    char *endptr;
-    int ad = (int)strtol(env->skk_num_list[0], &endptr, 10);
+    int ad = (int)strtol(env->skk_num_list[0], NULL, 10);
 
     Lisp_Object v = ad_to_gengo_1(env, ad, not_gannen, 0, 0);
     if (GET_TYPE(v) == Internal_Error) { return v; }
@@ -287,8 +285,7 @@ Lisp_Object f_skk_gengo_to_ad(NArray *args, lispenv_t *env) {
     }
 
     CHECK_CONDITION(env->skk_num_list != NULL);
-    char *endptr;
-    int nengo = (int)strtol(env->skk_num_list[0], &endptr, 10);
+    int nengo = (int)strtol(env->skk_num_list[0], NULL, 10);
 
     CHECK_CONDITION(env->skk_henkan_key != NULL);
     char gengo_buf[TMP_BUFFSIZE];
@@ -377,10 +374,9 @@ Lisp_Object skk_default_current_date(
     CHECK_TYPE(gengo_index_o, Lisp_Int);
     int gengo_index = GET_IVAL(gengo_index_o);
 
-    char *endptr;
-    int year_i = (int)strtol(year, &endptr, 10);
+    int year_i = (int)strtol(year, NULL, 10);
     int month_i = month_name_to_month(month);
-    int day_i = (int)strtol(day, &endptr, 10);
+    int day_i = (int)strtol(day, NULL, 10);
 
     char *year_str;
     if (GET_TYPE(gengo_p) == Lisp_Nil) {

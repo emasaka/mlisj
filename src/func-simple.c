@@ -252,8 +252,7 @@ Lisp_Object f_string_to_number(NArray *args, lispenv_t *env) {
     check_num_t result = check_num_str(str, false);
     if (result == R_INT) {
         /* integer*/
-        char *endptr;
-        int n = (int)strtol(str, &endptr, 10);
+        int n = (int)strtol(str, NULL, 10);
         return LISP_INT(n);
     } else if (result == R_FLOAT) {
         /* float */
