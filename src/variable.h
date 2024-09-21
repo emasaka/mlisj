@@ -15,7 +15,7 @@
 #define VARIABLE_STACK_SIZE 32
 
 typedef struct {
-    char *symbol;
+    const char *symbol;
     Lisp_Object value;
 } variable_binding;
 
@@ -26,9 +26,9 @@ typedef struct {
     symbol_pool_t *symbol_pool;
 } variable_pool_t;
 
-extern int set_variable(variable_pool_t *, char *, Lisp_Object);
+extern int set_variable(variable_pool_t *, const char *, Lisp_Object);
 extern int set_variable_from_cstr(variable_pool_t *, char *, Lisp_Object, bool);
-extern Lisp_Object get_variable(variable_pool_t *, const char *);
+extern Lisp_Object get_variable(const variable_pool_t *, const char *);
 extern int save_variable_status(variable_pool_t *);
 extern void restore_variable_status(variable_pool_t *, int);
 

@@ -33,7 +33,7 @@ typedef struct {
 
 extern int add_func(func_pool_t *, char *, cfunc_t);
 extern int add_func_from_cstr(func_pool_t *, char *, cfunc_t, bool);
-extern cfunc_t get_func(func_pool_t *, const char *);
+extern cfunc_t get_func(const func_pool_t *, const char *);
 
 extern func_pool_t *init_func_table(symbol_pool_t *);
 extern void end_func_table(func_pool_t *);

@@ -107,10 +107,10 @@ Lisp_Object f_skk_times(NArray *args, lispenv_t *env) {
     Function: skk-gadget-units-conversion
 */
 
-static struct {
-    const char *unit_from;
-    const char *unit_to;
-    double ratio;
+static const struct {
+    const char * const unit_from;
+    const char * const unit_to;
+    const double ratio;
 } units_list[] = {
     { "mile" ,"km" ,1.6093 },
     { "mile" ,"yard" ,1760 },
@@ -152,13 +152,13 @@ Lisp_Object f_skk_gadget_units_conversion(NArray *args, lispenv_t *env) {
     gengo related routeines
 */
 
-static struct {
-    char *gengo;
-    char *gengo_kana;
-    char *gengo_initial;
-    int start_y;
-    int start_m;
-    int start_d;
+static const struct {
+    char * const gengo;
+    char * const gengo_kana;
+    char * const gengo_initial;
+    const int start_y;
+    const int start_m;
+    const int start_d;
 } gengo_list[] = {
     { "明治", "めいじ", "M", 1868, 10, 23 },
     { "大正", "たいしょう", "T", 1912, 7, 30 },
@@ -181,7 +181,7 @@ int gengo_to_ad_1(const char *gengo, int year) {
 Lisp_Object ad_to_gengo_1(lispenv_t *env, int ad, bool not_gannen, int month, int day) {
     /* check values of month and day*/
     CHECK_CONDITION(month <= 12);
-    static int days_in_a_month[] = { 0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    static const int days_in_a_month[] = { 0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     if (month > 0 && day > 0) {
         CHECK_CONDITION(day <= days_in_a_month[month]);
         /* check of leap year is omitted */
@@ -307,9 +307,9 @@ Lisp_Object f_skk_gengo_to_ad(NArray *args, lispenv_t *env) {
     Function: skk-default-current-date
 */
 
-typedef char *str_tuple3[3];
+typedef char * const str_tuple3[3];
 
-static str_tuple3 skk_month_list[] = {
+static const str_tuple3 skk_month_list[] = {
     {"Jan", "1", "Januar"}, {"Feb", "2", "Februar"}, {"Mar", "3", "März"},
     {"Apr", "4", "April"}, {"May", "5", "Mai"},
     {"Jun", "6", "Juni"}, {"Jul", "7", "Juli"}, {"Aug", "8", "August"},
@@ -317,7 +317,7 @@ static str_tuple3 skk_month_list[] = {
     {"Nov", "11", "November"}, {"Dec", "12", "Dezember"}
 };
 
-static str_tuple3 skk_day_of_week_list[] = {
+static const str_tuple3 skk_day_of_week_list[] = {
     {"Sun", "日", "So"}, {"Mon", "月", "Mo"}, {"Tue", "火", "Di"}, {"Wed", "水", "Mi"},
     {"Thu", "木", "Do"}, {"Fri", "金", "Fr"}, {"Sat", "土", "Sa"}
 };

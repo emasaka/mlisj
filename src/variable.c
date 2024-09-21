@@ -10,7 +10,7 @@
 #include "lispobject.h"
 #include "variable.h"
 
-int set_variable(variable_pool_t *vp, char *sym, Lisp_Object val) {
+int set_variable(variable_pool_t *vp, const char *sym, Lisp_Object val) {
     if (vp->variable_stack_used < VARIABLE_STACK_SIZE) {
         vp->variable_stack[vp->variable_stack_used++] = (variable_binding){ .symbol = sym, .value = val };
         return 0;
@@ -27,7 +27,7 @@ int set_variable_from_cstr(variable_pool_t *vp, char *str, Lisp_Object val, bool
 
 /* changing value of variable is not implemented */
 
-Lisp_Object get_variable(variable_pool_t *vp, const char *sym) {
+Lisp_Object get_variable(const variable_pool_t *vp, const char *sym) {
     size_t i = vp->variable_stack_used;
     while (i > 0) {
         i--;

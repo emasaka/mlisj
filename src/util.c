@@ -15,12 +15,12 @@
 /*
     check if the string is a number
 */
-check_num_t check_num_str(char *str, bool num_only_p) {
+check_num_t check_num_str(const char *str, bool num_only_p) {
     /* XXX: exponential notation of float is not supported */
 
     enum { START, DIGITS, DOT, DIGITS_AND_DOT } state = START;
 
-    char *p = str;
+    const char *p = str;
     if (*p == '\0') {
         return R_NOTNUM;
     } else if (*p == '-' || *p == '+') {
@@ -79,7 +79,7 @@ check_num_t check_num_str(char *str, bool num_only_p) {
     convert a hankaku number string to zenkaku.
 */
 
-static char *zenkaku_digits_list[] = {
+static const char * const zenkaku_digits_list[] = {
     "０", "１", "２", "３", "４", "５", "６", "７", "８", "９"
 };
 
@@ -106,11 +106,11 @@ int skk_num_type1_kanji(const char *src, char *dst, size_t size) {
     return 0;
 }
 
-static char *kansuji_digits_list[] = {
+static const char * const kansuji_digits_list[] = {
     "〇","一","二","三", "四","五","六","七", "八","九"
 };
 
-static char *japanese_keta_4[] = {
+static const char * const japanese_keta_4[] = {
     "", "十", "百", "千"
 };
 
@@ -127,14 +127,14 @@ static void skk_num_to_kanji_4digits(const char *src, char *dst) {
             strcpy(d, kansuji_digits_list[c - '0']);
             d += ZENKAKU_DIGIT_STRLEN;
         }
-        char *keta = japanese_keta_4[len];
+        const char *keta = japanese_keta_4[len];
         strcpy(d, keta);
         d += strlen(keta);
     }
     *d = '\0';
 }
 
-static void str_prepend(char *base, const char * newstr) {
+static void str_prepend(char *base, const char *newstr) {
     size_t len = strlen(newstr);
     if (len > 0) {
         memmove(base + len, base, strlen(base) + 1);
@@ -142,7 +142,7 @@ static void str_prepend(char *base, const char * newstr) {
     }
 }
 
-static char *japanese_keta_man[] = {
+static const char * const japanese_keta_man[] = {
     "", "万", "億", "兆", "京"
 };
 
@@ -164,7 +164,7 @@ int skk_num_type3_kanji(const char *src, char *dst, size_t size) {
         }
         skk_num_to_kanji_4digits(buff4, buff4_out);
         if (buff4_out[0] != '\0') {
-            char *keta_man = japanese_keta_man[keta];
+            const char *keta_man = japanese_keta_man[keta];
             if (strcmp(buff4_out, "千") == 0 && keta != 0) {
                 strcpy(buff4_out, "一千");
             }
@@ -195,7 +195,7 @@ int skk_num_type0_kanji(const char *src, char *dst, size_t size) {
 
 typedef int(*skk_num_type_func_t)(const char *, char *, size_t);
 
-static skk_num_type_func_t skk_num_type_list[] = {
+static const skk_num_type_func_t skk_num_type_list[] = {
     skk_num_type0_kanji,  /* 0 */
     skk_num_type1_kanji,  /* 1 */
     NULL, /* 2: not implemented */

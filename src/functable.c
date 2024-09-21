@@ -28,7 +28,7 @@ int add_func_from_cstr(func_pool_t *fp, char *str, cfunc_t func, bool copy_p) {
     return add_func(fp, sym, func);
 }
 
-cfunc_t get_func(func_pool_t *fp, const char *sym) {
+cfunc_t get_func(const func_pool_t *fp, const char *sym) {
     /* linear search, for simplicity */
     for (size_t i = 0; i < fp->func_table_used; i++) {
         if (fp->func_table[i].symbol == sym) {

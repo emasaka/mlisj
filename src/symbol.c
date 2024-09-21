@@ -37,7 +37,7 @@ static int hash_table_search(char **table, const char *str) {
     return -1;
 }
 
-char *symbol_table_lookup(symbol_pool_t *sp, const char *str) {
+char *symbol_table_lookup(const symbol_pool_t *sp, const char *str) {
     int i = hash_table_search(sp->symbol_table, str);
     if (i == -1) {
         return NULL;
