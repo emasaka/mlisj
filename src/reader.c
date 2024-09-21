@@ -30,8 +30,7 @@ static Lisp_Object reader_get_intnum(const char *str) {
 
 /* parse float number */
 static Lisp_Object reader_get_floatnum(const char *str, lispenv_t *env) {
-    char *endptr;
-    double fnum = strtod(str, &endptr);
+    double fnum = strtod(str, NULL);
     double *flt = cdouble2float(env->mempool, fnum);
     if (flt == NULL) {
         return LISP_ERROR(Memory_Error);

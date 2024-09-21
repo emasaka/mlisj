@@ -256,8 +256,7 @@ Lisp_Object f_string_to_number(NArray *args, lispenv_t *env) {
         return LISP_INT(n);
     } else if (result == R_FLOAT) {
         /* float */
-        char *endptr;
-        double fnum = strtod(str, &endptr);
+        double fnum = strtod(str, NULL);
         double *flt = cdouble2float(env->mempool, fnum);
         CHECK_ALLOC(flt);
         return LISP_FLOAT(flt);
