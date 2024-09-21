@@ -329,7 +329,7 @@ void test_simple_func_pwd_body(void) {
     CU_ASSERT_EQUAL_FATAL(GET_TYPE(result), Lisp_String);
 
     char buffer[TMP_BUFFSIZE];
-    getcwd(buffer, TMP_BUFFSIZE);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(getcwd(buffer, TMP_BUFFSIZE));
     CU_ASSERT_STRING_EQUAL(GET_SVAL(result), buffer);
 }
 
