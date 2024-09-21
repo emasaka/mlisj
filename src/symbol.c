@@ -93,6 +93,13 @@ symbol_pool_t *init_symbol(mempool_t *mempool) {
     }
     symbol_pool->symbol_table = symbol_table;
     symbol_pool->symbol_table_used = 0;
+#if !(defined(__x86_64__) || defined(__i386__) || \
+      defined(__aarch64__) || defined(__arm__) )
+    /* This is not necessary for most CPU architectures */
+    for (size_t i = 0; i < SYMBOL_TABLE_SIZE; i++) {
+        symbol_table[i] = NULL;
+    }
+#endif
 
     symbol_pool->mempool = mempool;
 
