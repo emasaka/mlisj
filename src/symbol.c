@@ -13,21 +13,54 @@
 #include "mempool.h"
 #include "symbol.h"
 
-/* linear search, for simplicity */
-char *symbol_table_lookup(symbol_pool_t *sp, const char *str) {
-    for (size_t i = 0; i < sp->symbol_table_used; i++) {
-        if (strcmp(str, sp->symbol_table[i]) == 0) {
-            return sp->symbol_table[i];
-        }
+static unsigned long str_hash_dbj2(const char *str) {
+    unsigned long hash = 5381;
+    const char *p = str;
+    while (*p) {
+        hash = ((hash << 5) + hash) + *p++;
     }
-    /* not found */
-    return NULL;
+    return hash % SYMBOL_TABLE_SIZE;
 }
 
-char *new_symbol(symbol_pool_t *sp, char *str, bool copy_p) {
-    if (sp->symbol_table_used == SYMBOL_TABLE_SIZE) {
+static int hash_table_search(char **table, const char *str) {
+    unsigned long hash = str_hash_dbj2(str);
+    size_t i = (size_t)hash;
+    do {
+        if ((table[i] == NULL) || (strcmp(str, table[i]) == 0)) {
+            return (int)i;
+        }
+        if (++i == SYMBOL_TABLE_SIZE) {
+            i = 0;
+        }
+    } while (i != hash);
+    /* something wrong */
+    return -1;
+}
+
+char *symbol_table_lookup(symbol_pool_t *sp, const char *str) {
+    int i = hash_table_search(sp->symbol_table, str);
+    if (i == -1) {
         return NULL;
     }
+    return sp->symbol_table[i];
+}
+
+char *str2symbol(symbol_pool_t *sp, char *str, bool copy_p) {
+    if (sp->symbol_table_used == SYMBOL_TABLE_SIZE) {
+        /* table is full */
+        return NULL;
+    }
+
+    int i = hash_table_search(sp->symbol_table, str);
+    if (i == -1) {
+        /* error */
+        return NULL;
+    } else if (sp->symbol_table[i] != NULL) {
+        /* already existed */
+        return sp->symbol_table[i];
+    }
+
+    /* add a new symbol */
     char *newstr;
     if (copy_p) {
         newstr =  copy_to_string_area(sp->mempool, str);
@@ -35,18 +68,9 @@ char *new_symbol(symbol_pool_t *sp, char *str, bool copy_p) {
     } else {
         newstr = str;
     }
-    sp->symbol_table[sp->symbol_table_used++] = newstr;
+    sp->symbol_table[i] = newstr;
+    sp->symbol_table_used++;
     return newstr;
-}
-
-char *str2symbol(symbol_pool_t *sp, char *str, bool copy_p) {
-    char *p = symbol_table_lookup(sp, str);
-    if (p) {
-        /* already existed */
-        return p;
-    } else {
-        return new_symbol(sp, str, copy_p);
-    }
 }
 
 void end_symbol(symbol_pool_t *symbol_pool) {
@@ -62,7 +86,7 @@ symbol_pool_t *init_symbol(mempool_t *mempool) {
         return NULL;
     }
 
-    char **symbol_table = malloc(sizeof(char *) * SYMBOL_TABLE_SIZE);
+    char **symbol_table = calloc(SYMBOL_TABLE_SIZE, sizeof(char *));
     if (symbol_table == NULL) {
         free(symbol_pool);
         return NULL;

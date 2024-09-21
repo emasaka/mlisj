@@ -68,9 +68,9 @@ void testsuite_adding_symbols(void) {
 
 void test_symbol_edge(void) {
     symbol_pool->symbol_table_used = SYMBOL_TABLE_SIZE - 1;
-    char *sym1 = new_symbol(symbol_pool, "ghi", true);
+    char *sym1 = str2symbol(symbol_pool, "ghi", true);
     CU_ASSERT_PTR_NOT_NULL(sym1);
-    char *sym2 = new_symbol(symbol_pool, "jkh", true);
+    char *sym2 = str2symbol(symbol_pool, "jkh", true);
     CU_ASSERT_PTR_NULL(sym2);
 }
 
