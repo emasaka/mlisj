@@ -112,8 +112,6 @@ Below are the specifications and implementation notes.
      * Multibyte character literal.
      * Hexadecimal notation and unicode code notation in strings.
      * Escape multibyte characters in strings.
-* from symbol (pointer) to function is performed using linear search.
-     * Since the number is small, it should not be a problem.
 * Lisp_Object structures (like tagged pointers) are roughly the size of two pointers, which is wasteful.
      * It should be possible to make it smaller just by changing the definition of src/lispobject.h.
 * Only integer strings are assumed to enter skk_num_list (same as when skk-num-convert-float is nil in DDSKK).
