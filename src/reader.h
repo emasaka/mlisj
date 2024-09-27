@@ -12,6 +12,8 @@
 #include "lispobject.h"
 #include "lispenv.h"
 
+#define READER_MAX_NESTING_LEVEL 32
+
 extern Lisp_Object reader(const char *, lispenv_t *);
 
 #endif /* _READER_H */

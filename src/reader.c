@@ -11,12 +11,14 @@
 #include <stdlib.h>
 #include "lispenv.h"
 #include "util.h"
+#include "reader.h"
 
 #define READER_BUFSIZE 512
 #define READER_ARRAY_BUFSIZE 128
 
 typedef struct {
     const char *ptr;
+    size_t nesting_level;
     lispenv_t *env;
 } reader_context;
 
@@ -136,6 +138,9 @@ static Lisp_Object reader_string(reader_context *c) {
 
 static Lisp_Object reader_list(reader_context *c) {
     Lisp_Object buffer[READER_ARRAY_BUFSIZE];
+    if (++(c->nesting_level) > READER_MAX_NESTING_LEVEL) {
+        return LISP_ERROR(Reader_Error);
+    }
     size_t buffer_used = 0;
     c->ptr++;
     for (size_t i = 0; i < READER_ARRAY_BUFSIZE; i++) {
@@ -190,6 +195,6 @@ static Lisp_Object reader_sexp(reader_context *c) {
 }
 
 Lisp_Object reader(const char *str, lispenv_t *env) {
-    reader_context c = (reader_context){ .ptr = str, .env = env };
+    reader_context c = (reader_context){ .ptr = str, .nesting_level = 0, .env = env };
     return reader_sexp(&c);
 }

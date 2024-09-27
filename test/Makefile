@@ -34,7 +34,7 @@ test_functable: test_functable.c ../src/functable.h functable.o mempool.o symbol
 
 test_lispenv: test_lispenv.c $(LISPENV_O_AND_DEPS) $(LISPENV_H_AND_DEPS)
 
-test_reader: test_reader.c reader.o util.o writer.o $(LISPENV_O_AND_DEPS) helper/writer.h $(LISPENV_H_AND_DEPS)
+test_reader: test_reader.c reader.o util.o writer.o $(LISPENV_O_AND_DEPS) helper/writer.h ../src/reader.h $(LISPENV_H_AND_DEPS)
 
 test_eval: test_eval.c eval.o reader.o util.o writer.o $(LISPENV_O_AND_DEPS) ../src/eval.h ../src/reader.h helper/writer.h $(LISPENV_H_AND_DEPS)
 

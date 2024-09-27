@@ -233,6 +233,20 @@ void test_reader_list_broken(void) {
     CU_ASSERT_EQUAL(GET_TYPE(obj), Internal_Error);
 }
 
+void test_reader_list_nested_toodeep(void) {
+    char tmp_buf[(READER_MAX_NESTING_LEVEL + 1) * 2 + 1];
+    char *p = tmp_buf;
+    for (size_t i = 0; i < READER_MAX_NESTING_LEVEL + 1; i++){
+        *p++ = '(';
+    }
+    for (size_t i = 0; i < READER_MAX_NESTING_LEVEL + 1; i++){
+        *p++ = ')';
+    }
+    *p = '\0';
+    Lisp_Object obj = reader(tmp_buf, lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(obj), Internal_Error);
+}
+
 void testsuite_reader_list(void) {
     CU_pSuite suite = CU_add_suite("reader_list", init_for_readertest, end_for_readertest);
     CU_add_test(suite, "reader_list_empty", test_reader_list_empty);
@@ -242,6 +256,7 @@ void testsuite_reader_list(void) {
     CU_add_test(suite, "reader_list_nested1", test_reader_list_nested1);
     CU_add_test(suite, "reader_list_nested2", test_reader_list_nested2);
     CU_add_test(suite, "reader_list_broken", test_reader_list_broken);
+    CU_add_test(suite, "reader_list_nested_toodeep", test_reader_list_nested_toodeep);
 }
 
 /*

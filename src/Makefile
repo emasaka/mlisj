@@ -34,7 +34,7 @@ functable.o: variable.c lispobject.h mempool.h symbol.h functable.h
 
 lispenv.o: lispenv.c $(LISPENV_H_AND_DEPS)
 
-reader.o: reader.c util.h $(LISPENV_H_AND_DEPS)
+reader.o: reader.c util.h reader.h $(LISPENV_H_AND_DEPS)
 
 eval.o: eval.c  eval.h reader.h func-helper.h $(LISPENV_H_AND_DEPS)
 
