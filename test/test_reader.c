@@ -42,6 +42,14 @@ void test_reader_positive_int(void) {
     CU_ASSERT_STRING_EQUAL(tmp_buf, "31");
 }
 
+void test_reader_positive_int_with_prefix(void) {
+    char tmp_buf[TMP_BUFFSIZE];
+    Lisp_Object obj = reader("+31", lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(obj), Lisp_Int);
+    CU_ASSERT(writer(obj, tmp_buf) == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "31");
+}
+
 void test_reader_negative_int(void) {
     char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("-31", lisp_env);
@@ -67,6 +75,7 @@ void test_reader_floatnum(void) {
 void testsuite_reader_number(void) {
     CU_pSuite suite = CU_add_suite("reader_number", init_for_readertest, end_for_readertest);
     CU_add_test(suite, "reader_positive_int", test_reader_positive_int);
+    CU_add_test(suite, "reader_positive_int_with_prefix", test_reader_positive_int_with_prefix);
     CU_add_test(suite, "reader_negative_int", test_reader_negative_int);
     CU_add_test(suite, "reader_char", test_reader_char);
     CU_add_test(suite, "reader_floatnum", test_reader_floatnum);
