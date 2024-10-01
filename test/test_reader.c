@@ -35,35 +35,27 @@ int end_for_readertest(void) {
  */
 
 void test_reader_positive_int(void) {
-    char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("31", lisp_env);
     CU_ASSERT_EQUAL(GET_TYPE(obj), Lisp_Int);
-    CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT_STRING_EQUAL(tmp_buf, "31");
+    CU_ASSERT_EQUAL(GET_IVAL(obj), 31);
 }
 
 void test_reader_positive_int_with_prefix(void) {
-    char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("+31", lisp_env);
     CU_ASSERT_EQUAL(GET_TYPE(obj), Lisp_Int);
-    CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT_STRING_EQUAL(tmp_buf, "31");
+    CU_ASSERT_EQUAL(GET_IVAL(obj), 31);
 }
 
 void test_reader_negative_int(void) {
-    char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("-31", lisp_env);
     CU_ASSERT_EQUAL(GET_TYPE(obj), Lisp_Int);
-    CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT_STRING_EQUAL(tmp_buf, "-31");
+    CU_ASSERT_EQUAL(GET_IVAL(obj), -31);
 }
 
 void test_reader_char(void) {
-    char tmp_buf[TMP_BUFFSIZE];
     Lisp_Object obj = reader("?a", lisp_env);
     CU_ASSERT_EQUAL(GET_TYPE(obj), Lisp_Int);
-    CU_ASSERT(writer(obj, tmp_buf) == 0);
-    CU_ASSERT_STRING_EQUAL(tmp_buf, "97");
+    CU_ASSERT_EQUAL(GET_IVAL(obj), 'a');
 }
 
 void test_reader_floatnum(void) {

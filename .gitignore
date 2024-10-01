@@ -4,6 +4,7 @@
 /test/*
 /example/*
 !*.[ch]
+!*.py
 !Makefile
 !*.map
 !/test/helper
