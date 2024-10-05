@@ -5,6 +5,7 @@
 /example/*
 !*.[ch]
 !*.py
+!*.rb
 !Makefile
 !*.map
 !/test/helper
