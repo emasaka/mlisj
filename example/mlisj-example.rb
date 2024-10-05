@@ -14,6 +14,11 @@ module Mlisj
   dlload '../src/libmlisj.so'
   extern 'int mlisj_eval(const char *, char *, size_t, char **, const char *)'
   StrP = struct(['void *ptr'])
+
+  module_function
+  def strp_array_set(ary, idx, val)
+    StrP.new(ary + (idx * Fiddle::SIZEOF_VOIDP)).ptr = val
+  end
 end
 
 MLISJ_ERROR_EVALUATION = 1
@@ -24,13 +29,11 @@ BUFSIZE = 256
 
 def make_c_strary(strlist)
   return nil if strlist.nil?
-  ary = Fiddle::Pointer.malloc(Fiddle::SIZEOF_VOIDP * (strlist.length + 1), Fiddle::RUBY_FREE)
+  ary = Fiddle::Pointer.malloc(Fiddle::SIZEOF_VOIDP * (strlist.size + 1), Fiddle::RUBY_FREE)
   strlist.each_with_index do |str, i|
-    sp = Mlisj::StrP.new(ary + (i * Fiddle::SIZEOF_VOIDP))
-    sp.ptr = Fiddle::Pointer[str]
+    Mlisj::strp_array_set(ary, i, Fiddle::Pointer[str])
   end
-  sp = Mlisj::StrP.new(ary + (strlist.size * Fiddle::SIZEOF_VOIDP))
-  sp.ptr = Fiddle::NULL
+  Mlisj::strp_array_set(ary, strlist.size, Fiddle::NULL)
   ary
 end
 
