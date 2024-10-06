@@ -1,4 +1,6 @@
 CC := gcc
+INSTALL := install
+DESTDIR := /usr/local
 CFLAGS := -O3 -W -Wall -fPIC
 TARGET_LIB := libmlisj.so
 OBJS := mlisj.o mempool.o symbol.o variable.o functable.o lispenv.o reader.o eval.o func-simple.o func-skk-gadgets.o util.o
@@ -45,6 +47,11 @@ func-skk-gadgets.o: func-skk-gadgets.c eval.h reader.h util.h func-helper.h util
 util.o: util.c util.h
 
 # other
+
+.PHONY: install
+install: $(TARGET_LIB)
+	$(INSTALL) $(TARGET_LIB) $(DESTDIR)/lib
+	$(INSTALL) -m 444 mlisj.h $(DESTDIR)/include
 
 .PHONY: clean
 clean:
