@@ -88,8 +88,9 @@ Below are the specifications and implementation notes.
 * Only functions, special forms, and features used in the SKK dictionaries are implemented.
 * Specialized in evaluating one expression and returning a string.
 * Create and clear the environment each time.  No GC.
+* Emphasize turnaround including initialization, rather than performance on expression evaluation alone
     * Don't waste time initializing
-* Preferred implementation simplicity over performance.
+    * Prioritize simplicity of implementation
 * Datum are immutable at the Lisp level.
 * Returns immediately if there is an execution error (e.g. when a string like “(lol)” is passed).
 * I don't want to differ too much from external libraries other than libc.
@@ -100,6 +101,7 @@ Below are the specifications and implementation notes.
 * Variable assignment in Lisp
 * Function definition in Lisp
 * Definition of t
+* Conditional branching and loop
 
 ### Current implementation limitations
 
