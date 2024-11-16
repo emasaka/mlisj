@@ -281,6 +281,28 @@ void testsuite_reader_empty(void) {
 }
 
 /*
+  comment
+ */
+
+void test_reader_comment_skip(void) {
+    Lisp_Object obj = reader("; comment\nfoo", lisp_env);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(obj), Lisp_Symbol);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(obj), "foo");
+}
+
+void test_reader_comment_symbol(void) {
+    Lisp_Object obj = reader("foo;bar", lisp_env);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(obj), Lisp_Symbol);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(obj), "foo");
+}
+
+void testsuite_reader_comment(void) {
+    CU_pSuite suite = CU_add_suite("reader_comment", init_for_readertest, end_for_readertest);
+    CU_add_test(suite, "reader_comment_skip", test_reader_comment_skip);
+    CU_add_test(suite, "reader_comment_symbol", test_reader_comment_symbol);
+}
+
+/*
   Main
  */
 
@@ -293,6 +315,7 @@ int main(void) {
     testsuite_reader_string();
     testsuite_reader_list();
     testsuite_reader_empty();
+    testsuite_reader_comment();
 
     CU_basic_run_tests();
     int ret = CU_get_number_of_failures();

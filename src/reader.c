@@ -46,7 +46,7 @@ static Lisp_Object reader_maybe_symbol(reader_context *c) {
     for (size_t i = 0; i < READER_BUFSIZE; i++) {
         char ch = c->ptr[0];
         /* XXX: escapes in symbol is not supported */
-        if (isspace(ch) || (ch == '(') || (ch == ')') || (ch == '\"') || (ch == '\'') || (ch == '\0')) {
+        if (isspace(ch) || (ch == '(') || (ch == ')') || (ch == '\"') || (ch == '\'') || (ch == ';') || (ch == '\0')) {
             *p = '\0';
 
             /* integer? float? other?*/
@@ -177,7 +177,12 @@ static Lisp_Object reader_quoted(reader_context *c) {
 }
 
 static Lisp_Object reader_sexp(reader_context *c) {
+restart:
     while (isspace(c->ptr[0])) { c->ptr++; }
+    if (c->ptr[0] == ';') {
+        while ((c->ptr[0] != '\n') && (c->ptr[0] != '\0')) { c->ptr++; }
+        goto restart;
+    }
     switch (c->ptr[0]) {
     case '\0':
         return LISP_ERROR(Reader_Error);
