@@ -375,8 +375,11 @@ Lisp_Object skk_default_current_date(
     int gengo_index = GET_IVAL(gengo_index_o);
 
     int year_i = (int)strtol(year, NULL, 10);
+    CHECK_CONDITION((0 < year_i) && (year_i <= 3000)); /* 3000 is workaround*/
     int month_i = month_name_to_month(month);
+    CHECK_CONDITION(month_i >= 1);
     int day_i = (int)strtol(day, NULL, 10);
+    CHECK_CONDITION((1 <= day_i) && (day_i <= 31));
 
     char *year_str;
     if (GET_TYPE(gengo_p) == Lisp_Nil) {
