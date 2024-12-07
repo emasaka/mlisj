@@ -12,6 +12,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <time.h>
+#include <errno.h>
 #include "lispobject.h"
 #include "lispenv.h"
 #include "mempool.h"
@@ -90,8 +91,10 @@ Lisp_Object f_skk_times(NArray *args, lispenv_t *env) {
     CHECK_CONDITION(args->size == 0);
     int r = 1;
     if (env->skk_num_list != NULL) {
+	errno = 0;
         for (size_t i = 0; env->skk_num_list[i] != NULL; i++) {
             int n = (int)strtol(env->skk_num_list[i], NULL, 10);
+	    CHECK_CONDITION(errno == 0);
             r *= n;
         }
     }
@@ -233,7 +236,9 @@ Lisp_Object f_skk_ad_to_gengo(NArray *args, lispenv_t *env) {
     CHECK_CONDITION(gengo_index == 0 || gengo_index == 1);
 
     CHECK_CONDITION(env->skk_num_list != NULL);
+    errno = 0;
     int ad = (int)strtol(env->skk_num_list[0], NULL, 10);
+    CHECK_CONDITION(errno == 0);
 
     Lisp_Object v = ad_to_gengo_1(env, ad, not_gannen, 0, 0);
     if (GET_TYPE(v) == Internal_Error) { return v; }
@@ -285,7 +290,9 @@ Lisp_Object f_skk_gengo_to_ad(NArray *args, lispenv_t *env) {
     }
 
     CHECK_CONDITION(env->skk_num_list != NULL);
+    errno = 0;
     int nengo = (int)strtol(env->skk_num_list[0], NULL, 10);
+    CHECK_CONDITION(errno == 0);
 
     CHECK_CONDITION(env->skk_henkan_key != NULL);
     char gengo_buf[TMP_BUFFSIZE];
@@ -374,12 +381,14 @@ Lisp_Object skk_default_current_date(
     CHECK_TYPE(gengo_index_o, Lisp_Int);
     int gengo_index = GET_IVAL(gengo_index_o);
 
+    errno = 0;
     int year_i = (int)strtol(year, NULL, 10);
-    CHECK_CONDITION((0 < year_i) && (year_i <= 3000)); /* 3000 is workaround*/
+    CHECK_CONDITION((errno == 0) && (year_i > 0));
     int month_i = month_name_to_month(month);
     CHECK_CONDITION(month_i >= 1);
+    errno = 0;
     int day_i = (int)strtol(day, NULL, 10);
-    CHECK_CONDITION((1 <= day_i) && (day_i <= 31));
+    CHECK_CONDITION((errno == 0) && (1 <= day_i) && (day_i <= 31));
 
     char *year_str;
     if (GET_TYPE(gengo_p) == Lisp_Nil) {

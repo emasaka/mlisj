@@ -9,6 +9,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 #include "lispenv.h"
 #include "util.h"
 #include "reader.h"
@@ -26,7 +27,9 @@ static Lisp_Object reader_sexp(reader_context *); /* prototype declaration */
 
 /* parse integer number */
 static Lisp_Object reader_get_intnum(const char *str) {
+    errno = 0;
     int n = (int)strtol(str, NULL, 10);
+    if (errno != 0) { return LISP_ERROR(Reader_Error); }
     return LISP_INT(n);
 }
 
