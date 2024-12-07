@@ -20,7 +20,7 @@ struct _lispenv;
 typedef Lisp_Object (*cfunc_t)(struct _NArray *, struct _lispenv *);
 
 typedef struct {
-    char *symbol;
+    const char *symbol;
     cfunc_t cfunc;
 } cfunc_entry;
 
@@ -31,7 +31,7 @@ typedef struct {
     symbol_pool_t *symbol_pool;
 } func_pool_t;
 
-extern int add_func(func_pool_t *, char *, cfunc_t);
+extern int add_func(func_pool_t *, const char *, cfunc_t);
 extern int add_func_from_cstr(func_pool_t *, char *, cfunc_t, bool);
 extern cfunc_t get_func(const func_pool_t *, const char *);
 

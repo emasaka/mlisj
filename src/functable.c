@@ -32,7 +32,7 @@ static int func_hash_table_search(cfunc_entry *table, const char *sym) {
     return -1;
 }
 
-int add_func(func_pool_t *fp, char *sym, cfunc_t func) {
+int add_func(func_pool_t *fp, const char *sym, cfunc_t func) {
     if (fp->func_table_used >= FUNC_TABLE_SIZE) {
         return -1;
     }
