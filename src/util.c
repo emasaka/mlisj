@@ -116,9 +116,11 @@ static const char * const japanese_keta_4[] = {
 
 static void skk_num_to_kanji_4digits(const char *src, char *dst) {
     size_t len = strlen(src);
+    if (len > 4) { len = 4; }
     const char *s = src;
     char *d = dst;
     while (*s != '\0') {
+        if (len == 0) { break; }
         char c = *s++;
         len--;
         if (c == '0') {
@@ -149,13 +151,13 @@ static const char * const japanese_keta_man[] = {
 int skk_num_type3_kanji(const char *src, char *dst, size_t size) {
     char buff4_out[ZENKAKU_DIGIT_STRLEN * 8 + 1];
     char buff4[5];
-    buff4[4] = '\0';
     size_t keta = 0;
     size_t slen = strlen(src);
     dst[0] = '\0';
     while (keta < (sizeof(japanese_keta_man) / sizeof(japanese_keta_man[0]))) {
         if (slen > 4) {
             memcpy(buff4, src + (slen - 4), 4);
+            buff4[4] = '\0';
             slen -= 4;
         } else {
             memcpy(buff4, src, slen);
