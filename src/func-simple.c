@@ -253,9 +253,9 @@ Lisp_Object f_string_to_number(NArray *args, lispenv_t *env) {
     check_num_t result = check_num_str(str, false);
     if (result == R_INT) {
         /* integer*/
-	errno = 0;
+        errno = 0;
         int n = (int)strtol(str, NULL, 10);
-	CHECK_CONDITION(errno == 0);
+        CHECK_CONDITION(errno == 0);
         return LISP_INT(n);
     } else if (result == R_FLOAT) {
         /* float */

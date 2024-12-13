@@ -91,10 +91,10 @@ Lisp_Object f_skk_times(NArray *args, lispenv_t *env) {
     CHECK_CONDITION(args->size == 0);
     int r = 1;
     if (env->skk_num_list != NULL) {
-	errno = 0;
+        errno = 0;
         for (size_t i = 0; env->skk_num_list[i] != NULL; i++) {
             int n = (int)strtol(env->skk_num_list[i], NULL, 10);
-	    CHECK_CONDITION(errno == 0);
+            CHECK_CONDITION(errno == 0);
             r *= n;
         }
     }
