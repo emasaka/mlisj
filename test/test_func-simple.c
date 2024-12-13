@@ -65,15 +65,15 @@ void test_simple_func_minus_int(void) {
 void test_simple_func_minus_float(void) {
     Lisp_Object result1 = eval_expr(reader("(- 5.0 3)", lisp_env), lisp_env);
     CU_ASSERT_EQUAL_FATAL(GET_TYPE(result1), Lisp_Float);
-    CU_ASSERT_DOUBLE_EQUAL(*(GET_FVAL(result1)), 2.0, 1e-10);
+    CU_ASSERT_DOUBLE_EQUAL(GET_FVAL_VAL(result1), 2.0, 1e-10);
 
     Lisp_Object result2 = eval_expr(reader("(- 5 3.0)", lisp_env), lisp_env);
     CU_ASSERT_EQUAL_FATAL(GET_TYPE(result2), Lisp_Float);
-    CU_ASSERT_DOUBLE_EQUAL(*(GET_FVAL(result2)), 2.0, 1e-10);
+    CU_ASSERT_DOUBLE_EQUAL(GET_FVAL_VAL(result2), 2.0, 1e-10);
 
     Lisp_Object result3 = eval_expr(reader("(- 3.0 5)", lisp_env), lisp_env);
     CU_ASSERT_EQUAL_FATAL(GET_TYPE(result3), Lisp_Float);
-    CU_ASSERT_DOUBLE_EQUAL(*(GET_FVAL(result3)), -2.0, 1e-10);
+    CU_ASSERT_DOUBLE_EQUAL(GET_FVAL_VAL(result3), -2.0, 1e-10);
 }
 
 void testsuite_simple_func_minus(void) {
@@ -299,7 +299,7 @@ void test_simple_func_string_to_number_int(void) {
 void test_simple_func_string_to_number_float(void) {
     Lisp_Object result1 = eval_expr(reader("(string-to-number \"3.2\")", lisp_env), lisp_env);
     CU_ASSERT_EQUAL_FATAL(GET_TYPE(result1), Lisp_Float);
-    CU_ASSERT_DOUBLE_EQUAL(*(GET_FVAL(result1)), 3.2, 1e-10);
+    CU_ASSERT_DOUBLE_EQUAL(GET_FVAL_VAL(result1), 3.2, 1e-10);
 }
 
 void test_simple_func_string_to_number_notnumber(void) {

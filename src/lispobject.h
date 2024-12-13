@@ -9,6 +9,9 @@
 #ifndef _LISPOBJECT_H
 #define _LISPOBJECT_H
 
+/* 1: double as immediate value, 0: double as reference */
+#define DOUBLE_IMMEDIATE 0
+
 enum Lisp_Type {
    Lisp_Symbol,
    Lisp_Int,
@@ -39,7 +42,11 @@ typedef struct _Lisp_Object {
     union {
         // struct _Lisp_Object *lval;    /* ununsed: cons list */
         int ival;               /* Lisp_Int, Lisp_Nil (0) */
+#if DOUBLE_IMMEDIATE
+        double fval;            /* Lisp_Float */
+#else
         double *fval;           /* Lisp_Float */
+#endif
         char *sval;             /* Lisp_String, Lisp_Symbol */
         struct _Lisp_Object (*fnval)(struct _lispenv *); /* Dynamic_Val */
         struct _NArray *aval;   /* Lisp_CList */
@@ -65,5 +72,11 @@ typedef struct _Lisp_Object {
 #define GET_AVAL(x) ((x).val.aval)
 #define GET_FNVAL(x) ((x).val.fnval)
 #define GET_ERROR_TYPE(x) ((x).val.err)
+
+#if DOUBLE_IMMEDIATE
+#define GET_FVAL_VAL(x) GET_FVAL(x)
+#else
+#define GET_FVAL_VAL(x) *(GET_FVAL(x))
+#endif
 
 #endif /* _LISPOBJECT_H */

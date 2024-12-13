@@ -46,20 +46,32 @@
     Function: -
 */
 
+#if DOUBLE_IMMEDIATE
+static Lisp_Object minus_onearg(NArray *args, __attribute__((unused)) lispenv_t *env) {
+#else
 static Lisp_Object minus_onearg(NArray *args, lispenv_t *env) {
+#endif
     /* (- x) -> -x */
     if (GET_TYPE(args->data[0]) == Lisp_Int) {
         return LISP_INT(-GET_IVAL(args->data[0]));
     } else if (GET_TYPE(args->data[0]) == Lisp_Float) {
-        double *flt = cdouble2float(env->mempool, -(*GET_FVAL(args->data[0])));
+#if DOUBLE_IMMEDIATE
+        return LISP_FLOAT(-(GET_FVAL_VAL(args->data[0])));
+#else
+        double *flt = cdouble2float(env->mempool, -(GET_FVAL_VAL(args->data[0])));
         CHECK_ALLOC(flt);
         return LISP_FLOAT(flt);
+#endif
     } else {
         return LISP_ERROR(Evaluation_Error);
     }
 }
 
+#if DOUBLE_IMMEDIATE
+static Lisp_Object minus_multiarg(NArray *args) {
+#else
 static Lisp_Object minus_multiarg(NArray *args, lispenv_t *env) {
+#endif
     int r_int = 0;
     double r_double = 0.0;
     bool float_p = false;
@@ -67,7 +79,7 @@ static Lisp_Object minus_multiarg(NArray *args, lispenv_t *env) {
     if (GET_TYPE(args->data[0]) == Lisp_Int) {
         r_int = GET_IVAL(args->data[0]);
     } else if (GET_TYPE(args->data[0]) == Lisp_Float) {
-        r_double = *GET_FVAL(args->data[0]);
+        r_double = GET_FVAL_VAL(args->data[0]);
         float_p = true;
     } else {
         return LISP_ERROR(Evaluation_Error);
@@ -82,10 +94,10 @@ static Lisp_Object minus_multiarg(NArray *args, lispenv_t *env) {
             }
         } else if (GET_TYPE(args->data[i]) == Lisp_Float) {
             if (float_p == true) {
-                r_double -= *GET_FVAL(args->data[i]);
+                r_double -= GET_FVAL_VAL(args->data[i]);
             } else {
                 r_double = (double)r_int;
-                r_double -= *GET_FVAL(args->data[i]);
+                r_double -= GET_FVAL_VAL(args->data[i]);
                 float_p = true;
             }
         } else {
@@ -94,9 +106,13 @@ static Lisp_Object minus_multiarg(NArray *args, lispenv_t *env) {
     }
 
     if (float_p == true) {
+#if DOUBLE_IMMEDIATE
+        return LISP_FLOAT(r_double);
+#else
         double *flt = cdouble2float(env->mempool, r_double);
         CHECK_ALLOC(flt);
         return LISP_FLOAT(flt);
+#endif
     } else {
         return LISP_INT(r_int);
     }
@@ -110,7 +126,11 @@ Lisp_Object f_minus(NArray *args, lispenv_t *env) {
     } else if (args->size == 1) {
         return minus_onearg(args, env);
     } else {
+#if DOUBLE_IMMEDIATE
+        return minus_multiarg(args);
+#else
         return minus_multiarg(args, env);
+#endif
     }
 }
 
@@ -246,7 +266,11 @@ Lisp_Object f_substring(NArray *args, lispenv_t *env) {
     Function: string-to-number
 */
 
+#if DOUBLE_IMMEDIATE
+Lisp_Object f_string_to_number(NArray *args, __attribute__((unused)) lispenv_t *env) {
+#else
 Lisp_Object f_string_to_number(NArray *args, lispenv_t *env) {
+#endif
     CHECK_CONDITION(args->size == 1);
     CHECK_TYPE(args->data[0], Lisp_String);
     char *str = GET_SVAL(args->data[0]);
@@ -260,9 +284,13 @@ Lisp_Object f_string_to_number(NArray *args, lispenv_t *env) {
     } else if (result == R_FLOAT) {
         /* float */
         double fnum = strtod(str, NULL);
+#if DOUBLE_IMMEDIATE
+        return LISP_FLOAT(fnum);
+#else
         double *flt = cdouble2float(env->mempool, fnum);
         CHECK_ALLOC(flt);
         return LISP_FLOAT(flt);
+#endif
     } else {
         /* not number*/
         return LISP_INT(0);

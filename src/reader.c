@@ -34,6 +34,12 @@ static Lisp_Object reader_get_intnum(const char *str) {
 }
 
 /* parse float number */
+#if DOUBLE_IMMEDIATE
+static Lisp_Object reader_get_floatnum(const char *str) {
+    double fnum = strtod(str, NULL);
+    return LISP_FLOAT(fnum);
+}
+#else
 static Lisp_Object reader_get_floatnum(const char *str, lispenv_t *env) {
     double fnum = strtod(str, NULL);
     double *flt = cdouble2float(env->mempool, fnum);
@@ -42,6 +48,7 @@ static Lisp_Object reader_get_floatnum(const char *str, lispenv_t *env) {
     }
     return LISP_FLOAT(flt);
 }
+#endif
 
 static Lisp_Object reader_maybe_symbol(reader_context *c) {
     char buffer[READER_BUFSIZE];
@@ -57,7 +64,11 @@ static Lisp_Object reader_maybe_symbol(reader_context *c) {
             if (result == R_INT) {
                 return reader_get_intnum(buffer);
             } else if (result == R_FLOAT) {
+#if DOUBLE_IMMEDIATE
+                return reader_get_floatnum(buffer);
+#else
                 return reader_get_floatnum(buffer, c->env);
+#endif
             }
 
             /* nil? */

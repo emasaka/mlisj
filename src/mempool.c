@@ -51,6 +51,7 @@ char *copy_to_string_area(mempool_t *mp, const char *str) {
     return area;
 }
 
+#if !DOUBLE_IMMEDIATE
 /*
   Float Pool
  */
@@ -65,6 +66,7 @@ double *cdouble2float(mempool_t *mp, double f) {
         return p;
     }
 }
+#endif
 
 /*
   Array Node Pool
@@ -108,7 +110,9 @@ void end_mempool(mempool_t *mempool) {
 
     MAYBE_FREE(mempool->lispobject_pool);
     MAYBE_FREE(mempool->string_pool);
+#if !DOUBLE_IMMEDIATE
     MAYBE_FREE(mempool->float_pool);
+#endif
     MAYBE_FREE(mempool->narray_node_pool);
     MAYBE_FREE(mempool);
 }
@@ -121,7 +125,9 @@ mempool_t *init_mempool(void) {
 
     mempool->lispobject_pool = NULL;
     mempool->string_pool = NULL;
+#if !DOUBLE_IMMEDIATE
     mempool->float_pool = NULL;
+#endif
     mempool->narray_node_pool = NULL;
 
     Lisp_Object *lispobject_pool = malloc(sizeof(Lisp_Object) * LISPOBJECT_POOL_SIZE);
@@ -140,6 +146,7 @@ mempool_t *init_mempool(void) {
     mempool->string_pool = string_pool;
     mempool->string_pool_used = 0;
 
+#if !DOUBLE_IMMEDIATE
     double *float_pool = malloc(sizeof(double) * FLOAT_POOL_SIZE);
     if (float_pool == NULL) {
         end_mempool(mempool);
@@ -147,6 +154,7 @@ mempool_t *init_mempool(void) {
     }
     mempool->float_pool = float_pool;
     mempool->float_pool_used = 0;
+#endif
 
     NArray *narray_node_pool = malloc(sizeof(NArray) * NARRAY_NODE_POOL_SIZE);
     if (narray_node_pool == NULL) {

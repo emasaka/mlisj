@@ -30,8 +30,10 @@ typedef struct {
     char *string_pool;
     size_t string_pool_used;
 
+#if !DOUBLE_IMMEDIATE
     double *float_pool;
     size_t float_pool_used;
+#endif
 
     NArray *narray_node_pool;
     size_t narray_node_pool_used;
@@ -40,7 +42,9 @@ typedef struct {
 extern Lisp_Object *new_lispobject_array(mempool_t *, size_t);
 extern char *new_string_area(mempool_t *, size_t);
 extern char *copy_to_string_area(mempool_t *, const char *);
+#if !DOUBLE_IMMEDIATE
 extern double *cdouble2float(mempool_t *, double);
+#endif
 extern NArray *new_narray(mempool_t *, size_t);
 extern NArray *cdr_narray(mempool_t *, NArray *);
 

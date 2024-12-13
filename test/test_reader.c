@@ -61,7 +61,7 @@ void test_reader_char(void) {
 void test_reader_floatnum(void) {
     Lisp_Object obj = reader("3.0", lisp_env);
     CU_ASSERT_EQUAL_FATAL(GET_TYPE(obj), Lisp_Float);
-    CU_ASSERT_DOUBLE_EQUAL(*(GET_FVAL(obj)), 3.0, 1e-10);
+    CU_ASSERT_DOUBLE_EQUAL(GET_FVAL_VAL(obj), 3.0, 1e-10);
 }
 
 void testsuite_reader_number(void) {

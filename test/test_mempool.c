@@ -106,6 +106,7 @@ void testsuite_string_copy(void) {
     CU_add_test(suite, "string_copy_edge", test_string_copy_edge);
 }
 
+#if !DOUBLE_IMMEDIATE
 /*
   Float Pool
  */
@@ -130,6 +131,7 @@ void testsuite_float_pool(void) {
     CU_add_test(suite, "float_allocate_normal", test_float_pool_normal);
     CU_add_test(suite, "float_allocate_edge", test_float_pool_edge);
 }
+#endif
 
 /*
   Array Node Pool
@@ -169,7 +171,9 @@ int main(void) {
     testsuite_lispobject_pool();
     testsuite_string_area();
     testsuite_string_copy();
+#if !DOUBLE_IMMEDIATE
     testsuite_float_pool();
+#endif
     testsuite_narray_node_pool();
 
     CU_basic_run_tests();
