@@ -11,7 +11,7 @@
 
 #include <stdbool.h>
 
-#define FUNC_TABLE_SIZE 32
+#define FUNC_TABLE_SIZE 31
 
 /* prototype declarations of struct */
 struct _Narray;

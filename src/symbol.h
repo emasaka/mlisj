@@ -12,7 +12,7 @@
 #include <stdbool.h>
 #include "mempool.h"
 
-#define SYMBOL_TABLE_SIZE 256
+#define SYMBOL_TABLE_SIZE 199
 
 typedef struct {
     char **symbol_table;
