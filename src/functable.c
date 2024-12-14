@@ -8,7 +8,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <stdint.h>
 #include "lispobject.h"
 #include "symbol.h"
 #include "functable.h"
