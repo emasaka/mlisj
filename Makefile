@@ -10,6 +10,10 @@ lib:
 test:
 	cd test; $(MAKE) test CC=$(CC)
 
+.PHONY: install
+install:
+	cd src; $(MAKE) install
+
 .PHONY: clean
 clean:
 	cd src; $(MAKE) clean
