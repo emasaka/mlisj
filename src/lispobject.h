@@ -45,26 +45,27 @@ enum Internal_Error_Type {
 
 typedef struct _Lisp_Object {
     enum Lisp_Type type: 4;
-    unsigned long body:60;
+    unsigned long body: 60;
 } Lisp_Object;
 
 /* accessors */
-#define LISP_SYMBOL(x) ((Lisp_Object){ .type = Lisp_Symbol, .body = (uintptr_t)(x) })
-#define LISP_INT(n) ((Lisp_Object){ .type = Lisp_Int, .body = (unsigned long)(long)(n) })
-#define LISP_FLOAT(x) ((Lisp_Object){ .type = Lisp_Float, .body = (uintptr_t)(x) })
-#define LISP_STRING(x) ((Lisp_Object){ .type = Lisp_String, .body = (uintptr_t)(x) })
-#define LISP_CLIST(x) ((Lisp_Object){ .type = Lisp_CList, .body = (uintptr_t)(x) })
-#define LISP_NIL ((Lisp_Object){ .type = Lisp_Nil, .body = 0 })
-#define DYNAMIC_VAL(f) ((Lisp_Object){ .type = Dynamic_Val, .body = (uintptr_t)(f) })
-#define LISP_ERROR(x) ((Lisp_Object){ .type = Internal_Error, .body = (unsigned long)(x) })
+#define _LISP_OBJECT(tp, x) ((Lisp_Object){ .type = tp, .body = (x) })
+#define LISP_SYMBOL(x) _LISP_OBJECT(Lisp_Symbol, (uintptr_t)(x))
+#define LISP_INT(n) _LISP_OBJECT(Lisp_Int, (unsigned long)(long)(n))
+#define LISP_FLOAT(x) _LISP_OBJECT(Lisp_Float, (uintptr_t)(x))
+#define LISP_STRING(x) _LISP_OBJECT(Lisp_String, (uintptr_t)(x))
+#define LISP_CLIST(x) _LISP_OBJECT(Lisp_CList, (uintptr_t)(x))
+#define LISP_NIL _LISP_OBJECT(Lisp_Nil, 0)
+#define DYNAMIC_VAL(f) _LISP_OBJECT(Dynamic_Val, (uintptr_t)(f))
+#define LISP_ERROR(x) _LISP_OBJECT(Internal_Error, (unsigned long)(x))
 
 #define GET_TYPE(x) ((x).type)
-#define GET_IVAL(x) ((int)(unsigned int)((x).body))
+#define GET_IVAL(x) ((int)((x).body))
 #define GET_FVAL(x) ((double *)(uintptr_t)((x).body))
 #define GET_SVAL(x) ((char *)(uintptr_t)((x).body))
-#define GET_AVAL(x) ((struct _NArray *)(uintptr_t)((x).body))
-#define GET_FNVAL(x) ((Lisp_Object (*)(struct _lispenv *))(uintptr_t)((x).body))
-#define GET_ERROR_TYPE(x) ((enum Internal_Error_Type)(uintptr_t)((x).body))
+#define GET_AVAL(x) ((NArray *)(uintptr_t)((x).body))
+#define GET_FNVAL(x) ((Lisp_Object (*)(lispenv_t *))(uintptr_t)((x).body))
+#define GET_ERROR_TYPE(x) ((enum Internal_Error_Type)((x).body))
 
 #else
 /* default implementation */
