@@ -54,3 +54,4 @@ call_mlisj("(skk-current-date (lambda (date-information format gengo and-time) (
 call_mlisj("(skk-relative-date (lambda (date-information format gengo and-time) (skk-default-current-date date-information \"%s-%s-%s(%s)\" 0 nil 0 0 nil)) nil nil :dd -1)")
 call_mlisj("(skk-times)", ["3", "5"]);
 call_mlisj("(skk-gengo-to-ad \"\" \"年\")", ["60"], "しょうわ60ねん")
+call_mlisj("(skk-gadget-units-conversion \"inch\" (string-to-number (car skk-num-list)) \"cm\")", ["10"])

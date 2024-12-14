@@ -41,5 +41,8 @@ int main() {
     char *num_list2[] = { "60", NULL };
     call_mlisj("(skk-gengo-to-ad \"\" \"年\")", num_list2, "しょうわ60ねん");
 
+    char *num_list3[] = { "10", NULL };
+    call_mlisj("(skk-gadget-units-conversion \"inch\" (string-to-number (car skk-num-list)) \"cm\")", num_list3, NULL);
+
     return 0;
 }
