@@ -47,7 +47,7 @@ int writer_putc(int ch, writer_context *c) {
 int writer_int(Lisp_Object obj, writer_context *c) {
     char tmp_buf[TMP_BUFFSIZE];
     // coopying twice is not efficient but easy
-    if (snprintf(tmp_buf, sizeof(tmp_buf), "%d", obj.val.ival) < (int)sizeof(tmp_buf)) {
+    if (snprintf(tmp_buf, sizeof(tmp_buf), "%d", GET_IVAL(obj)) < (int)sizeof(tmp_buf)) {
         return writer_puts(tmp_buf, c);
     } else {
         return -1;
@@ -55,7 +55,7 @@ int writer_int(Lisp_Object obj, writer_context *c) {
 }
 
 int writer_symbol(Lisp_Object obj, writer_context *c) {
-    return writer_puts(obj.val.sval, c);
+    return writer_puts(GET_SVAL(obj), c);
 }
 
 int writer_nil(writer_context *c) {
@@ -64,7 +64,7 @@ int writer_nil(writer_context *c) {
 
 int writer_string(Lisp_Object obj, writer_context *c) {
     char tmp_buf[TMP_BUFFSIZE];
-    unsigned char *p = (unsigned char *)obj.val.sval;
+    unsigned char *p = (unsigned char *)GET_SVAL(obj);
     int ch;
     int ret;
     ret = writer_putc('"', c);
@@ -97,7 +97,7 @@ int writer_string(Lisp_Object obj, writer_context *c) {
 int writer_sexp(Lisp_Object, writer_context *); /* prototype declaration */
 
 int writer_clist(Lisp_Object obj, writer_context *c) {
-    NArray *ary = obj.val.aval;
+    NArray *ary = GET_AVAL(obj);
     int ret;
     ret = writer_putc('(', c);
     if (ret != 0) { return ret; }
