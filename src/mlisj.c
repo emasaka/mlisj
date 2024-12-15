@@ -59,9 +59,8 @@ int mlisj_eval(const char *src, char *dest, size_t size, char **skk_num_list, co
             size_t result_size = strlen(result_str) + 1;
             if (result_size <= size) {
                 memcpy(dest, result_str, result_size);
-            } else if (size > 0) {
-                memcpy(dest, result_str, size - 1);
-                dest[size - 1] = '\0';
+            } else {
+                exitcode = MLISJ_ERROR_RUNTIME;
             }
         }
         break;
