@@ -190,8 +190,13 @@ int skk_num_type3_kanji(const char *src, char *dst, size_t size) {
 
 int skk_num_type0_kanji(const char *src, char *dst, size_t size) {
     /* just copy */
-    strncpy(dst, src, size);
-    dst[size - 1] = '\0';
+    size_t src_size = strlen(src) + 1;
+    if (src_size <= size) {
+        memcpy(dst, src, src_size);
+    } else {
+        memcpy(dst, src, size - 1);
+        dst[size - 1] = '\0';
+    }
     return 0;
 }
 

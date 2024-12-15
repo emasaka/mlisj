@@ -54,8 +54,16 @@ int mlisj_eval(const char *src, char *dest, size_t size, char **skk_num_list, co
     Lisp_Object result = eval_expr(lisp_expr, env);
     switch (GET_TYPE(result)) {
     case Lisp_String:
-        strncpy(dest, GET_SVAL(result), size);
-        if (size > 0) { dest[size - 1] = '\0'; }
+        {
+            char *result_str = GET_SVAL(result);
+            size_t result_size = strlen(result_str) + 1;
+            if (result_size <= size) {
+                memcpy(dest, result_str, result_size);
+            } else if (size > 0) {
+                memcpy(dest, result_str, size - 1);
+                dest[size - 1] = '\0';
+            }
+        }
         break;
     case Internal_Error:
         exitcode = (GET_ERROR_TYPE(result) == Evaluation_Error) ?
