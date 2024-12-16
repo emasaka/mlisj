@@ -66,7 +66,7 @@ static Lisp_Object reader_maybe_symbol(reader_context *c) {
     char *p = buffer;
     for (size_t i = 0; i < READER_BUFSIZE; i++) {
         char ch = c->ptr[0];
-        /* XXX: escapes in symbol is not supported */
+        /* NOTE: escapes in symbol is not supported */
         if (isspace(ch) || (ch == '(') || (ch == ')') || (ch == '\"') || (ch == '\'') || (ch == ';') || (ch == '\0')) {
             *p = '\0';
 
@@ -104,16 +104,16 @@ static Lisp_Object reader_maybe_symbol(reader_context *c) {
 }
 
 static Lisp_Object reader_char(reader_context *c) {
-    /* XXX: escapes in character is not supported */
-    /* XXX: multibyte character is not supported */
+    /* NOTE: escapes in character is not supported */
+    /* NOTE: multibyte character is not supported */
     c->ptr++;
     if (*(c->ptr) == '\0') { return LISP_ERROR(Reader_Error); }
     return LISP_INT(*(c->ptr++));
 }
 
 static Lisp_Object reader_string(reader_context *c) {
-    /* XXX: "\x<hex>" and "\u<code>" are not supported */
-    /* XXX: escaping multibyte character is not supported (maybe no problem) */
+    /* NOTE: "\x<hex>" and "\u<code>" are not supported */
+    /* NOTE: escaping multibyte character is not supported (maybe no problem) */
     c->ptr++;
     char buffer[READER_BUFSIZE];
     size_t buffer_used = 0;

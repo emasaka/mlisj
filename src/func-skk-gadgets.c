@@ -86,7 +86,7 @@ Lisp_Object f_skk_version(__attribute__((unused)) NArray *args, __attribute__((u
 */
 
 Lisp_Object f_skk_times(NArray *args, lispenv_t *env) {
-    /* WORKAROUND: assume all args are integer */
+    /* WARNING: assume all args are integer */
     char buff[INT_STRLEN + 1];
     CHECK_CONDITION(args->size == 0);
     int r = 1;
@@ -130,7 +130,7 @@ Lisp_Object f_skk_gadget_units_conversion(NArray *args, lispenv_t *env) {
     CHECK_CONDITION(args->size == 3);
     CHECK_TYPE(args->data[0], Lisp_String);
     char *unit_from = GET_SVAL(args->data[0]);
-    /* WORKAROUND: assume original value is integer */
+    /* WARNING: assume original value is integer */
     CHECK_TYPE(args->data[1], Lisp_Int);
     int val = GET_IVAL(args->data[1]);
     CHECK_TYPE(args->data[2], Lisp_String);

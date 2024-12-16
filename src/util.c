@@ -16,7 +16,7 @@
     check if the string is a number
 */
 check_num_t check_num_str(const char *str, bool num_only_p) {
-    /* XXX: exponential notation of float is not supported */
+    /* NOTE: exponential notation of float is not supported */
 
     enum { START, DIGITS, DOT, DIGITS_AND_DOT } state = START;
 
