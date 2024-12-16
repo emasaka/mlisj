@@ -25,6 +25,17 @@ typedef struct {
 
 static Lisp_Object reader_sexp(reader_context *); /* prototype declaration */
 
+static void reader_skip_spaces_and_comment(reader_context *c) {
+    while (true) {
+        while (isspace(c->ptr[0])) { c->ptr++; }
+        if (c->ptr[0] == ';') {
+            while ((c->ptr[0] != '\n') && (c->ptr[0] != '\0')) { c->ptr++; }
+        } else {
+            return;
+        }
+    }
+}
+
 /* parse integer number */
 static Lisp_Object reader_get_intnum(const char *str) {
     errno = 0;
@@ -158,6 +169,7 @@ static Lisp_Object reader_list(reader_context *c) {
     size_t buffer_used = 0;
     c->ptr++;
     for (size_t i = 0; i < READER_ARRAY_BUFSIZE; i++) {
+        reader_skip_spaces_and_comment(c);
         while (isspace(c->ptr[0])) { c->ptr++; }
         if (c->ptr[0] == ')') {
             c->ptr++;
@@ -191,12 +203,7 @@ static Lisp_Object reader_quoted(reader_context *c) {
 }
 
 static Lisp_Object reader_sexp(reader_context *c) {
-restart:
-    while (isspace(c->ptr[0])) { c->ptr++; }
-    if (c->ptr[0] == ';') {
-        while ((c->ptr[0] != '\n') && (c->ptr[0] != '\0')) { c->ptr++; }
-        goto restart;
-    }
+    reader_skip_spaces_and_comment(c);
     switch (c->ptr[0]) {
     case '\0':
         return LISP_ERROR(Reader_Error);

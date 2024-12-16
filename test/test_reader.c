@@ -296,6 +296,14 @@ void test_reader_comment_symbol(void) {
     CU_ASSERT_STRING_EQUAL(GET_SVAL(obj), "foo");
 }
 
+void test_reader_comment_in_list(void) {
+    char tmp_buf[TMP_BUFFSIZE];
+    Lisp_Object obj = reader("(foo ;bar\n baz)", lisp_env);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(obj), Lisp_CList);
+    CU_ASSERT(writer(obj, tmp_buf) == 0);
+    CU_ASSERT_STRING_EQUAL(tmp_buf, "(foo baz)");
+}
+
 void testsuite_reader_comment(void) {
     CU_pSuite suite = CU_add_suite("reader_comment", init_for_readertest, end_for_readertest);
     CU_add_test(suite, "reader_comment_skip", test_reader_comment_skip);
