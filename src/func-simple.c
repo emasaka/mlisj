@@ -43,7 +43,7 @@
 #endif
 
 /*
-    Function: -
+    MARK: Function: -
 */
 
 #if DOUBLE_IMMEDIATE
@@ -135,7 +135,7 @@ Lisp_Object f_minus(NArray *args, lispenv_t *env) {
 }
 
 /*
-    Function: car
+    MARK: Function: car
 */
 
 Lisp_Object f_car(NArray *args, __attribute__((unused)) lispenv_t *env) {
@@ -154,7 +154,7 @@ Lisp_Object f_car(NArray *args, __attribute__((unused)) lispenv_t *env) {
 }
 
 /*
-    Function: concat
+    MARK: Function: concat
 */
 
 Lisp_Object f_concat(NArray *args, lispenv_t *env) {
@@ -189,7 +189,7 @@ Lisp_Object f_concat(NArray *args, lispenv_t *env) {
 }
 
 /*
-    Function: make-string
+    MARK: Function: make-string
 */
 
 Lisp_Object f_make_string(NArray *args, lispenv_t *env) {
@@ -209,7 +209,7 @@ Lisp_Object f_make_string(NArray *args, lispenv_t *env) {
 }
 
 /*
-    Function: string-to-char
+    MARK: Function: string-to-char
 */
 
 Lisp_Object f_string_to_char(NArray *args, __attribute__((unused)) lispenv_t *env) {
@@ -220,7 +220,7 @@ Lisp_Object f_string_to_char(NArray *args, __attribute__((unused)) lispenv_t *en
 }
 
 /*
-    Function: symbol-value
+    MARK: Function: symbol-value
 */
 
 Lisp_Object f_symbol_value(NArray *args, lispenv_t *env) {
@@ -236,7 +236,7 @@ Lisp_Object f_symbol_value(NArray *args, lispenv_t *env) {
 }
 
 /*
-    Function: substring
+    MARK: Function: substring
 */
 
 Lisp_Object f_substring(NArray *args, lispenv_t *env) {
@@ -263,7 +263,7 @@ Lisp_Object f_substring(NArray *args, lispenv_t *env) {
 }
 
 /*
-    Function: string-to-number
+    MARK: Function: string-to-number
 */
 
 #if DOUBLE_IMMEDIATE
@@ -298,7 +298,7 @@ Lisp_Object f_string_to_number(NArray *args, lispenv_t *env) {
 }
 
 /*
-    Function: pwd
+    MARK: Function: pwd
 */
 
 Lisp_Object get_pwd_str(lispenv_t *env) {
@@ -323,7 +323,7 @@ Lisp_Object f_pwd( __attribute__((unused)) NArray *args, __attribute__((unused))
 #endif /* EXPOSE_SYSTEM_ENV*/
 
 /*
-    Function: window-width
+    MARK: Function: window-width
 */
 
 Lisp_Object f_window_width( __attribute__((unused)) NArray *args, __attribute__((unused)) lispenv_t *env) {
@@ -331,7 +331,7 @@ Lisp_Object f_window_width( __attribute__((unused)) NArray *args, __attribute__(
 }
 
 /*
-    Function: current-time-string
+    MARK: Function: current-time-string
 */
 
 Lisp_Object f_current_time_string(NArray *args, lispenv_t *env) {
@@ -388,7 +388,7 @@ Lisp_Object dv_user_mail_address(lispenv_t *env) {
 }
 
 /*
-    register functions and variables
+    MARK: register functions and variables
 */
 
 int register_func_simple(lispenv_t *env) {

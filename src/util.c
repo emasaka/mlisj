@@ -13,6 +13,7 @@
 #include "util.h"
 
 /*
+    MARK: check_num_str()
     check if the string is a number
 */
 check_num_t check_num_str(const char *str, bool num_only_p) {
@@ -75,7 +76,8 @@ check_num_t check_num_str(const char *str, bool num_only_p) {
 }
 
 /*
-    skk_num_exp (like skk-num.el)
+    MARK: skk_num_exp()
+    routines like skk-num.el
     convert a hankaku number string to zenkaku.
 */
 

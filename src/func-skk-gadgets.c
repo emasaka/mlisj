@@ -31,7 +31,7 @@
 #define V_SKK_VERSION "MLISJ/0.0.0 (NO-CODENAME)"
 
 /*
-    Helper functions
+    MARK: Helper functions
 */
 
 static void str_cpy_up_to_digit(char *dst, const char *src, size_t len) {
@@ -74,7 +74,7 @@ static char *cat_4strings(lispenv_t *env, const char *str1, const char *str2, co
 
 
 /*
-    Function: skk-version
+    MARK: Function: skk-version
 */
 
 Lisp_Object f_skk_version(__attribute__((unused)) NArray *args, __attribute__((unused)) lispenv_t *env) {
@@ -82,7 +82,7 @@ Lisp_Object f_skk_version(__attribute__((unused)) NArray *args, __attribute__((u
 }
 
 /*
-    Function: skk-times
+    MARK: Function: skk-times
 */
 
 Lisp_Object f_skk_times(NArray *args, lispenv_t *env) {
@@ -107,7 +107,7 @@ Lisp_Object f_skk_times(NArray *args, lispenv_t *env) {
 }
 
 /*
-    Function: skk-gadget-units-conversion
+    MARK: Function: skk-gadget-units-conversion
 */
 
 static const struct {
@@ -211,7 +211,7 @@ Lisp_Object ad_to_gengo_1(lispenv_t *env, int ad, bool not_gannen, int month, in
 }
 
 /*
-    Function: skk-ad-to-gengo
+    MARK: Function: skk-ad-to-gengo
 */
 
 Lisp_Object f_skk_ad_to_gengo(NArray *args, lispenv_t *env) {
@@ -265,7 +265,7 @@ Lisp_Object f_skk_ad_to_gengo(NArray *args, lispenv_t *env) {
 
 
 /*
-    Function: skk-gengo-to-ad
+    MARK: Function: skk-gengo-to-ad
 */
 
 Lisp_Object f_skk_gengo_to_ad(NArray *args, lispenv_t *env) {
@@ -311,7 +311,7 @@ Lisp_Object f_skk_gengo_to_ad(NArray *args, lispenv_t *env) {
 }
 
 /*
-    Function: skk-default-current-date
+    MARK: Function: skk-default-current-date
 */
 
 typedef char * const str_tuple3[3];
@@ -455,7 +455,7 @@ Lisp_Object f_skk_default_current_date(NArray *args, lispenv_t *env) {
 }
 
 /*
-    Function: skk-current-date
+    MARK: Function: skk-current-date
 */
 
 Lisp_Object split_time_string(char *str, lispenv_t *env) {
@@ -544,7 +544,7 @@ Lisp_Object f_skk_current_date(NArray *args, lispenv_t *env) {
 }
 
 /*
-    Function: skk-relative-date
+    MARK: Function: skk-relative-date
 */
 
 Lisp_Object skk_relative_date_1(int offset_yy, int offset_mm, int offset_dd, lispenv_t *env) {
@@ -631,7 +631,7 @@ Lisp_Object dv_skk_num_list(lispenv_t *env) {
 }
 
 /*
-    register functions and variables
+    MARK: register functions and variables
 */
 
 int register_func_skk_gadgets(lispenv_t *env) {

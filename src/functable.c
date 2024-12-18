@@ -66,6 +66,10 @@ cfunc_t get_func(const func_pool_t *fp, const char *sym) {
     }
 }
 
+/*
+  MARK: initialize and cleanup
+ */
+
 void end_func_table(func_pool_t *func_pool) {
     if (func_pool->func_table != NULL) {
         free(func_pool->func_table);

@@ -47,6 +47,10 @@ void restore_variable_status(variable_pool_t *vp, int var_status) {
     vp->variable_stack_used = var_status;
 }
 
+/*
+  MARK: initialize and cleanup
+ */
+
 void end_variables(variable_pool_t *variable_pool) {
     if (variable_pool->variable_stack != NULL) {
         free(variable_pool->variable_stack);

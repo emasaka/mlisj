@@ -13,7 +13,7 @@
 #include "mempool.h"
 
 /*
-  Lisp_Object Pool
+  MARK: Lisp_Object Pool
  */
 
 /* obtain new lispobject pool area */
@@ -28,7 +28,7 @@ Lisp_Object *new_lispobject_array(mempool_t *mp, size_t n) {
 }
 
 /*
-  String Pool
+  MARK: String Pool
  */
 
 /* obtain new string pool area */
@@ -53,7 +53,7 @@ char *copy_to_string_area(mempool_t *mp, const char *str) {
 
 #if !DOUBLE_IMMEDIATE
 /*
-  Float Pool
+  MARK: Float Pool
  */
 
 /* obtain new float pool area and copy number */
@@ -69,7 +69,7 @@ double *cdouble2float(mempool_t *mp, double f) {
 #endif
 
 /*
-  Array Node Pool
+  MARK: Array Node Pool
   (bodies are on lispobject_pool)
  */
 
@@ -104,6 +104,10 @@ NArray *cdr_narray(mempool_t *mp, NArray *src) {
     node->data = (node->size == 0) ? NULL : (src->data + 1);
     return node;
 }
+
+/*
+  MARK: initialize and cleanup
+ */
 
 void end_mempool(mempool_t *mempool) {
 #define MAYBE_FREE(p) { if (p != NULL) { free(p); } }

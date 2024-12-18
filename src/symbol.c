@@ -73,6 +73,10 @@ char *str2symbol(symbol_pool_t *sp, char *str, bool copy_p) {
     return newstr;
 }
 
+/*
+  MARK: initialize and cleanup
+ */
+
 void end_symbol(symbol_pool_t *symbol_pool) {
     if (symbol_pool->symbol_table != NULL) {
         free(symbol_pool->symbol_table);
