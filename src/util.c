@@ -138,14 +138,6 @@ static void skk_num_to_kanji_4digits(const char *src, char *dst) {
     *d = '\0';
 }
 
-static void str_prepend(char *base, const char *newstr) {
-    size_t len = strlen(newstr);
-    if (len > 0) {
-        memmove(base + len, base, strlen(base) + 1);
-        memcpy(base, newstr, len);
-    }
-}
-
 static const char * const japanese_keta_man[] = {
     "", "万", "億", "兆", "京"
 };
@@ -153,41 +145,53 @@ static const char * const japanese_keta_man[] = {
 int skk_num_type3_kanji(const char *src, char *dst, size_t size) {
     char buff4_out[ZENKAKU_DIGIT_STRLEN * 8 + 1];
     char buff4[5];
-    size_t keta = 0;
     size_t slen = strlen(src);
+    size_t ketalen = slen / 4;
+    size_t ketawin = slen % 4;
+
+    if (ketawin == 0) {
+        ketawin = 4;
+        ketalen--;
+    }
+    if (ketalen > (sizeof(japanese_keta_man) / sizeof(japanese_keta_man[0]))) {
+        /* too big number */
+        return -1;
+    }
+
     dst[0] = '\0';
-    while (keta < (sizeof(japanese_keta_man) / sizeof(japanese_keta_man[0]))) {
-        if (slen > 4) {
-            memcpy(buff4, src + (slen - 4), 4);
-            buff4[4] = '\0';
-            slen -= 4;
-        } else {
-            memcpy(buff4, src, slen);
-            buff4[slen] = '\0';
-            slen = 0;
-        }
+    size_t dlen = 0;
+    const char *sp = src;
+    char *dp = dst;
+    for (int keta = ketalen; keta >= 0; keta--) {
+        memcpy(buff4, sp, ketawin);
+        buff4[ketawin] = '\0';
+
         skk_num_to_kanji_4digits(buff4, buff4_out);
         if (buff4_out[0] != '\0') {
             const char *keta_man = japanese_keta_man[keta];
             if (strcmp(buff4_out, "千") == 0 && keta != 0) {
                 strcpy(buff4_out, "一千");
             }
-            strcat(buff4_out, keta_man);
-            if (strlen(dst) + strlen(buff4_out) > size) { return -1; }
-            str_prepend(dst, buff4_out);
+            size_t buff4_out_len = strlen(buff4_out);
+            size_t keta_man_len = strlen(keta_man);
+            if (dlen + buff4_out_len + keta_man_len > size) { return -1; }
+            memcpy(dp, buff4_out, buff4_out_len);
+            dp += buff4_out_len;
+            memcpy(dp, keta_man, keta_man_len);
+            dp += keta_man_len;
+            dp[0] = '\0';
+            dlen = dlen + buff4_out_len + keta_man_len;
         }
-        if (slen == 0) {
-            /* exit function */
-            if (dst[0] == '\0') {
-                if (strlen(dst) + strlen(kansuji_digits_list[0]) > size) { return -1; }
-                strcpy(dst, kansuji_digits_list[0]);
-            }
-            return 0;
-        }
-        keta++;
+
+        sp += ketawin;
+        ketawin = 4;
     }
-    /* too big number */
-    return -1;
+
+    if (dlen == 0) {
+        if (strlen(kansuji_digits_list[0]) > size) { return -1; }
+        strcpy(dst, kansuji_digits_list[0]);
+    }
+    return 0;
 }
 
 int skk_num_type0_kanji(const char *src, char *dst, size_t size) {
