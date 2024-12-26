@@ -98,6 +98,42 @@ void testsuite_reader_symbol(void) {
 }
 
 /*
+  '#' + integer
+ */
+
+void test_reader_hashnum_hex(void) {
+    Lisp_Object obj = reader("#x21", lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(obj), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(obj), 0x21);
+}
+
+void test_reader_hashnum_oct(void) {
+    Lisp_Object obj = reader("#o21", lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(obj), Lisp_Int);
+    CU_ASSERT_EQUAL(GET_IVAL(obj), 021);
+}
+
+void test_reader_hashnum_error1(void) {
+    Lisp_Object obj = reader("#W", lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(obj), Internal_Error);
+    CU_ASSERT_EQUAL(GET_ERROR_TYPE(obj), Reader_Error);
+}
+
+void test_reader_hashnum_error2(void) {
+    Lisp_Object obj = reader("#x11W", lisp_env);
+    CU_ASSERT_EQUAL(GET_TYPE(obj), Internal_Error);
+    CU_ASSERT_EQUAL(GET_ERROR_TYPE(obj), Reader_Error);
+}
+
+void testsuite_reader_hashnum(void) {
+    CU_pSuite suite = CU_add_suite("reader_hashnum", init_for_readertest, end_for_readertest);
+    CU_add_test(suite, "reader_hashnum_hex", test_reader_hashnum_hex);
+    CU_add_test(suite, "reader_hashnum_oct", test_reader_hashnum_oct);
+    CU_add_test(suite, "reader_hashnum_error1", test_reader_hashnum_error1);
+    CU_add_test(suite, "reader_hashnum_error2", test_reader_hashnum_error2);
+}
+
+/*
   nil
  */
 
@@ -347,6 +383,7 @@ int main(void) {
 
     testsuite_reader_number();
     testsuite_reader_symbol();
+    testsuite_reader_hashnum();
     testsuite_reader_nil();
     testsuite_reader_string();
     testsuite_reader_list();

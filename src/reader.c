@@ -42,6 +42,36 @@ static void reader_skip_spaces_and_comment(reader_context *c) {
     }
 }
 
+/* parse '#' + integer */
+static Lisp_Object reader_hashnum(reader_context *c) {
+    /* NOTE: '#b' and '#<radix>' are not supported */
+    int n = 0;
+
+    c->ptr++;
+    if (c->ptr[0] == 'x') {
+        c->ptr++;
+        while (isxdigit(c->ptr[0])) {
+            n = (n << 4) + xdigit2i(c->ptr[0]);
+            c->ptr++;
+        }
+    } else if (c->ptr[0] == 'o') {
+        c->ptr++;
+        while (is_oct_digit(c->ptr[0])) {
+            n = (n << 3) + (c->ptr[0] - '0');
+            c->ptr++;
+        }
+    } else {
+        return LISP_ERROR(Reader_Error);
+    }
+
+    if (is_start_token(c->ptr[0])) {
+        return LISP_INT(n);
+    } else {
+        /* '#x11W' causes error */
+        return LISP_ERROR(Reader_Error);
+    }
+}
+
 /* parse integer number */
 static Lisp_Object reader_get_intnum(const char *str) {
     errno = 0;
@@ -238,6 +268,8 @@ static Lisp_Object reader_sexp(reader_context *c) {
         return reader_string(c);
     case '?':
         return reader_char(c);
+    case '#':
+        return reader_hashnum(c);
     default:
         return reader_maybe_symbol(c);
     }

@@ -108,7 +108,7 @@ Below are the specifications and implementation notes.
 * Lists are represented as cdr-coded arrays.  Associative lists using dotted pair expressions and set-cdr are not possible.
 * “\0” cannot be included in strings or symbols (because C string functions are used).
 * Unimplemented features of reader
-     * Integer literals only support decimal numbers.  Trailing '.' is also not supported.
+     * Integer literals only support decimal, hexadecimal and octal numbers.  Trailing '.' is also not supported.
      * Escapes in symbols.
      * Escape character literals.
      * Multibyte character literal.
