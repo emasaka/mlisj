@@ -160,6 +160,18 @@ void test_reader_string_escaped_visible(void) {
     CU_ASSERT_STRING_EQUAL(GET_SVAL(obj), "W");
 }
 
+void test_reader_string_escaped_ignore1(void) {
+    Lisp_Object obj = reader("\"\\61\\ 9\"", lisp_env);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(obj), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(obj), "19");
+}
+
+void test_reader_string_escaped_ignore2(void) {
+    Lisp_Object obj = reader("\"a\\\nb\"", lisp_env);
+    CU_ASSERT_EQUAL_FATAL(GET_TYPE(obj), Lisp_String);
+    CU_ASSERT_STRING_EQUAL(GET_SVAL(obj), "ab");
+}
+
 void test_reader_string_broken(void) {
     Lisp_Object obj = reader("\"", lisp_env);
     CU_ASSERT_EQUAL(GET_TYPE(obj), Internal_Error);
@@ -174,6 +186,8 @@ void testsuite_reader_string(void) {
     CU_add_test(suite, "reader_string_escaped_octet4", test_reader_string_escaped_octet4);
     CU_add_test(suite, "reader_string_newline", test_reader_string_newline);
     CU_add_test(suite, "reader_string_escaped_visible", test_reader_string_escaped_visible);
+    CU_add_test(suite, "reader_string_escaped_ignore1", test_reader_string_escaped_ignore1);
+    CU_add_test(suite, "reader_string_escaped_ignore2", test_reader_string_escaped_ignore2);
     CU_add_test(suite, "reader_string_broken", test_reader_string_broken);
 }
 

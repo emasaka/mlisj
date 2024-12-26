@@ -138,8 +138,13 @@ static Lisp_Object reader_string(reader_context *c) {
                 if (buffer_used++ == READER_BUFSIZE) { return LISP_ERROR(Memory_Error); }
                 *p++ = '\n';
                 c->ptr++;
+            } else if ((c->ptr[0] == ' ') || (c->ptr[0] == '\n')) {
+                /* ignore escaped charcter.  '\ ' -> '' */
+                /* usually used as the end of escaped charaters */
+                c->ptr++;
             } else {
                 if (buffer_used++ == READER_BUFSIZE) { return LISP_ERROR(Memory_Error); }
+                /* the character itself.  '\W' -> 'W' */
                 *p++ = *(c->ptr++);
             }
             break;
