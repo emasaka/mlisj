@@ -112,7 +112,7 @@ static Lisp_Object reader_char(reader_context *c) {
 }
 
 static Lisp_Object reader_string(reader_context *c) {
-    /* NOTE: "\x<hex>" and "\u<code>" are not supported */
+    /* NOTE: "\u<code>" are not supported */
     /* NOTE: escaping multibyte character is not supported (maybe no problem) */
     c->ptr++;
     char buffer[READER_BUFSIZE];
@@ -131,6 +131,22 @@ static Lisp_Object reader_string(reader_context *c) {
                     n = (n << 3) + (c->ptr[0] - '0');
                     c->ptr++;
                 } while ((c->ptr[0] >= '0') && (c->ptr[0] <= '7'));
+                if (buffer_used++ == READER_BUFSIZE) { return LISP_ERROR(Memory_Error); }
+                *p++ = (char)n;
+            } else if (c->ptr[0] == 'x') {
+                /* "\x<hex>" */
+                c->ptr++;
+                int n = 0;
+                size_t i = 0;
+                while (isxdigit(c->ptr[0])) {
+                    if (i++ >= 2) { break; }
+                    int ch = c->ptr[0];
+                    n = (n << 4) +
+                        (isdigit(ch) ? (ch - '0') :
+                         (islower(ch) ? (ch - 'a' + 10) :
+                          (ch - 'A' + 10) ));
+                    c->ptr++;
+                }
                 if (buffer_used++ == READER_BUFSIZE) { return LISP_ERROR(Memory_Error); }
                 *p++ = (char)n;
             } else if (c->ptr[0] == 'n') {

@@ -111,7 +111,7 @@ int mlisj_eval(const char *src, char *dest, size_t size, char **skk_num_list, co
     * シンボル中のエスケープ
     * 文字リテラルのエスケープ
     * マルチバイト文字リテラル
-    * 文字列中の16進数表記、unicodeコード表記
+    * 文字列中のunicodeコード表記
     * 文字列中のマルチバイト文字のエスケープ
 * skk_num_listに入ってくるのは整数の文字列のみを想定（DDSKKでいうとskk-num-convert-floatがnilの想定）
 * `skk-default-current-date`関数関連は、SKK-JISYO.lispで使われている引数のみ対応

@@ -112,7 +112,7 @@ Below are the specifications and implementation notes.
      * Escapes in symbols.
      * Escape character literals.
      * Multibyte character literal.
-     * Hexadecimal notation and unicode code notation in strings.
+     * Unicode code notation in strings.
      * Escape multibyte characters in strings.
 * Only integer strings are assumed to enter skk_num_list (same as when skk-num-convert-float is nil in DDSKK).
 * Regarding the `skk-default-current-date` function, only the arguments used in SKK-JISYO.lisp are supported.
