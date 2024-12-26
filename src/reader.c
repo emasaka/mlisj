@@ -25,6 +25,12 @@ typedef struct {
 
 static Lisp_Object reader_sexp(reader_context *); /* prototype declaration */
 
+/* helper macros */
+#define is_oct_digit(c) (((c) >= '0') && ((c) <= '7'))
+#define xdigit2i(c) (isdigit(c) ? ((c) - '0') : islower(c) ? ((c) - 'a' + 10) : ((c) - 'A' + 10))
+#define is_start_token(c) (isspace(c) || ((c) == '(') || ((c) == ')') || ((c) == '\"') || ((c) == '\'') || ((c) == ';') || ((c) == '\0'))
+
+/* helper function */
 static void reader_skip_spaces_and_comment(reader_context *c) {
     while (true) {
         while (isspace(c->ptr[0])) { c->ptr++; }
@@ -67,7 +73,7 @@ static Lisp_Object reader_maybe_symbol(reader_context *c) {
     for (size_t i = 0; i < READER_BUFSIZE; i++) {
         char ch = c->ptr[0];
         /* NOTE: escapes in symbol is not supported */
-        if (isspace(ch) || (ch == '(') || (ch == ')') || (ch == '\"') || (ch == '\'') || (ch == ';') || (ch == '\0')) {
+        if (is_start_token(ch)) {
             *p = '\0';
 
             /* integer? float? other?*/
@@ -122,7 +128,7 @@ static Lisp_Object reader_string(reader_context *c) {
         switch (c->ptr[0]) {
         case '\\':
             c->ptr++;
-            if ((c->ptr[0] >= '0') && (c->ptr[0] <= '7')) {
+            if (is_oct_digit(c->ptr[0])) {
                 /* "\<octet>" */
                 int n = 0;
                 size_t i = 0;
@@ -130,7 +136,7 @@ static Lisp_Object reader_string(reader_context *c) {
                     if (i++ >= 3) { break; }
                     n = (n << 3) + (c->ptr[0] - '0');
                     c->ptr++;
-                } while ((c->ptr[0] >= '0') && (c->ptr[0] <= '7'));
+                } while (is_oct_digit(c->ptr[0]));
                 if (buffer_used++ == READER_BUFSIZE) { return LISP_ERROR(Memory_Error); }
                 *p++ = (char)n;
             } else if (c->ptr[0] == 'x') {
@@ -140,11 +146,7 @@ static Lisp_Object reader_string(reader_context *c) {
                 size_t i = 0;
                 while (isxdigit(c->ptr[0])) {
                     if (i++ >= 2) { break; }
-                    int ch = c->ptr[0];
-                    n = (n << 4) +
-                        (isdigit(ch) ? (ch - '0') :
-                         (islower(ch) ? (ch - 'a' + 10) :
-                          (ch - 'A' + 10) ));
+                    n = (n << 4) + xdigit2i(c->ptr[0]);
                     c->ptr++;
                 }
                 if (buffer_used++ == READER_BUFSIZE) { return LISP_ERROR(Memory_Error); }
