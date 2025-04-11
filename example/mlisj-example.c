@@ -27,7 +27,7 @@ void call_mlisj(char *str, char **skk_num_list, char *henkan_key) {
 
 int main() {
     call_mlisj("(笑)", NULL, NULL);
-    call_mlisj("(concat \"I\057O\")", NULL, NULL);
+    call_mlisj("(concat \"I\\057O\")", NULL, NULL);
     call_mlisj("(symbol-value 'user-full-name)", NULL, NULL);
     call_mlisj("(make-string (- (window-width) 5) ?-)", NULL, NULL);
     call_mlisj("(current-time-string)", NULL, NULL);

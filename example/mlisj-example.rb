@@ -59,7 +59,7 @@ end
 
 ## main
 call_mlisj("(笑)")
-call_mlisj("(concat \"I\057O\")")
+call_mlisj("(concat \"I\\057O\")")
 call_mlisj("(symbol-value 'user-full-name)")
 call_mlisj("(make-string (- (window-width) 5) ?-)")
 call_mlisj("(current-time-string)")
